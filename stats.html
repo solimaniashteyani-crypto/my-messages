@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>سامانه ۱۱ — آمار</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+  :root{
+    --bg-1:#e0f2fe; --bg-2:#f0f9ff; --bg-3:#fff;
+    --card:#fff; --card-soft:#f8fbff;
+    --text:#0c1e3e; --muted:#5b7ba6;
+    --accent:#0ea5e9; --accent-2:#6366f1; --accent-deep:#0369a1;
+    --border:#dbeafe; --border-strong:#bfdbfe;
+    --ok:#16a34a; --err:#dc2626; --warn:#d97706;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:Vazirmatn,system-ui,sans-serif;
+    margin:0; padding:24px 20px 60px;
+    color:var(--text);
+    background:
+      radial-gradient(1000px 500px at 100% 0%, #bae6fd 0%, transparent 55%),
+      radial-gradient(800px 500px at 0% 100%, #c7d2fe 0%, transparent 55%),
+      linear-gradient(160deg,#e0f2fe 0%, #f0f9ff 45%, #fff 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  h1{
+    font-size:26px; margin:0 0 6px; font-weight:800;
+    background:linear-gradient(135deg,#0369a1,#6366f1);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .subtitle{color:var(--muted); font-size:14px; margin-bottom:24px}
+  .toolbar{
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    background:#fff; border:1px solid var(--border); border-radius:14px;
+    padding:14px 18px; margin-bottom:20px;
+    box-shadow:0 4px 12px rgba(12,30,62,.06);
+  }
+  .toolbar label{font-size:13px; color:var(--muted); font-weight:600}
+  .toolbar select, .toolbar button{
+    padding:8px 14px; border-radius:10px; font-family:inherit; font-size:14px;
+    border:1.5px solid var(--border); background:var(--card-soft); color:var(--text);
+    cursor:pointer; transition:all .2s;
+  }
+  .toolbar select:focus, .toolbar button:hover{
+    border-color:var(--accent); outline:none;
+  }
+  .toolbar button.primary{
+    background:linear-gradient(135deg,#0ea5e9,#6366f1);
+    color:#fff; border-color:transparent;
+    box-shadow:0 4px 12px rgba(14,165,233,.3);
+  }
+  .toolbar button.primary:hover{transform:translateY(-1px)}
+
+  .summary{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:12px; margin-bottom:24px;
+  }
+  .stat-box{
+    background:#fff; border:1px solid var(--border); border-radius:14px;
+    padding:14px 18px; text-align:center;
+    box-shadow:0 4px 12px rgba(12,30,62,.06);
+  }
+  .stat-box .num{
+    font-size:28px; font-weight:800;
+    background:linear-gradient(135deg,#0369a1,#6366f1);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .stat-box .lbl{font-size:12px; color:var(--muted); margin-top:4px}
+
+  .msg-card{
+    background:#fff; border:1px solid var(--border); border-radius:18px;
+    padding:20px 22px; margin-bottom:16px;
+    box-shadow:0 4px 14px rgba(12,30,62,.06), 0 12px 28px rgba(14,165,233,.08);
+    animation:in .3s ease;
+  }
+  @keyframes in{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+  .msg-header{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    gap:10px; flex-wrap:wrap; margin-bottom:12px;
+    padding-bottom:12px; border-bottom:1px dashed var(--border);
+  }
+  .msg-header .group{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(14,165,233,.1); color:var(--accent-deep);
+    padding:4px 12px; border-radius:999px; font-size:12px; font-weight:600;
+  }
+  .msg-header .time{color:var(--muted); font-size:12px}
+  .msg-body{
+    font-size:15px; line-height:1.75; white-space:pre-wrap;
+    word-break:break-word; margin-bottom:12px;
+  }
+  .msg-body img{max-width:100%; border-radius:10px; margin-top:8px; display:block}
+
+  .msg-stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:12px; margin-top:14px;
+    padding-top:14px; border-top:1px dashed var(--border);
+  }
+  .stat-col h4{
+    font-size:13px; margin:0 0 8px; font-weight:700;
+    display:flex; align-items:center; gap:6px;
+  }
+  .stat-col h4.blue{color:#0369a1}
+  .stat-col h4.red{color:#dc2626}
+  .stat-col h4.green{color:#16a34a}
+  .stat-col h4.purple{color:#7c3aed}
+  .stat-col .count{
+    background:var(--card-soft); padding:2px 8px; border-radius:999px;
+    font-size:11px; font-weight:600; color:var(--muted);
+  }
+
+  .pill-list{display:flex; flex-wrap:wrap; gap:6px}
+  .pill{
+    background:var(--card-soft); border:1px solid var(--border);
+    padding:4px 10px; border-radius:999px;
+    font-size:12px; color:var(--text);
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  .pill.seen{background:#ecfdf5; border-color:#a7f3d0; color:#047857}
+  .pill.unseen{background:#fef2f2; border-color:#fecaca; color:#b91c1c}
+  .pill.react{background:#eff6ff; border-color:#bfdbfe; color:#1e40af}
+  .pill.reply{background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9}
+  .pill time{color:var(--muted); font-size:10px}
+
+  .reply-item{
+    background:var(--card-soft); border-right:3px solid var(--accent-2);
+    border-radius:10px; padding:8px 12px; margin:6px 0; font-size:13px;
+  }
+  .reply-item b{color:#6d28d9}
+  .reply-item time{color:var(--muted); font-size:11px; margin-right:8px}
+
+  .empty{
+    text-align:center; color:var(--muted); padding:60px 20px;
+  }
+  .empty::before{content:'📊'; display:block; font-size:60px; margin-bottom:12px; opacity:.4}
+
+  .loading{text-align:center; color:var(--muted); padding:40px; font-size:15px}
+  .loading::before{content:'⏳'; display:block; font-size:40px; margin-bottom:10px; animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.4}}
+
+  .error{
+    background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;
+    padding:16px 20px; border-radius:12px; text-align:center;
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 سامانه ۱۱ — آمار</h1>
+  <div class="subtitle">نمایش کامل بینندگان، ری‌اکشن‌ها و پاسخ‌ها</div>
+
+  <div class="toolbar">
+    <label>فیلتر گروه:</label>
+    <select id="groupFilter">
+      <option value="all">🌐 همه گروه‌ها</option>
+    </select>
+    <button class="primary" onclick="loadStats()">🔄 به‌روزرسانی</button>
+    <button onclick="location.href='./send.html'">⚙️ پنل ادمین</button>
+    <span id="lastUpdate" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div id="content"></div>
+</div>
+
+<script src="config.js"></script>
+<script>
+const C = window.CONFIG;
+const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/messages.json`;
+
+const b64decode = b64 => {
+  const bin = atob(b64.replace(/\n/g,''));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+};
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const fmtTime = iso => {
+  const d = new Date(iso);
+  return d.toLocaleString('fa-IR', {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit'
+  });
+};
+
+const fmtTimeShort = iso => {
+  const d = new Date(iso);
+  const diff = (Date.now() - d) / 1000;
+  if (diff < 60)    return 'الان';
+  if (diff < 3600)  return `${Math.floor(diff/60)} دقیقه پیش`;
+  if (diff < 86400) return `${Math.floor(diff/3600)} ساعت پیش`;
+  return d.toLocaleDateString('fa-IR');
+};
+
+let db = null;
+
+async function loadStats() {
+  const content = document.getElementById('content');
+  content.innerHTML = '<div class="loading">در حال بارگذاری آمار...</div>';
+
+  try {
+    const r = await fetch(API + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    db = JSON.parse(b64decode(j.content));
+
+    document.getElementById('lastUpdate').textContent =
+      'آخرین به‌روزرسانی: ' + new Date().toLocaleTimeString('fa-IR');
+
+    renderSummary();
+    renderMessages();
+  } catch (e) {
+    content.innerHTML = `<div class="error">❌ خطا در دریافت اطلاعات: ${esc(e.message)}</div>`;
+  }
+}
+
+function renderSummary() {
+  const msgs = db.messages || [];
+  const rx = db.reactions || [];
+  const rp = db.replies || [];
+  const sn = db.seen || [];
+
+  document.getElementById('summary').innerHTML = `
+    <div class="stat-box"><div class="num">${msgs.length}</div><div class="lbl">📨 پیام‌ها</div></div>
+    <div class="stat-box"><div class="num">${sn.length}</div><div class="lbl">👁 بازدیدها</div></div>
+    <div class="stat-box"><div class="num">${rx.length}</div><div class="lbl">❤️ ری‌اکشن‌ها</div></div>
+    <div class="stat-box"><div class="num">${rp.length}</div><div class="lbl">💬 پاسخ‌ها</div></div>
+  `;
+
+  // پر کردن فیلتر گروه
+  const sel = document.getElementById('groupFilter');
+  sel.innerHTML = '<option value="all">🌐 همه گروه‌ها</option>' +
+    Object.entries(C.groups).map(([k,g]) =>
+      `<option value="${k}">${g.emoji} ${g.name}</option>`).join('');
+
+  sel.onchange = renderMessages;
+}
+
+function renderMessages() {
+  const content = document.getElementById('content');
+  const filter = document.getElementById('groupFilter').value;
+
+  const messages = (db.messages || [])
+    .filter(m => filter === 'all' || m.group === filter)
+    .sort((a,b) => new Date(b.time) - new Date(a.time));
+
+  if (!messages.length) {
+    content.innerHTML = '<div class="empty">هنوز پیامی نیست</div>';
+    return;
+  }
+
+  content.innerHTML = messages.map(m => renderMessageCard(m)).join('');
+}
+
+function renderMessageCard(m) {
+  const group = C.groups[m.group];
+  const groupName = group ? group.emoji + ' ' + group.name : '—';
+
+  // بینندگان این پیام
+  const seen = (db.seen || []).filter(s => s.messageId === m.id);
+  const seenNames = seen.map(s => s.from);
+
+  // لیست اعضای گروه (اگه تعریف شده باشه)
+  const members = group?.members || [];
+  const unseen = members.filter(name => !seenNames.includes(name));
+
+  // ری‌اکشن‌ها
+  const reactions = (db.reactions || []).filter(r => r.messageId === m.id);
+
+  // پاسخ‌ها
+  const replies = (db.replies || []).filter(r => r.messageId === m.id)
+    .sort((a,b) => new Date(a.time) - new Date(b.time));
+
+  // بخش بینندگان
+  let seenSection = '';
+  if (seen.length || unseen.length) {
+    seenSection = `
+      <div class="stat-col">
+        <h4 class="green">
+          👁 بینندگان
+          <span class="count">${seen.length}${members.length ? '/' + members.length : ''}</span>
+        </h4>
+        <div class="pill-list">
+          ${seen.map(s => `
+            <span class="pill seen">✅ ${esc(s.from)} <time>${fmtTimeShort(s.time)}</time></span>
+          `).join('')}
+          ${unseen.map(n => `
+            <span class="pill unseen">❌ ${esc(n)}</span>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else if (!members.length) {
+    seenSection = `
+      <div class="stat-col">
+        <h4 class="green">👁 بینندگان <span class="count">0</span></h4>
+        <div style="font-size:12px;color:var(--muted);padding:8px 0">
+          هنوز کسی ندیده — یا لیست اعضای گروه خالیه
+        </div>
+      </div>
+    `;
+  }
+
+  // بخش ری‌اکشن‌ها
+  const rxSection = reactions.length ? `
+    <div class="stat-col">
+      <h4 class="blue">❤️ ری‌اکشن‌ها <span class="count">${reactions.length}</span></h4>
+      <div class="pill-list">
+        ${reactions.map(r => `
+          <span class="pill react">${r.emoji} ${esc(r.from)}</span>
+        `).join('')}
+      </div>
+    </div>
+  ` : '';
+
+  // بخش پاسخ‌ها
+  const replySection = replies.length ? `
+    <div class="stat-col" style="grid-column:1/-1">
+      <h4 class="purple">💬 پاسخ‌ها <span class="count">${replies.length}</span></h4>
+      ${replies.map(r => `
+        <div class="reply-item">
+          <b>${esc(r.from)}</b>
+          <time>${fmtTimeShort(r.time)}</time>
+          <div>${esc(r.text)}</div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+
+  return `
+    <div class="msg-card">
+      <div class="msg-header">
+        <span class="group">${groupName}</span>
+        <span class="time">${fmtTime(m.time)}</span>
+      </div>
+      ${m.text ? `<div class="msg-body">${esc(m.text)}</div>` : ''}
+      ${m.image ? `<div class="msg-body"><img src="${esc(m.image)}" loading="lazy"></div>` : ''}
+      <div class="msg-stats">
+        ${seenSection}
+        ${rxSection}
+        ${replySection}
+      </div>
+    </div>
+  `;
+}
+
+// بوت
+loadStats();
+
+// هر ۲ دقیقه خودکار به‌روزرسانی
+setInterval(loadStats, 2 * 60 * 1000);
+</script>
+</body>
+</html>
