@@ -1,431 +1,63 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="fa">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ارسال پیام — پنل ادمین</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-<style>
-  body{
-    font-family:Vazirmatn,system-ui,sans-serif;
-    max-width:680px;margin:auto;padding:24px 20px 60px;
-    color:#0c1e3e;
-    background:
-      radial-gradient(1000px 500px at 100% 0%, #bae6fd 0%, transparent 55%),
-      radial-gradient(800px 500px at 0% 100%, #c7d2fe 0%, transparent 55%),
-      linear-gradient(160deg,#e0f2fe 0%, #f0f9ff 45%, #fff 100%);
-    background-attachment:fixed;
-    min-height:100vh;
-  }
-  h2{
-    font-size:22px; margin:0 0 6px; font-weight:700;
-    background:linear-gradient(135deg,#0369a1,#6366f1);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .subtitle{color:#5b7ba6; font-size:13px; margin-bottom:20px}
-  h3{color:#0369a1; font-size:16px; margin:32px 0 12px}
-  label{display:block; margin:14px 0 6px; font-size:14px; color:#5b7ba6; font-weight:500}
-  textarea,input,select{
-    width:100%; padding:11px 14px;
-    background:#f8fbff; border:1.5px solid #dbeafe;
-    color:#0c1e3e; border-radius:12px;
-    font-family:inherit; font-size:15px; box-sizing:border-box;
-    transition:all .2s ease;
-  }
-  textarea:focus,input:focus,select:focus{
-    outline:none; border-color:#0ea5e9; background:#fff;
-    box-shadow:0 0 0 4px rgba(14,165,233,.12);
-  }
-  textarea{height:120px; resize:vertical}
-  button{
-    padding:11px 22px;
-    background:linear-gradient(135deg,#0ea5e9,#6366f1);
-    color:#fff; border:none; border-radius:12px; cursor:pointer;
-    font-family:inherit; font-size:15px; font-weight:600;
-    margin-top:14px; margin-left:6px;
-    box-shadow:0 4px 14px rgba(14,165,233,.35);
-    transition:all .2s ease;
-  }
-  button:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(14,165,233,.45)}
-  button:active{transform:translateY(0) scale(.97)}
-  button.ghost{background:transparent; border:1.5px solid #bfdbfe; color:#5b7ba6; box-shadow:none}
-  button.ghost:hover{background:#f0f9ff; color:#0c1e3e}
-  button.danger{background:linear-gradient(135deg,#ef4444,#dc2626); box-shadow:0 3px 10px rgba(220,38,38,.3)}
-  #status{margin-top:14px; font-size:14px; min-height:20px; font-weight:500}
-  .ok{color:#16a34a}.err{color:#dc2626}
-  .card{
-    background:#fff; border:1px solid #dbeafe; border-radius:16px;
-    padding:16px 18px; margin:10px 0; font-size:14px;
-    box-shadow:0 4px 12px rgba(12,30,62,.06), 0 12px 28px rgba(14,165,233,.10);
-    animation:in .3s ease;
-  }
-  @keyframes in{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
-  .card img{max-width:100%; border-radius:10px; margin-top:8px}
-  .card button{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-    padding:5px 14px; font-size:12px; margin-top:10px;
-    box-shadow:0 3px 10px rgba(220,38,38,.3);
-  }
-  .card button:hover{box-shadow:0 5px 16px rgba(220,38,38,.4)}
-  .preview{max-width:200px; border-radius:10px; margin-top:10px; display:none;
-           box-shadow:0 4px 16px rgba(14,165,233,.2)}
-  .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-  .progress{
-    height:6px; background:#e0f2fe; border-radius:4px;
-    overflow:hidden; margin-top:12px; display:none;
-  }
-  .progress>div{
-    height:100%;
-    background:linear-gradient(90deg,#0ea5e9,#6366f1,#0ea5e9);
-    background-size:200% 100%; width:0; transition:width .3s ease;
-    animation:shine 2s linear infinite;
-  }
-  @keyframes shine{to{background-position:-200% 0}}
-
-  /* کارت وضعیت توکن */
-  .token-status{
-    background:linear-gradient(135deg, #d1fae5, #a7f3d0);
-    border:1.5px solid #6ee7b7;
-    border-radius:14px;
-    padding:14px 18px;
-    margin-bottom:16px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 4px 12px rgba(16,185,129,.15);
-  }
-  .token-status .info{display:flex; align-items:center; gap:10px; font-weight:600; color:#047857}
-  .token-status .icon{font-size:20px}
-  .token-status button{
-    background:transparent; color:#047857;
-    border:1.5px solid #047857;
-    padding:6px 14px; font-size:13px; margin:0;
-    box-shadow:none;
-  }
-  .token-status button:hover{background:#047857; color:#fff}
-  .token-status.hidden{display:none}
-
-  /* گروه‌ها به‌صورت دکمه‌های رادیویی زیبا */
-  .group-chips{
-    display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;
-  }
-  .group-chips input[type="radio"]{display:none}
-  .group-chips label{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:9px 16px;
-    background:#fff; border:1.5px solid #dbeafe;
-    border-radius:999px; cursor:pointer;
-    font-size:14px; font-weight:500; color:#5b7ba6;
-    margin:0; transition:all .2s ease;
-    box-shadow:0 2px 6px rgba(12,30,62,.04);
-  }
-  .group-chips label:hover{border-color:#0ea5e9; color:#0369a1; transform:translateY(-1px)}
-  .group-chips input[type="radio"]:checked + label{
-    background:linear-gradient(135deg,#0ea5e9,#6366f1);
-    border-color:transparent; color:#fff;
-    box-shadow:0 4px 14px rgba(14,165,233,.35);
-    transform:translateY(-1px);
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0ea5e9">
+  <meta name="description" content="سامانه ۱۱ — پیام‌رسان شخصی، بدون واسطه">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="سامانه ۱۱">
+  <title>سامانه ۱۱</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 </head>
 <body>
-<h2>📤 ارسال پیام — پنل ادمین</h2>
-<div class="subtitle">سامانه ۱۱ — نسخه ۱.۰.۰</div>
+  <header>
+    <h1>📬 سامانه ۱۱</h1>
+    <div class="header-actions">
+      <button id="refreshBtn" title="به‌روزرسانی">🔄</button>
+      <button id="settingsBtn" title="تنظیمات">⚙️</button>
+    </div>
+  </header>
 
-<!-- کارت وضعیت توکن (فقط وقتی توکن ذخیره شده) -->
-<div id="tokenSaved" class="token-status hidden">
-  <div class="info">
-    <span class="icon">✅</span>
-    <span>توکن ذخیره شده — آماده ارسال</span>
-  </div>
-  <button onclick="logout()">خروج از حساب</button>
-</div>
+  <div id="offline" class="offline-bar" hidden>📴 حالت آفلاین — آخرین نسخه ذخیره‌شده</div>
 
-<!-- فرم توکن (فقط وقتی توکن نداریم) -->
-<div id="tokenForm">
-  <label>🔑 توکن گیت‌هاب (فقط یک بار وارد کن، ذخیره میشه)</label>
-  <input type="password" id="token" placeholder="github_pat_..." autocomplete="off">
-  <div class="row">
-    <button onclick="saveToken()">ذخیره توکن 💾</button>
-    <span style="font-size:12px; color:#5b7ba6; margin-top:16px;">
-      از <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#0ea5e9">این صفحه</a> بساز
-    </span>
-  </div>
-  <div id="tokenMsg" style="margin-top:8px; font-size:13px"></div>
-</div>
+  <nav id="tabs"></nav>
+  <div id="status" class="status"></div>
+  <main id="feed"></main>
 
-<hr style="border:none; border-top:1px solid #dbeafe; margin:24px 0">
+  <dialog id="settingsDlg">
+    <form method="dialog">
+      <h3>تنظیمات</h3>
+      <label>نام من
+        <input id="myName" placeholder="مثلاً علی" autocomplete="off">
+      </label>
+      <label>گروه من
+        <select id="myGroup"></select>
+      </label>
+      <menu>
+        <button value="save">ذخیره</button>
+      </menu>
+    </form>
+  </dialog>
 
-<!-- انتخاب گروه -->
-<label>📁 گروه مقصد</label>
-<div class="group-chips" id="groupChips"></div>
+  <dialog id="replyDlg">
+    <form method="dialog">
+      <h3>پاسخ به پیام</h3>
+      <div id="replyQuote" class="quote"></div>
+      <textarea id="replyText" placeholder="پاسخ خود را بنویسید..." rows="3"></textarea>
+      <menu>
+        <button value="cancel" class="ghost">لغو</button>
+        <button id="replySendBtn" type="button">ارسال</button>
+      </menu>
+    </form>
+  </dialog>
 
-<!-- متن پیام -->
-<label>✍️ متن پیام (اختیاری اگر عکس داری)</label>
-<textarea id="msg" placeholder="سلام..."></textarea>
-
-<!-- عکس -->
-<label>🖼 عکس (اختیاری)</label>
-<input type="file" id="imgFile" accept="image/*">
-<img id="preview" class="preview">
-
-<!-- دکمه‌ها -->
-<div class="row" style="margin-top:14px">
-  <button onclick="send()">ارسال 🚀</button>
-  <button class="ghost" onclick="reload()">🔄 به‌روزرسانی لیست</button>
-</div>
-
-<!-- نوار پیشرفت -->
-<div class="progress" id="prog"><div id="progBar"></div></div>
-
-<!-- وضعیت -->
-<div id="status"></div>
-
-<!-- پیام‌های اخیر -->
-<h3>📨 پیام‌های اخیر</h3>
-<div id="list"></div>
-
-<script src="config.js"></script>
-<script>
-const C = window.CONFIG;
-const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents`;
-const MSG_PATH = 'messages.json';
-const TOKEN_KEY = 'gh_token';
-
-// ---------- توکن ----------
-const tokenEl = document.getElementById('token');
-
-function getToken() {
-  return localStorage.getItem(TOKEN_KEY) || '';
-}
-
-function saveToken() {
-  const t = tokenEl.value.trim();
-  const msgEl = document.getElementById('tokenMsg');
-  if (!t) {
-    msgEl.innerHTML = '<span style="color:#dc2626">❌ توکن رو وارد کن</span>';
-    return;
-  }
-  if (!t.startsWith('github_pat_') && !t.startsWith('ghp_')) {
-    msgEl.innerHTML = '<span style="color:#dc2626">❌ فرمت توکن اشتباهه (باید با github_pat_ یا ghp_ شروع بشه)</span>';
-    return;
-  }
-  localStorage.setItem(TOKEN_KEY, t);
-  msgEl.innerHTML = '<span style="color:#16a34a">✅ توکن ذخیره شد! حالا می‌تونی پیام بفرستی.</span>';
-  updateTokenUI();
-  reload();
-}
-
-function logout() {
-  if (!confirm('توکن پاک بشه؟ باید دوباره وارد کنی.')) return;
-  localStorage.removeItem(TOKEN_KEY);
-  tokenEl.value = '';
-  updateTokenUI();
-  document.getElementById('list').innerHTML = '<div style="color:#94a3b8">وارد شو تا لیست رو ببینی</div>';
-  setStatus('');
-}
-
-function updateTokenUI() {
-  const t = getToken();
-  const saved = document.getElementById('tokenSaved');
-  const form = document.getElementById('tokenForm');
-  if (t) {
-    saved.classList.remove('hidden');
-    form.style.display = 'none';
-  } else {
-    saved.classList.add('hidden');
-    form.style.display = 'block';
-  }
-}
-
-// ---------- گروه‌ها ----------
-const groupChips = document.getElementById('groupChips');
-groupChips.innerHTML = Object.entries(C.groups)
-  .map(([k,g], i) => `
-    <input type="radio" name="group" id="g-${k}" value="${k}" ${i===0?'checked':''}>
-    <label for="g-${k}">${g.emoji} ${g.name}</label>
-  `).join('');
-
-function getSelectedGroup() {
-  const el = document.querySelector('input[name="group"]:checked');
-  return el ? el.value : 'friends';
-}
-
-// ---------- وضعیت ----------
-const setStatus = (t, cls='') => {
-  document.getElementById('status').innerHTML = `<span class="${cls}">${t}</span>`;
-};
-
-// ---------- Base64 ----------
-const b64decode = b64 => {
-  const bin = atob(b64.replace(/\n/g,''));
-  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
-};
-const b64encodeStr = s => {
-  const bytes = new TextEncoder().encode(s);
-  let bin = ''; for (const b of bytes) bin += String.fromCharCode(b);
-  return btoa(bin);
-};
-const fileToBase64 = file => new Promise((res, rej) => {
-  const r = new FileReader();
-  r.onload  = () => res(r.result.split(',')[1]);
-  r.onerror = rej;
-  r.readAsDataURL(file);
-});
-
-// ---------- پیش‌نمایش عکس ----------
-const imgFile = document.getElementById('imgFile');
-const preview = document.getElementById('preview');
-imgFile.onchange = () => {
-  const f = imgFile.files[0];
-  if (!f) { preview.style.display = 'none'; return; }
-  preview.src = URL.createObjectURL(f);
-  preview.style.display = 'block';
-};
-
-// ---------- گیت‌هاب API ----------
-async function getFile(path) {
-  const r = await fetch(`${API}/${path}?t=${Date.now()}`, {
-    headers: { Authorization: `token ${getToken()}` }
-  });
-  if (r.status === 404) return { sha: null, data: null };
-  if (r.status === 401) throw new Error('401 — توکن منقضی یا اشتباهه. خروج از حساب و دوباره وارد کن.');
-  if (!r.ok) throw new Error('خطا در خواندن ' + path + ' (' + r.status + ')');
-  const j = await r.json();
-  return { sha: j.sha, data: JSON.parse(b64decode(j.content)) };
-}
-
-async function putFile(path, base64Content, sha, commitMsg) {
-  const body = { message: commitMsg, content: base64Content };
-  if (sha) body.sha = sha;
-  const r = await fetch(`${API}/${path}`, {
-    method: 'PUT',
-    headers: { Authorization: `token ${getToken()}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) {
-    const t = await r.text();
-    throw new Error('آپدیت نشد (' + r.status + '): ' + t.slice(0, 150));
-  }
-  return r.json();
-}
-
-async function uploadImage(file) {
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-  const filename = `${crypto.randomUUID()}.${ext}`;
-  const path = `images/${filename}`;
-  const b64 = await fileToBase64(file);
-  await putFile(path, b64, null, 'upload image');
-  return `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/${path}`;
-}
-
-// ---------- ارسال پیام ----------
-async function send() {
-  if (!getToken()) return setStatus('اول توکن رو وارد کن', 'err');
-
-  const text = document.getElementById('msg').value.trim();
-  const file = imgFile.files[0];
-  if (!text && !file) return setStatus('متن یا عکس لازمه', 'err');
-
-  const prog = document.getElementById('prog');
-  const bar  = document.getElementById('progBar');
-  prog.style.display = 'block';
-  bar.style.width = '10%';
-
-  try {
-    let imageUrl = null;
-    if (file) {
-      setStatus('در حال آپلود عکس...');
-      bar.style.width = '40%';
-      imageUrl = await uploadImage(file);
-      bar.style.width = '70%';
-    }
-
-    setStatus('در حال ثبت پیام...');
-    const { sha, data } = await getFile(MSG_PATH);
-    const db = data || { messages: [], reactions: [], replies: [], seen: [] };
-    db.messages ||= []; db.reactions ||= []; db.replies ||= []; db.seen ||= [];
-
-    const group = getSelectedGroup();
-    db.messages.push({
-      id: crypto.randomUUID(),
-      text,
-      group,
-      time: new Date().toISOString(),
-      ...(imageUrl ? { image: imageUrl } : {})
-    });
-
-    await putFile(MSG_PATH, b64encodeStr(JSON.stringify(db, null, 2)), sha, 'new message');
-    bar.style.width = '100%';
-
-    document.getElementById('msg').value = '';
-    imgFile.value = ''; preview.style.display = 'none';
-    setStatus('✅ ارسال شد! اعلان تا چند لحظه دیگه میاد 📲', 'ok');
-    renderList(db.messages);
-  } catch (e) {
-    setStatus('❌ ' + e.message, 'err');
-  } finally {
-    setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0'; }, 600);
-  }
-}
-
-// ---------- حذف پیام ----------
-async function del(id) {
-  if (!confirm('این پیام حذف بشه؟')) return;
-  try {
-    const { sha, data: db } = await getFile(MSG_PATH);
-    db.messages  = db.messages.filter(m => m.id !== id);
-    db.reactions = (db.reactions||[]).filter(r => r.messageId !== id);
-    db.replies   = (db.replies||[]).filter(r => r.messageId !== id);
-    db.seen      = (db.seen||[]).filter(s => s.messageId !== id);
-    await putFile(MSG_PATH, b64encodeStr(JSON.stringify(db, null, 2)), sha, 'delete message');
-    setStatus('🗑 حذف شد', 'ok');
-    renderList(db.messages);
-  } catch (e) { setStatus('❌ ' + e.message, 'err'); }
-}
-
-// ---------- نمایش لیست ----------
-function renderList(msgs) {
-  const list = document.getElementById('list');
-  const sorted = [...msgs].sort((a,b) => new Date(b.time) - new Date(a.time)).slice(0, 30);
-  list.innerHTML = sorted.map(m => {
-    const g = C.groups[m.group];
-    const preview = m.text ? m.text.slice(0, 80) : '[عکس]';
-    return `<div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px">
-        <b>${g ? g.emoji + ' ' + g.name : '—'}</b>
-        <span style="color:#94a3b8; font-size:12px">${new Date(m.time).toLocaleString('fa-IR')}</span>
-      </div>
-      ${m.text ? `<div style="white-space:pre-wrap; margin:6px 0">${escapeHtml(m.text)}</div>` : ''}
-      ${m.image ? `<img src="${m.image}" loading="lazy">` : ''}
-      <button onclick="del('${m.id}')">🗑 حذف</button>
-    </div>`;
-  }).join('') || '<div style="color:#94a3b8; padding:20px; text-align:center">هنوز پیامی نیست</div>';
-}
-
-function escapeHtml(s) {
-  return String(s ?? '').replace(/[&<>"']/g,
-    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-// ---------- به‌روزرسانی لیست ----------
-async function reload() {
-  if (!getToken()) {
-    document.getElementById('list').innerHTML = '<div style="color:#94a3b8; padding:20px; text-align:center">اول توکن رو وارد کن</div>';
-    return;
-  }
-  try {
-    const { data: db } = await getFile(MSG_PATH);
-    if (!db) return setStatus('messages.json پیدا نشد', 'err');
-    renderList(db.messages || []);
-    setStatus(`📨 ${db.messages?.length||0} پیام، ${db.reactions?.length||0} ری‌اکشن، ${db.replies?.length||0} پاسخ، ${db.seen?.length||0} خوانده‌شده`, 'ok');
-  } catch (e) { setStatus('❌ ' + e.message, 'err'); }
-}
-
-// ---------- مقدار اولیه ----------
-tokenEl.value = getToken() || '';
-updateTokenUI();
-if (getToken()) reload();
-</script>
+  <script src="db.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
