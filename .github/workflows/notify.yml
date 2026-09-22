@@ -1,0 +1,59 @@
+name: Notify on new message
+
+on:
+  push:
+    paths: ['messages.json']
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+
+      - name: Detect new messages & push to ntfy
+        env:
+          NTFY: https://ntfy.sh
+        run: |
+          set -e
+          git show HEAD~1:messages.json > /tmp/old.json 2>/dev/null \
+            || echo '{"messages":[]}' > /tmp/old.json
+
+          jq -c --slurpfile old /tmp/old.json '
+            .messages[]
+            | select(.id as $i | ($old[0].messages | map(.id) | index($i) | not))
+          ' messages.json > /tmp/new.ndjson || true
+
+          cat > /tmp/topics.mjs <<'EOF'
+          import fs from 'fs';
+          const src = fs.readFileSync('config.js','utf8');
+          const s = {}; new Function('window', src)(s);
+          console.log(JSON.stringify(s.CONFIG.groups));
+          EOF
+          TOPICS=$(node /tmp/topics.mjs)
+
+          while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            ID=$(echo "$line"  | jq -r .id)
+            TXT=$(echo "$line" | jq -r .text)
+            GRP=$(echo "$line" | jq -r .group)
+            IMG=$(echo "$line" | jq -r '.image // empty')
+            TOPIC=$(echo "$TOPICS" | jq -r --arg g "$GRP" '.[$g].topic // empty')
+            NAME=$(echo "$TOPICS"  | jq -r --arg g "$GRP" '.[$g].name  // empty')
+            [ -z "$TOPIC" ] && continue
+
+            if [ -n "$IMG" ]; then
+              curl -s \
+                -H "Title: پیام جدید برای $NAME" \
+                -H "Tags: framed_picture" \
+                -H "Attach: $IMG" \
+                -H "X-Message-Id: $ID" \
+                -d "$TXT" "$NTFY/$TOPIC" > /dev/null
+            else
+              curl -s \
+                -H "Title: پیام جدید برای $NAME" \
+                -H "Tags: speech_balloon" \
+                -H "X-Message-Id: $ID" \
+                -d "$TXT" "$NTFY/$TOPIC" > /dev/null
+            fi
+          done < /tmp/new.ndjson
