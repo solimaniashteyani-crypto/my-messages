@@ -1,5 +1,12 @@
 {
-  "messages": [],
+  "messages": [
+    {
+      "id": "f8379dcb-3984-401f-a483-f033a8a3837c",
+      "text": "سلام",
+      "group": "work",
+      "time": "2026-09-22T22:10:02.550Z"
+    }
+  ],
   "reactions": [],
   "replies": [],
   "seen": []
