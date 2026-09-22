@@ -1,0 +1,79 @@
+name: Sync interactions
+
+on:
+  schedule: [{ cron: '*/10 * * * *' }]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch interactions from ntfy
+        run: |
+          TOPIC=$(node -e "
+            const fs=require('fs');
+            const s={}; new Function('window',fs.readFileSync('config.js','utf8'))(s);
+            console.log(s.CONFIG.interactionsTopic);
+          ")
+          curl -s "https://ntfy.sh/$TOPIC/json?poll=1&since=all" > /tmp/raw.ndjson
+          jq -c 'try {id: .id, time: .time, data: (.message | fromjson)} catch empty' \
+            /tmp/raw.ndjson > /tmp/ix.ndjson || true
+
+      - name: Merge into messages.json
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const db = JSON.parse(fs.readFileSync('messages.json','utf8'));
+          db.reactions ||= []; db.replies ||= []; db.seen ||= [];
+
+          const rIds = new Set(db.reactions.map(r => r.id));
+          const pIds = new Set(db.replies.map(r => r.id));
+          const sKeys = new Set(db.seen.map(s => s.messageId + ':' + s.from));
+
+          const lines = fs.existsSync('/tmp/ix.ndjson')
+            ? fs.readFileSync('/tmp/ix.ndjson','utf8').trim().split('\n').filter(Boolean)
+            : [];
+
+          let addR = 0, addP = 0, addS = 0;
+          for (const line of lines) {
+            try {
+              const { id, time, data } = JSON.parse(line);
+              if (!id || !data?.type || !data?.messageId) continue;
+              const iso = new Date((time||Date.now()/1000)*1000).toISOString();
+
+              if (data.type === 'reaction' && data.emoji && !rIds.has(id)) {
+                db.reactions.push({ id, messageId: data.messageId, emoji: data.emoji,
+                                    from: data.from || 'ناشناس', time: iso });
+                rIds.add(id); addR++;
+              } else if (data.type === 'reply' && data.text && !pIds.has(id)) {
+                db.replies.push({ id, messageId: data.messageId, text: data.text,
+                                  from: data.from || 'ناشناس', time: iso });
+                pIds.add(id); addP++;
+              } else if (data.type === 'seen' && data.from) {
+                const k = data.messageId + ':' + data.from;
+                if (!sKeys.has(k)) {
+                  db.seen.push({ messageId: data.messageId, from: data.from, time: iso });
+                  sKeys.add(k); addS++;
+                }
+              }
+            } catch {}
+          }
+
+          if (db.seen.length > 2000) db.seen = db.seen.slice(-2000);
+
+          fs.writeFileSync('messages.json', JSON.stringify(db, null, 2));
+          console.log(`+${addR} reactions, +${addP} replies, +${addS} seen`);
+          EOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add messages.json
+          git diff --cached --quiet || git commit -m "sync interactions"
+          git push
