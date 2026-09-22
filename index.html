@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0ea5e9">
+  <title>پیام‌ها</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+</head>
+<body>
+  <header>
+    <h1>📬 پیام‌ها</h1>
+    <div class="header-actions">
+      <button id="refreshBtn" title="به‌روزرسانی">🔄</button>
+      <button id="settingsBtn" title="تنظیمات">⚙️</button>
+    </div>
+  </header>
+
+  <div id="offline" class="offline-bar" hidden>📴 حالت آفلاین — آخرین نسخه ذخیره‌شده</div>
+
+  <nav id="tabs"></nav>
+  <div id="status" class="status"></div>
+  <main id="feed"></main>
+
+  <dialog id="settingsDlg">
+    <form method="dialog">
+      <h3>تنظیمات</h3>
+      <label>نام من
+        <input id="myName" placeholder="مثلاً علی" autocomplete="off">
+      </label>
+      <label>گروه من
+        <select id="myGroup"></select>
+      </label>
+      <menu>
+        <button value="save">ذخیره</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="replyDlg">
+    <form method="dialog">
+      <h3>پاسخ به پیام</h3>
+      <div id="replyQuote" class="quote"></div>
+      <textarea id="replyText" placeholder="پاسخ خود را بنویسید..." rows="3"></textarea>
+      <menu>
+        <button value="cancel" class="ghost">لغو</button>
+        <button id="replySendBtn" type="button">ارسال</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="db.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

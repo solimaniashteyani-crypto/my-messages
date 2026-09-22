@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ارسال پیام</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+  body{
+    font-family:Vazirmatn,system-ui,sans-serif;
+    max-width:680px;margin:auto;padding:24px 20px 60px;
+    color:#0c1e3e;
+    background:
+      radial-gradient(1000px 500px at 100% 0%, #bae6fd 0%, transparent 55%),
+      radial-gradient(800px 500px at 0% 100%, #c7d2fe 0%, transparent 55%),
+      linear-gradient(160deg,#e0f2fe 0%, #f0f9ff 45%, #fff 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+  h2{
+    font-size:22px; margin:0 0 16px; font-weight:700;
+    background:linear-gradient(135deg,#0369a1,#6366f1);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  h3{color:#0369a1; font-size:16px; margin:32px 0 12px}
+  label{display:block; margin:14px 0 6px; font-size:14px; color:#5b7ba6; font-weight:500}
+  textarea,input,select{
+    width:100%; padding:11px 14px;
+    background:#f8fbff; border:1.5px solid #dbeafe;
+    color:#0c1e3e; border-radius:12px;
+    font-family:inherit; font-size:15px; box-sizing:border-box;
+    transition:all .2s ease;
+  }
+  textarea:focus,input:focus,select:focus{
+    outline:none; border-color:#0ea5e9; background:#fff;
+    box-shadow:0 0 0 4px rgba(14,165,233,.12);
+  }
+  textarea{height:120px; resize:vertical}
+  button{
+    padding:11px 22px;
+    background:linear-gradient(135deg,#0ea5e9,#6366f1);
+    color:#fff; border:none; border-radius:12px; cursor:pointer;
+    font-family:inherit; font-size:15px; font-weight:600;
+    margin-top:14px; margin-left:6px;
+    box-shadow:0 4px 14px rgba(14,165,233,.35);
+    transition:all .2s ease;
+  }
+  button:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(14,165,233,.45)}
+  button:active{transform:translateY(0) scale(.97)}
+  button.ghost{background:transparent; border:1.5px solid #bfdbfe; color:#5b7ba6; box-shadow:none}
+  button.ghost:hover{background:#f0f9ff; color:#0c1e3e}
+  #status{margin-top:14px; font-size:14px; min-height:20px; font-weight:500}
+  .ok{color:#16a34a}.err{color:#dc2626}
+  .card{
+    background:#fff; border:1px solid #dbeafe; border-radius:16px;
+    padding:16px 18px; margin:10px 0; font-size:14px;
+    box-shadow:0 4px 12px rgba(12,30,62,.06), 0 12px 28px rgba(14,165,233,.10);
+    animation:in .3s ease;
+  }
+  @keyframes in{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .card img{max-width:100%; border-radius:10px; margin-top:8px}
+  .card button{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    padding:5px 14px; font-size:12px; margin-top:10px;
+    box-shadow:0 3px 10px rgba(220,38,38,.3);
+  }
+  .card button:hover{box-shadow:0 5px 16px rgba(220,38,38,.4)}
+  .preview{max-width:200px; border-radius:10px; margin-top:10px; display:none;
+           box-shadow:0 4px 16px rgba(14,165,233,.2)}
+  .row{display:flex;gap:6px;flex-wrap:wrap}
+  .progress{
+    height:6px; background:#e0f2fe; border-radius:4px;
+    overflow:hidden; margin-top:12px; display:none;
+  }
+  .progress>div{
+    height:100%;
+    background:linear-gradient(90deg,#0ea5e9,#6366f1,#0ea5e9);
+    background-size:200% 100%; width:0; transition:width .3s ease;
+    animation:shine 2s linear infinite;
+  }
+  @keyframes shine{to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<h2>📤 ارسال پیام</h2>
+
+<label>توکن گیت‌هاب (فقط یک بار ذخیره میشه)</label>
+<input type="password" id="token" placeholder="ghp_..." autocomplete="off">
+
+<label>گروه مقصد</label>
+<select id="group"></select>
+
+<label>متن پیام (اختیاری اگر عکس داری)</label>
+<textarea id="msg" placeholder="سلام..."></textarea>
+
+<label>عکس (اختیاری)</label>
+<input type="file" id="imgFile" accept="image/*">
+<img id="preview" class="preview">
+
+<div class="row">
+  <button onclick="send()">ارسال 🚀</button>
+  <button class="ghost" onclick="reload()">به‌روزرسانی لیست</button>
+</div>
+<div class="progress" id="prog"><div id="progBar"></div></div>
+<div id="status"></div>
+
+<h3>پیام‌های اخیر</h3>
+<div id="list"></div>
+
+<script src="config.js"></script>
+<script>
+const C = window.CONFIG;
+const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents`;
+const MSG_PATH = 'messages.json';
+
+const tokenEl = document.getElementById('token');
+tokenEl.value = localStorage.getItem('gh_token') || '';
+tokenEl.onchange = () => localStorage.setItem('gh_token', tokenEl.value);
+
+const groupSel = document.getElementById('group');
+groupSel.innerHTML = Object.entries(C.groups)
+  .map(([k,g]) => `<option value="${k}">${g.emoji} ${g.name}</option>`).join('');
+
+const setStatus = (t, cls='') => {
+  document.getElementById('status').innerHTML = `<span class="${cls}">${t}</span>`;
+};
+
+const b64decode = b64 => {
+  const bin = atob(b64.replace(/\n/g,''));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+};
+const b64encodeStr = s => {
+  const bytes = new TextEncoder().encode(s);
+  let bin = ''; for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin);
+};
+const fileToBase64 = file => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload  = () => res(r.result.split(',')[1]);
+  r.onerror = rej;
+  r.readAsDataURL(file);
+});
+
+const imgFile = document.getElementById('imgFile');
+const preview = document.getElementById('preview');
+imgFile.onchange = () => {
+  const f = imgFile.files[0];
+  if (!f) { preview.style.display = 'none'; return; }
+  preview.src = URL.createObjectURL(f);
+  preview.style.display = 'block';
+};
+
+async function getFile(path) {
+  const r = await fetch(`${API}/${path}?t=${Date.now()}`, {
+    headers: { Authorization: `token ${tokenEl.value}` }
+  });
+  if (r.status === 404) return { sha: null, data: null };
+  if (!r.ok) throw new Error('خطا در خواندن ' + path + ' (' + r.status + ')');
+  const j = await r.json();
+  return { sha: j.sha, data: JSON.parse(b64decode(j.content)) };
+}
+
+async function putFile(path, base64Content, sha, commitMsg) {
+  const body = { message: commitMsg, content: base64Content };
+  if (sha) body.sha = sha;
+  const r = await fetch(`${API}/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `token ${tokenEl.value}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const t = await r.text();
+    throw new Error('آپدیت نشد (' + r.status + '): ' + t);
+  }
+  return r.json();
+}
+
+async function uploadImage(file) {
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const filename = `${crypto.randomUUID()}.${ext}`;
+  const path = `images/${filename}`;
+  const b64 = await fileToBase64(file);
+  await putFile(path, b64, null, 'upload image');
+  return `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/${path}`;
+}
+
+async function send() {
+  const text = document.getElementById('msg').value.trim();
+  const file = imgFile.files[0];
+  if (!text && !file) return setStatus('متن یا عکس لازمه', 'err');
+  if (!tokenEl.value) return setStatus('اول توکن رو بذار', 'err');
+
+  const prog = document.getElementById('prog');
+  const bar  = document.getElementById('progBar');
+  prog.style.display = 'block';
+  bar.style.width = '10%';
+
+  try {
+    let imageUrl = null;
+    if (file) {
+      setStatus('در حال آپلود عکس...');
+      bar.style.width = '40%';
+      imageUrl = await uploadImage(file);
+      bar.style.width = '70%';
+    }
+
+    setStatus('در حال ثبت پیام...');
+    const { sha, data } = await getFile(MSG_PATH);
+    const db = data || { messages: [], reactions: [], replies: [], seen: [] };
+    db.messages ||= []; db.reactions ||= []; db.replies ||= []; db.seen ||= [];
+
+    db.messages.push({
+      id: crypto.randomUUID(),
+      text,
+      group: groupSel.value,
+      time: new Date().toISOString(),
+      ...(imageUrl ? { image: imageUrl } : {})
+    });
+
+    await putFile(MSG_PATH, b64encodeStr(JSON.stringify(db, null, 2)), sha, 'new message');
+    bar.style.width = '100%';
+
+    document.getElementById('msg').value = '';
+    imgFile.value = ''; preview.style.display = 'none';
+    setStatus('✅ ارسال شد (اکشن گیت‌هاب پوش می‌کنه)', 'ok');
+    renderList(db.messages);
+  } catch (e) {
+    setStatus('❌ ' + e.message, 'err');
+  } finally {
+    setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0'; }, 600);
+  }
+}
+
+async function del(id) {
+  if (!confirm('حذف بشه؟')) return;
+  try {
+    const { sha, data: db } = await getFile(MSG_PATH);
+    db.messages  = db.messages.filter(m => m.id !== id);
+    db.reactions = (db.reactions||[]).filter(r => r.messageId !== id);
+    db.replies   = (db.replies||[]).filter(r => r.messageId !== id);
+    db.seen      = (db.seen||[]).filter(s => s.messageId !== id);
+    await putFile(MSG_PATH, b64encodeStr(JSON.stringify(db, null, 2)), sha, 'delete message');
+    setStatus('🗑 حذف شد', 'ok');
+    renderList(db.messages);
+  } catch (e) { setStatus('❌ ' + e.message, 'err'); }
+}
+
+function renderList(msgs) {
+  const list = document.getElementById('list');
+  const sorted = [...msgs].sort((a,b) => new Date(b.time) - new Date(a.time)).slice(0, 30);
+  list.innerHTML = sorted.map(m => {
+    const g = C.groups[m.group];
+    return `<div class="card">
+      <b>${g ? g.emoji + ' ' + g.name : '—'}</b>
+      ${m.text ? `<div style="margin:6px 0;white-space:pre-wrap">${m.text.replace(/</g,'&lt;')}</div>` : ''}
+      ${m.image ? `<img src="${m.image}" loading="lazy">` : ''}
+      <div style="color:#94a3b8;font-size:12px;margin-top:6px">${new Date(m.time).toLocaleString('fa-IR')}</div>
+      <button onclick="del('${m.id}')">حذف</button>
+    </div>`;
+  }).join('') || '<div style="color:#94a3b8">خالیه</div>';
+}
+
+async function reload() {
+  try {
+    const { data: db } = await getFile(MSG_PATH);
+    if (!db) return setStatus('messages.json پیدا نشد', 'err');
+    renderList(db.messages || []);
+    setStatus(`📨 ${db.messages?.length||0} پیام، ${db.reactions?.length||0} ریاکشن، ${db.replies?.length||0} پاسخ، ${db.seen?.length||0} خوانده‌شده`, 'ok');
+  } catch (e) { setStatus('❌ ' + e.message, 'err'); }
+}
+
+reload();
+</script>
+</body>
+</html>
