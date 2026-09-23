@@ -104,6 +104,46 @@ h1{
 }
 
 /* ═══════════ نوار آفلاین ═══════════ */
+/* ═══════════════════════════════════════════════════════ */
+/* 👑 دکمه ورود به پنل مدیریت */
+/* ═══════════════════════════════════════════════════════ */
+.admin-entry{
+  padding: 16px 22px 8px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+.admin-entry-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(30,64,175,.35);
+  transition: all .25s ease;
+  letter-spacing: -.2px;
+}
+.admin-entry-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(30,64,175,.5);
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+}
+.admin-entry-btn:active{
+  transform: translateY(0) scale(.98);
+}
+
+@media (max-width:480px){
+  .admin-entry{padding: 12px 16px 6px}
+  .admin-entry-btn{font-size: 16px; padding: 14px 18px; border-radius: 14px}
+}
+
 .offline-bar{
   text-align:center; font-size:15px; padding:10px; font-weight:700;
   background:linear-gradient(90deg,#fef3c7,#fde68a);
