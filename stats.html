@@ -679,7 +679,7 @@ function renderMessageCard(m) {
   const seen = (db.seen || []).filter(s => s.messageId === m.id);
   const seenNames = seen.map(s => s.from);
 
-  const members = membersDb.members.filter(mb => mb.group === m.group || !mb.group);
+  const members = membersDb.members.filter(mb => mb.group === m.group);
 
   let seenSection = '';
 
