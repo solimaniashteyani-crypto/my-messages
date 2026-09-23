@@ -26,37 +26,40 @@
     background-attachment:fixed;
     min-height:100vh;
   }
-  .wrap{max-width:960px;margin:0 auto}
+  .wrap{max-width:1080px;margin:0 auto}
   h1{
     font-size:26px; margin:0 0 6px; font-weight:800;
     background:linear-gradient(135deg,#0369a1,#6366f1);
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .subtitle{color:var(--muted); font-size:14px; margin-bottom:24px}
-  .toolbar{
-    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-    background:#fff; border:1px solid var(--border); border-radius:14px;
-    padding:14px 18px; margin-bottom:20px;
-    box-shadow:0 4px 12px rgba(12,30,62,.06);
-  }
-  .toolbar label{font-size:13px; color:var(--muted); font-weight:600}
-  .toolbar select, .toolbar button{
-    padding:8px 14px; border-radius:10px; font-family:inherit; font-size:14px;
-    border:1.5px solid var(--border); background:var(--card-soft); color:var(--text);
-    cursor:pointer; transition:all .2s;
-  }
-  .toolbar select:focus, .toolbar button:hover{
-    border-color:var(--accent); outline:none;
-  }
-  .toolbar button.primary{
-    background:linear-gradient(135deg,#0ea5e9,#6366f1);
-    color:#fff; border-color:transparent;
-    box-shadow:0 4px 12px rgba(14,165,233,.3);
-  }
-  .toolbar button.primary:hover{transform:translateY(-1px)}
+  .subtitle{color:var(--muted); font-size:14px; margin-bottom:20px}
 
+  /* نوار دکمه‌ها */
+  .nav{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-bottom:20px;
+  }
+  .nav a, .nav button{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:10px 18px; border-radius:12px;
+    font-family:inherit; font-size:14px; font-weight:600;
+    text-decoration:none; cursor:pointer; border:none;
+    transition:all .2s;
+  }
+  .nav .primary{
+    background:linear-gradient(135deg,#0ea5e9,#6366f1);
+    color:#fff; box-shadow:0 4px 14px rgba(14,165,233,.35);
+  }
+  .nav .primary:hover{transform:translateY(-1px)}
+  .nav .ghost{
+    background:transparent; color:var(--muted);
+    border:1.5px solid var(--border-strong);
+  }
+  .nav .ghost:hover{background:var(--card-soft); color:var(--text)}
+
+  /* خلاصه */
   .summary{
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
     gap:12px; margin-bottom:24px;
   }
   .stat-box{
@@ -71,6 +74,7 @@
   }
   .stat-box .lbl{font-size:12px; color:var(--muted); margin-top:4px}
 
+  /* کارت پیام */
   .msg-card{
     background:#fff; border:1px solid var(--border); border-radius:18px;
     padding:20px 22px; margin-bottom:16px;
@@ -96,36 +100,63 @@
   }
   .msg-body img{max-width:100%; border-radius:10px; margin-top:8px; display:block}
 
+  /* گرید آمار */
   .msg-stats{
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:12px; margin-top:14px;
-    padding-top:14px; border-top:1px dashed var(--border);
+    display:grid; grid-template-columns:1fr; gap:14px;
+    margin-top:14px; padding-top:14px; border-top:1px dashed var(--border);
   }
+  @media (min-width:640px){
+    .msg-stats{grid-template-columns:1fr 1fr}
+    .msg-stats .full{grid-column:1/-1}
+  }
+
   .stat-col h4{
     font-size:13px; margin:0 0 8px; font-weight:700;
-    display:flex; align-items:center; gap:6px;
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
   }
   .stat-col h4.blue{color:#0369a1}
   .stat-col h4.red{color:#dc2626}
   .stat-col h4.green{color:#16a34a}
   .stat-col h4.purple{color:#7c3aed}
-  .stat-col .count{
-    background:var(--card-soft); padding:2px 8px; border-radius:999px;
-    font-size:11px; font-weight:600; color:var(--muted);
+  .stat-col h4.gray{color:#5b7ba6}
+
+  .pill-list{display:flex; flex-direction:column; gap:6px}
+  .member-row{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px; border-radius:10px;
+    font-size:13px; border:1px solid;
+    transition:all .2s;
+  }
+  .member-row.seen{
+    background:#ecfdf5; border-color:#a7f3d0; color:#047857;
+  }
+  .member-row.unseen{
+    background:#fef2f2; border-color:#fecaca; color:#b91c1c;
+  }
+  .member-row .status{font-size:16px; width:20px; text-align:center}
+  .member-row .name{font-weight:600}
+  .member-row .role{
+    font-size:11px; opacity:.75;
+    background:rgba(0,0,0,.05); padding:2px 8px; border-radius:999px;
+  }
+  .member-row .phone{
+    font-size:11px; margin-right:auto;
+    color:#0369a1; text-decoration:none;
+  }
+  .member-row .phone:hover{text-decoration:underline}
+  .member-row time{
+    font-size:10px; opacity:.7; margin-right:auto;
   }
 
-  .pill-list{display:flex; flex-wrap:wrap; gap:6px}
   .pill{
     background:var(--card-soft); border:1px solid var(--border);
     padding:4px 10px; border-radius:999px;
     font-size:12px; color:var(--text);
     display:inline-flex; align-items:center; gap:5px;
+    margin:2px;
   }
-  .pill.seen{background:#ecfdf5; border-color:#a7f3d0; color:#047857}
-  .pill.unseen{background:#fef2f2; border-color:#fecaca; color:#b91c1c}
   .pill.react{background:#eff6ff; border-color:#bfdbfe; color:#1e40af}
   .pill.reply{background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9}
-  .pill time{color:var(--muted); font-size:10px}
 
   .reply-item{
     background:var(--card-soft); border-right:3px solid var(--accent-2);
@@ -134,19 +165,22 @@
   .reply-item b{color:#6d28d9}
   .reply-item time{color:var(--muted); font-size:11px; margin-right:8px}
 
-  .empty{
-    text-align:center; color:var(--muted); padding:60px 20px;
-  }
+  .empty{text-align:center; color:var(--muted); padding:60px 20px}
   .empty::before{content:'📊'; display:block; font-size:60px; margin-bottom:12px; opacity:.4}
-
   .loading{text-align:center; color:var(--muted); padding:40px; font-size:15px}
   .loading::before{content:'⏳'; display:block; font-size:40px; margin-bottom:10px; animation:pulse 1s ease-in-out infinite}
   @keyframes pulse{50%{opacity:.4}}
-
   .error{
     background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;
-    padding:16px 20px; border-radius:12px; text-align:center;
-    font-size:14px;
+    padding:16px 20px; border-radius:12px; text-align:center; font-size:14px;
+  }
+  .progress-bar{
+    height:6px; background:#e0f2fe; border-radius:4px; overflow:hidden;
+    margin:6px 0;
+  }
+  .progress-bar > div{
+    height:100%; background:linear-gradient(90deg,#0ea5e9,#6366f1);
+    transition:width .3s ease;
   }
 </style>
 </head>
@@ -155,25 +189,19 @@
   <h1>📊 سامانه ۱۱ — آمار</h1>
   <div class="subtitle">نمایش کامل بینندگان، ری‌اکشن‌ها و پاسخ‌ها</div>
 
-<div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
-  <a href="./send.html" style="display:inline-flex; align-items:center; gap:6px; padding:11px 20px; background:linear-gradient(135deg,#0ea5e9,#6366f1); color:#fff; text-decoration:none; border-radius:12px; font-weight:600; font-size:15px; box-shadow:0 4px 14px rgba(14,165,233,.35); transition:all .2s;">
-    ⚙️ برگشت به پنل ادمین
-  </a>
-  <a href="./index.html" style="display:inline-flex; align-items:center; gap:6px; padding:11px 20px; background:transparent; color:#5b7ba6; text-decoration:none; border-radius:12px; font-weight:600; font-size:15px; border:1.5px solid #bfdbfe; transition:all .2s;">
-    🌐 نمایش پیام‌ها
-  </a>
-  <button onclick="loadStats()" style="display:inline-flex; align-items:center; gap:6px; padding:11px 20px; background:#f8fbff; color:#0c1e3e; border:1.5px solid #dbeafe; border-radius:12px; font-weight:600; font-size:15px; font-family:inherit; cursor:pointer;">
-    🔄 به‌روزرسانی
-  </button>
-  <span id="lastUpdate" style="font-size:12px; color:#5b7ba6; margin-right:auto; align-self:center;"></span>
-</div>
+  <div class="nav">
+    <a href="./send.html" class="primary">⚙️ پنل ادمین</a>
+    <a href="./index.html" class="ghost">🌐 نمایش پیام‌ها</a>
+    <button onclick="loadStats()" class="ghost">🔄 به‌روزرسانی</button>
+    <span id="lastUpdate" style="font-size:12px;color:var(--muted); margin-right:auto; align-self:center;"></span>
+  </div>
 
-<div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
-  <label style="font-size:13px; color:#5b7ba6; font-weight:600;">فیلتر گروه:</label>
-  <select id="groupFilter" style="padding:8px 14px; border-radius:10px; font-family:inherit; font-size:14px; border:1.5px solid #dbeafe; background:#f8fbff; color:#0c1e3e; cursor:pointer;">
-    <option value="all">🌐 همه گروه‌ها</option>
-  </select>
-</div>  </div>
+  <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
+    <label style="font-size:13px; color:#5b7ba6; font-weight:600;">فیلتر گروه:</label>
+    <select id="groupFilter" style="padding:8px 14px; border-radius:10px; font-family:inherit; font-size:14px; border:1.5px solid #dbeafe; background:#f8fbff; color:#0c1e3e; cursor:pointer;">
+      <option value="all">🌐 همه گروه‌ها</option>
+    </select>
+  </div>
 
   <div class="summary" id="summary"></div>
   <div id="content"></div>
@@ -192,13 +220,10 @@ const b64decode = b64 => {
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-const fmtTime = iso => {
-  const d = new Date(iso);
-  return d.toLocaleString('fa-IR', {
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit'
-  });
-};
+const fmtTime = iso => new Date(iso).toLocaleString('fa-IR', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit'
+});
 
 const fmtTimeShort = iso => {
   const d = new Date(iso);
@@ -244,12 +269,10 @@ function renderSummary() {
     <div class="stat-box"><div class="num">${rp.length}</div><div class="lbl">💬 پاسخ‌ها</div></div>
   `;
 
-  // پر کردن فیلتر گروه
   const sel = document.getElementById('groupFilter');
   sel.innerHTML = '<option value="all">🌐 همه گروه‌ها</option>' +
     Object.entries(C.groups).map(([k,g]) =>
       `<option value="${k}">${g.emoji} ${g.name}</option>`).join('');
-
   sel.onchange = renderMessages;
 }
 
@@ -277,9 +300,12 @@ function renderMessageCard(m) {
   const seen = (db.seen || []).filter(s => s.messageId === m.id);
   const seenNames = seen.map(s => s.from);
 
-  // لیست اعضای گروه (اگه تعریف شده باشه)
+  // لیست اعضای گروه
   const members = group?.members || [];
-  const unseen = members.filter(name => !seenNames.includes(name));
+  const totalMembers = members.length;
+  const seenCount = members.length
+    ? members.filter(mb => seenNames.includes(mb.name)).length
+    : seen.length;
 
   // ری‌اکشن‌ها
   const reactions = (db.reactions || []).filter(r => r.messageId === m.id);
@@ -288,52 +314,65 @@ function renderMessageCard(m) {
   const replies = (db.replies || []).filter(r => r.messageId === m.id)
     .sort((a,b) => new Date(a.time) - new Date(b.time));
 
-  // بخش بینندگان
-  let seenSection = '';
-  if (seen.length || unseen.length) {
-    seenSection = `
-      <div class="stat-col">
-        <h4 class="green">
-          👁 بینندگان
-          <span class="count">${seen.length}${members.length ? '/' + members.length : ''}</span>
-        </h4>
-        <div class="pill-list">
-          ${seen.map(s => `
-            <span class="pill seen">✅ ${esc(s.from)} <time>${fmtTimeShort(s.time)}</time></span>
-          `).join('')}
-          ${unseen.map(n => `
-            <span class="pill unseen">❌ ${esc(n)}</span>
-          `).join('')}
+  // ساخت لیست اعضا
+  let membersListHtml = '';
+  if (members.length) {
+    membersListHtml = members.map(mb => {
+      const seenItem = seen.find(s => s.from === mb.name);
+      const isSeen = !!seenItem;
+      const phoneLink = mb.phone
+        ? `<a class="phone" href="tel:${esc(mb.phone)}" title="تماس">📞 ${esc(mb.phone)}</a>`
+        : '';
+      const roleTag = mb.role
+        ? `<span class="role">${esc(mb.role)}</span>`
+        : '';
+      return `
+        <div class="member-row ${isSeen ? 'seen' : 'unseen'}">
+          <span class="status">${isSeen ? '✅' : '❌'}</span>
+          <span class="name">${esc(mb.name)}</span>
+          ${roleTag}
+          ${phoneLink}
+          ${isSeen
+            ? `<time>${fmtTimeShort(seenItem.time)}</time>`
+            : '<span class="phone" style="color:#b91c1c">ندیده</span>'}
         </div>
+      `;
+    }).join('');
+  } else {
+    // اگه لیست اعضا خالی باشه، فقط کسایی که دیدن رو نشون بده
+    membersListHtml = seen.map(s => `
+      <div class="member-row seen">
+        <span class="status">✅</span>
+        <span class="name">${esc(s.from)}</span>
+        <time>${fmtTimeShort(s.time)}</time>
       </div>
-    `;
-  } else if (!members.length) {
-    seenSection = `
-      <div class="stat-col">
-        <h4 class="green">👁 بینندگان <span class="count">0</span></h4>
-        <div style="font-size:12px;color:var(--muted);padding:8px 0">
-          هنوز کسی ندیده — یا لیست اعضای گروه خالیه
-        </div>
-      </div>
-    `;
+    `).join('') || '<div style="font-size:12px;color:var(--muted);padding:8px 0">هنوز کسی ندیده</div>';
   }
 
-  // بخش ری‌اکشن‌ها
+  const pct = totalMembers ? Math.round(seenCount / totalMembers * 100) : 0;
+  const seenTitle = totalMembers
+    ? `👁 بینندگان <span class="pill" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0">${seenCount} از ${totalMembers} (${pct}%)</span>`
+    : `👁 بینندگان <span class="pill" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0">${seenCount}</span>`;
+
   const rxSection = reactions.length ? `
     <div class="stat-col">
-      <h4 class="blue">❤️ ری‌اکشن‌ها <span class="count">${reactions.length}</span></h4>
-      <div class="pill-list">
+      <h4 class="blue">❤️ ری‌اکشن‌ها (${reactions.length})</h4>
+      <div class="pill-list" style="flex-direction:row;flex-wrap:wrap">
         ${reactions.map(r => `
           <span class="pill react">${r.emoji} ${esc(r.from)}</span>
         `).join('')}
       </div>
     </div>
-  ` : '';
+  ` : `
+    <div class="stat-col">
+      <h4 class="gray">❤️ ری‌اکشن‌ها (0)</h4>
+      <div style="font-size:12px;color:var(--muted);padding:4px 0">هنوز کسی ری‌اکشن نداده</div>
+    </div>
+  `;
 
-  // بخش پاسخ‌ها
   const replySection = replies.length ? `
-    <div class="stat-col" style="grid-column:1/-1">
-      <h4 class="purple">💬 پاسخ‌ها <span class="count">${replies.length}</span></h4>
+    <div class="stat-col full">
+      <h4 class="purple">💬 پاسخ‌ها (${replies.length})</h4>
       ${replies.map(r => `
         <div class="reply-item">
           <b>${esc(r.from)}</b>
@@ -342,7 +381,12 @@ function renderMessageCard(m) {
         </div>
       `).join('')}
     </div>
-  ` : '';
+  ` : `
+    <div class="stat-col full">
+      <h4 class="gray">💬 پاسخ‌ها (0)</h4>
+      <div style="font-size:12px;color:var(--muted);padding:4px 0">هنوز کسی پاسخ نداده</div>
+    </div>
+  `;
 
   return `
     <div class="msg-card">
@@ -352,8 +396,12 @@ function renderMessageCard(m) {
       </div>
       ${m.text ? `<div class="msg-body">${esc(m.text)}</div>` : ''}
       ${m.image ? `<div class="msg-body"><img src="${esc(m.image)}" loading="lazy"></div>` : ''}
+      <div class="progress-bar"><div style="width:${pct}%"></div></div>
       <div class="msg-stats">
-        ${seenSection}
+        <div class="stat-col">
+          <h4 class="green">${seenTitle}</h4>
+          <div class="pill-list">${membersListHtml}</div>
+        </div>
         ${rxSection}
         ${replySection}
       </div>
@@ -363,8 +411,6 @@ function renderMessageCard(m) {
 
 // بوت
 loadStats();
-
-// هر ۲ دقیقه خودکار به‌روزرسانی
 setInterval(loadStats, 2 * 60 * 1000);
 </script>
 </body>
