@@ -22,7 +22,6 @@
     --border-strong:#93c5fd;
     --ok:#16a34a;
     --err:#dc2626;
-    --warn:#d97706;
     --purple:#7c3aed;
     --card:#ffffff;
     --card-soft:#f0f7ff;
@@ -80,10 +79,7 @@
   }
 
   /* ═══════════ نوار ناوبری ═══════════ */
-  .nav-row{
-    display:grid; grid-template-columns:1fr 1fr; gap:12px;
-    margin-bottom:22px;
-  }
+  .nav-row{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px}
   .nav-btn{
     display:flex; align-items:center; justify-content:center; gap:10px;
     padding:16px 20px; border-radius:14px;
@@ -280,6 +276,144 @@
   .reply-item time{color:var(--muted); font-size:12px; margin-right:8px; font-weight:600}
   .reply-item div{margin-top:6px; line-height:1.7}
 
+  /* ═══════════ صفحه‌بندی ═══════════ */
+  .pagination{
+    display:flex; justify-content:center; align-items:center;
+    gap:10px; margin:28px 0 20px; flex-wrap:wrap;
+  }
+  .pagination button{
+    padding:12px 20px; border-radius:12px;
+    font-family:inherit; font-size:15px; font-weight:800;
+    border:2px solid var(--border);
+    background:#fff; color:var(--primary-deep);
+    cursor:pointer; transition:all .2s;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .pagination button:hover:not(:disabled){
+    background:var(--card-soft);
+    border-color:var(--primary);
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(30,64,175,.15);
+  }
+  .pagination button:disabled{opacity:.4; cursor:not-allowed}
+  .pagination .page-info{
+    padding:12px 22px; background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; border-radius:12px; font-weight:800; font-size:15px;
+    box-shadow:0 4px 14px rgba(30,64,175,.3);
+    min-width:120px; text-align:center;
+  }
+
+  /* ═══════════ دکمه پاک‌سازی ═══════════ */
+  .danger-zone{
+    margin-top:36px; padding:24px 22px;
+    background:linear-gradient(135deg,#fef2f2,#fee2e2);
+    border:2px dashed #fca5a5;
+    border-radius:22px;
+  }
+  .danger-zone h3{
+    color:#b91c1c; font-size:18px; font-weight:900;
+    margin:0 0 8px; display:flex; align-items:center; gap:8px;
+  }
+  .danger-zone p{
+    color:#7f1d1d; font-size:14px; margin:0 0 16px; font-weight:600; line-height:1.7;
+  }
+  .danger-btn{
+    padding:14px 28px; border-radius:14px;
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff; border:none;
+    font-family:inherit; font-size:16px; font-weight:800;
+    cursor:pointer; transition:all .25s ease;
+    box-shadow:0 6px 20px rgba(220,38,38,.35);
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .danger-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 28px rgba(220,38,38,.5);
+  }
+  .danger-btn:active{transform:translateY(0) scale(.98)}
+
+  /* ═══════════ مودال تأیید ═══════════ */
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(12,30,62,.6);
+    backdrop-filter:blur(6px);
+    justify-content:center; align-items:center;
+    padding:20px;
+  }
+  .modal-backdrop.show{display:flex; animation:fadein .2s ease}
+  @keyframes fadein{from{opacity:0} to{opacity:1}}
+
+  .modal{
+    background:#fff; border-radius:24px;
+    padding:28px 26px; max-width:440px; width:100%;
+    box-shadow:0 24px 80px rgba(12,30,62,.4);
+    animation:slidein .25s ease;
+  }
+  @keyframes slidein{from{transform:translateY(20px) scale(.95); opacity:0} to{transform:none; opacity:1}}
+
+  .modal h3{
+    font-size:22px; margin:0 0 10px; color:#b91c1c;
+    font-weight:900; display:flex; align-items:center; gap:10px;
+  }
+  .modal .warning-text{
+    color:var(--muted); font-size:15px; margin-bottom:20px;
+    line-height:1.7; font-weight:600;
+  }
+  .modal label{
+    display:block; margin:14px 0 8px;
+    font-size:15px; font-weight:800; color:var(--text);
+  }
+  .modal input{
+    width:100%; padding:16px 20px;
+    background:var(--card-soft); border:2.5px solid var(--border);
+    color:var(--text); border-radius:14px;
+    font-family:inherit; font-size:18px; font-weight:700;
+    text-align:center; letter-spacing:8px;
+    transition:all .2s;
+    box-sizing:border-box;
+  }
+  .modal input:focus{
+    outline:none; border-color:#dc2626; background:#fff;
+    box-shadow:0 0 0 5px rgba(220,38,38,.15);
+  }
+  .modal .error-msg{
+    color:#dc2626; font-size:14px; font-weight:700;
+    margin-top:10px; text-align:center; min-height:20px;
+  }
+  .modal .actions{
+    display:flex; gap:10px; margin-top:22px; justify-content:flex-end;
+  }
+  .modal .actions button{
+    padding:13px 24px; border-radius:12px;
+    font-family:inherit; font-size:15px; font-weight:800;
+    cursor:pointer; transition:all .2s; border:none;
+  }
+  .modal .actions .cancel{
+    background:transparent; color:var(--muted);
+    border:2px solid var(--border-strong);
+  }
+  .modal .actions .cancel:hover{background:var(--card-soft); color:var(--text)}
+  .modal .actions .confirm{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+    box-shadow:0 6px 18px rgba(220,38,38,.35);
+  }
+  .modal .actions .confirm:hover{transform:translateY(-1px); box-shadow:0 8px 24px rgba(220,38,38,.5)}
+  .modal .actions .confirm:disabled{opacity:.4; cursor:not-allowed; box-shadow:none}
+
+  /* ═══════════ پیام موفقیت ═══════════ */
+  .toast{
+    position:fixed; bottom:30px; left:50%;
+    transform:translateX(-50%) translateY(120%);
+    background:linear-gradient(135deg,#16a34a,#15803d);
+    color:#fff; padding:16px 28px; border-radius:16px;
+    font-size:16px; font-weight:800; z-index:200;
+    box-shadow:0 12px 36px rgba(22,163,74,.4);
+    transition:transform .3s ease;
+    display:flex; align-items:center; gap:10px;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
   /* ═══════════ وضعیت‌ها ═══════════ */
   .empty{text-align:center; color:var(--muted); padding:80px 20px; font-size:18px; font-weight:600}
   .empty::before{content:'📊'; display:block; font-size:64px; margin-bottom:16px; opacity:.4}
@@ -315,6 +449,8 @@
     .member-row{padding:10px 12px; font-size:14px}
     .member-row .name{font-size:14px}
     .member-row .phone{font-size:12px}
+    .pagination button{padding:10px 16px; font-size:14px}
+    .pagination .page-info{padding:10px 16px; font-size:14px; min-width:auto}
   }
 </style>
 </head>
@@ -351,7 +487,54 @@
     <!-- محتوا -->
     <div id="content"></div>
 
+    <!-- صفحه‌بندی -->
+    <div class="pagination" id="pagination" style="display:none">
+      <button id="prevBtn" onclick="changePage(-1)">→ صفحه قبل</button>
+      <span class="page-info" id="pageInfo">صفحه ۱ از ۱</span>
+      <button id="nextBtn" onclick="changePage(1)">صفحه بعد ←</button>
+    </div>
+
+    <!-- منطقه خطرناک -->
+    <div class="danger-zone">
+      <h3>⚠️ منطقه خطرناک</h3>
+      <p>
+        این دکمه <b>همه پیام‌ها، ری‌اکشن‌ها، پاسخ‌ها و بازدیدها</b> رو پاک می‌کنه.<br>
+        اعضای ثبت‌نام‌شده دست‌نخورده می‌مونن.
+      </p>
+      <button class="danger-btn" onclick="openDeleteModal()">
+        🗑 پاک کردن همه داده‌ها
+      </button>
+    </div>
+
   </div>
+</div>
+
+<!-- مودال تأیید پاک‌سازی -->
+<div class="modal-backdrop" id="deleteModal">
+  <div class="modal">
+    <h3>🗑 پاک کردن همه داده‌ها</h3>
+    <div class="warning-text">
+      این عمل <b>غیرقابل بازگشت</b> است.<br>
+      همه پیام‌ها، ری‌اکشن‌ها، پاسخ‌ها و بازدیدها پاک می‌شن.
+    </div>
+
+    <label>🔐 رمز امنیتی را وارد کنید</label>
+    <input type="password" id="deletePassword" placeholder="••••" maxlength="4" inputmode="numeric">
+    <div class="error-msg" id="deleteError"></div>
+
+    <div class="actions">
+      <button class="cancel" onclick="closeDeleteModal()">لغو</button>
+      <button class="confirm" id="confirmDeleteBtn" onclick="confirmDelete()" disabled>
+        🗑 پاک کن
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- پیام موفقیت -->
+<div class="toast" id="toast">
+  <span>✅</span>
+  <span id="toastMsg">انجام شد!</span>
 </div>
 
 <script src="config.js"></script>
@@ -359,10 +542,18 @@
 const C = window.CONFIG;
 const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/messages.json`;
 const MEMBERS_API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/members.json`;
+const TOKEN_KEY = 'gh_token';
+const DELETE_PASSWORD = '5113';
+const PER_PAGE = 5;
 
 const b64decode = b64 => {
   const bin = atob(b64.replace(/\n/g,''));
   return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+};
+const b64encodeStr = s => {
+  const bytes = new TextEncoder().encode(s);
+  let bin = ''; for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin);
 };
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
@@ -384,26 +575,30 @@ const fmtTimeShort = iso => {
 
 let db = null;
 let membersDb = { members: [] };
+let currentPage = 1;
+let filteredMessages = [];
+let messagesFileSha = null; // sha برای پاک کردن
+
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 
 async function loadStats() {
   const content = document.getElementById('content');
   content.innerHTML = '<div class="loading">در حال بارگذاری آمار...</div>';
 
   try {
-    // پیام‌ها
     const r = await fetch(API + '?t=' + Date.now(), { cache: 'no-store' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const j = await r.json();
+    messagesFileSha = j.sha;
     db = JSON.parse(b64decode(j.content));
 
-    // اعضا
     try {
       const r2 = await fetch(MEMBERS_API + '?t=' + Date.now(), { cache: 'no-store' });
       if (r2.ok) {
         const j2 = await r2.json();
         membersDb = JSON.parse(b64decode(j2.content));
       }
-    } catch(e) { console.warn('members.json:', e); }
+    } catch(e) {}
 
     document.getElementById('lastUpdate').textContent =
       '⏱ ' + new Date().toLocaleTimeString('fa-IR');
@@ -432,23 +627,49 @@ function renderSummary() {
   sel.innerHTML = '<option value="all">🌐 همه گروه‌ها</option>' +
     Object.entries(C.groups).map(([k,g]) =>
       `<option value="${k}">${g.emoji} ${g.name}</option>`).join('');
-  sel.onchange = renderMessages;
+  sel.onchange = () => { currentPage = 1; renderMessages(); };
 }
 
 function renderMessages() {
   const content = document.getElementById('content');
   const filter = document.getElementById('groupFilter').value;
 
-  const messages = (db.messages || [])
+  filteredMessages = (db.messages || [])
     .filter(m => filter === 'all' || m.group === filter)
     .sort((a,b) => new Date(b.time) - new Date(a.time));
 
-  if (!messages.length) {
+  if (!filteredMessages.length) {
     content.innerHTML = '<div class="empty">هنوز پیامی نیست</div>';
+    document.getElementById('pagination').style.display = 'none';
     return;
   }
 
-  content.innerHTML = messages.map(m => renderMessageCard(m)).join('');
+  const totalPages = Math.ceil(filteredMessages.length / PER_PAGE);
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  const start = (currentPage - 1) * PER_PAGE;
+  const pageMessages = filteredMessages.slice(start, start + PER_PAGE);
+
+  content.innerHTML = pageMessages.map(m => renderMessageCard(m)).join('');
+
+  // صفحه‌بندی
+  if (totalPages > 1) {
+    document.getElementById('pagination').style.display = 'flex';
+    document.getElementById('pageInfo').textContent =
+      `صفحه ${currentPage} از ${totalPages}`;
+    document.getElementById('prevBtn').disabled = currentPage === 1;
+    document.getElementById('nextBtn').disabled = currentPage === totalPages;
+  } else {
+    document.getElementById('pagination').style.display = 'none';
+  }
+}
+
+function changePage(delta) {
+  currentPage += delta;
+  renderMessages();
+  // اسکرول به بالای کارت
+  document.getElementById('summary').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function renderMessageCard(m) {
@@ -497,9 +718,7 @@ function renderMessageCard(m) {
                 <span class="name">${esc(fullName)}</span>
                 ${provinceTag}
                 ${phoneLink}
-                ${isSeen
-                  ? `<time>${fmtTimeShort(seenItem.time)}</time>`
-                  : ''}
+                ${isSeen ? `<time>${fmtTimeShort(seenItem.time)}</time>` : ''}
               </div>
             `;
           }).join('')}
@@ -528,7 +747,6 @@ function renderMessageCard(m) {
     `;
   }
 
-  // ری‌اکشن‌ها
   const reactions = (db.reactions || []).filter(r => r.messageId === m.id);
   const rxSection = `
     <div class="stat-col">
@@ -541,7 +759,6 @@ function renderMessageCard(m) {
     </div>
   `;
 
-  // پاسخ‌ها
   const replies = (db.replies || []).filter(r => r.messageId === m.id)
     .sort((a,b) => new Date(a.time) - new Date(b.time));
   const replySection = `
@@ -575,6 +792,126 @@ function renderMessageCard(m) {
     </div>
   `;
 }
+
+// ═══════════════════════════════════════════════════════
+// 🗑 پاک کردن همه داده‌ها
+// ═══════════════════════════════════════════════════════
+function openDeleteModal() {
+  if (!getToken()) {
+    showToast('❌ اول توکن گیت‌هاب رو وارد کن (توی پنل ادمین)', 'error');
+    return;
+  }
+  document.getElementById('deletePassword').value = '';
+  document.getElementById('deleteError').textContent = '';
+  document.getElementById('confirmDeleteBtn').disabled = true;
+  document.getElementById('deleteModal').classList.add('show');
+  setTimeout(() => document.getElementById('deletePassword').focus(), 100);
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('show');
+}
+
+// چک زنده رمز
+document.addEventListener('input', e => {
+  if (e.target && e.target.id === 'deletePassword') {
+    const val = e.target.value.trim();
+    const btn = document.getElementById('confirmDeleteBtn');
+    const err = document.getElementById('deleteError');
+
+    if (val.length === 0) {
+      btn.disabled = true;
+      err.textContent = '';
+    } else if (val === DELETE_PASSWORD) {
+      btn.disabled = false;
+      err.textContent = '✅ رمز صحیح است';
+      err.style.color = '#16a34a';
+    } else {
+      btn.disabled = true;
+      err.textContent = '❌ رمز اشتباه است';
+      err.style.color = '#dc2626';
+    }
+  }
+});
+
+async function confirmDelete() {
+  const pass = document.getElementById('deletePassword').value.trim();
+  if (pass !== DELETE_PASSWORD) return;
+
+  const btn = document.getElementById('confirmDeleteBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ در حال پاک کردن...';
+
+  try {
+    const token = getToken();
+    if (!token) throw new Error('توکن گیت‌هاب موجود نیست');
+
+    // فایل messages.json رو با محتوای خالی جایگزین کن
+    const emptyDb = {
+      messages: [],
+      reactions: [],
+      replies: [],
+      seen: []
+    };
+
+    const body = {
+      message: 'clear all messages (admin)',
+      content: b64encodeStr(JSON.stringify(emptyDb, null, 2)),
+      sha: messagesFileSha
+    };
+
+    const r = await fetch(API, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!r.ok) {
+      const t = await r.text();
+      throw new Error('پاک‌سازی نشد (' + r.status + ')');
+    }
+
+    closeDeleteModal();
+    showToast('✅ همه داده‌ها پاک شد!');
+
+    // بارگذاری مجدد
+    setTimeout(() => loadStats(), 800);
+
+  } catch (e) {
+    document.getElementById('deleteError').textContent = '❌ ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '🗑 پاک کن';
+  }
+}
+
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg.replace('✅ ', '').replace('❌ ', '');
+  if (type === 'error') {
+    toast.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+    toast.style.boxShadow = '0 12px 36px rgba(220,38,38,.4)';
+    toast.querySelector('span').textContent = '❌';
+  } else {
+    toast.style.background = 'linear-gradient(135deg,#16a34a,#15803d)';
+    toast.style.boxShadow = '0 12px 36px rgba(22,163,74,.4)';
+    toast.querySelector('span').textContent = '✅';
+  }
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// بستن مودال با Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDeleteModal();
+});
+
+// بستن مودال با کلیک بیرون
+document.getElementById('deleteModal').addEventListener('click', e => {
+  if (e.target.id === 'deleteModal') closeDeleteModal();
+});
 
 loadStats();
 setInterval(loadStats, 2 * 60 * 1000);
