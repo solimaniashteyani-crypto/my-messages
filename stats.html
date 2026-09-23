@@ -2,215 +2,363 @@
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>سامانه ۱۱ — آمار</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>سامانه پیام‌رسان سما — صفحه آمار</title>
+<meta name="description" content="صفحه آمار سامانه پیام‌رسان سما — نسخه 5/11">
+<link rel="manifest" href="admin-manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="آمار سما">
+<meta name="theme-color" content="#1e40af">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
   :root{
-    --bg-1:#e0f2fe; --bg-2:#f0f9ff; --bg-3:#fff;
-    --card:#fff; --card-soft:#f8fbff;
-    --text:#0c1e3e; --muted:#5b7ba6;
-    --accent:#0ea5e9; --accent-2:#6366f1; --accent-deep:#0369a1;
-    --border:#dbeafe; --border-strong:#bfdbfe;
-    --ok:#16a34a; --err:#dc2626; --warn:#d97706;
+    --primary:#1e40af;
+    --primary-2:#3b82f6;
+    --primary-deep:#1e3a8a;
+    --text:#0c1e3e;
+    --muted:#64748b;
+    --border:#bfdbfe;
+    --border-strong:#93c5fd;
+    --ok:#16a34a;
+    --err:#dc2626;
+    --warn:#d97706;
+    --purple:#7c3aed;
+    --card:#ffffff;
+    --card-soft:#f0f7ff;
+    --shadow-card:0 12px 40px rgba(30,64,175,.15), 0 4px 14px rgba(12,30,62,.06);
   }
   *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
   body{
     font-family:Vazirmatn,system-ui,sans-serif;
-    margin:0; padding:24px 20px 60px;
-    color:var(--text);
+    font-size:17px;
     background:
-      radial-gradient(1000px 500px at 100% 0%, #bae6fd 0%, transparent 55%),
-      radial-gradient(800px 500px at 0% 100%, #c7d2fe 0%, transparent 55%),
-      linear-gradient(160deg,#e0f2fe 0%, #f0f9ff 45%, #fff 100%);
+      radial-gradient(1200px 600px at 100% -10%, #93c5fd 0%, transparent 55%),
+      radial-gradient(900px 500px at -10% 110%, #bfdbfe 0%, transparent 55%),
+      linear-gradient(160deg,#dbeafe 0%, #eff6ff 45%, #fff 100%);
     background-attachment:fixed;
+    color:var(--text);
+    padding:32px 20px 60px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
     min-height:100vh;
   }
-  .wrap{max-width:1080px;margin:0 auto}
-  h1{
-    font-size:26px; margin:0 0 6px; font-weight:800;
-    background:linear-gradient(135deg,#0369a1,#6366f1);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .subtitle{color:var(--muted); font-size:14px; margin-bottom:20px}
 
-  /* نوار دکمه‌ها */
-  .nav{
-    display:flex; flex-wrap:wrap; gap:10px;
-    margin-bottom:20px;
+  .wrap{max-width:820px; margin:0 auto;}
+
+  /* ═══════════ هدر ═══════════ */
+  .header{text-align:center; margin-bottom:28px}
+  .header .icon{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:80px; height:80px; border-radius:24px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; font-size:40px;
+    box-shadow:0 16px 40px rgba(30,64,175,.35);
+    margin-bottom:14px;
   }
-  .nav a, .nav button{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:10px 18px; border-radius:12px;
-    font-family:inherit; font-size:14px; font-weight:600;
+  .header h1{
+    font-size:30px; margin:0 0 6px; font-weight:900;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    letter-spacing:-.5px;
+  }
+  .header .subtitle{color:var(--muted); font-size:16px; font-weight:600}
+
+  /* ═══════════ کارت اصلی ═══════════ */
+  .main-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:28px 26px;
+    box-shadow:var(--shadow-card);
+    position:relative; overflow:hidden;
+  }
+  .main-card::before{
+    content:''; position:absolute; top:0; right:0; left:0; height:5px;
+    background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
+  }
+
+  /* ═══════════ نوار ناوبری ═══════════ */
+  .nav-row{
+    display:grid; grid-template-columns:1fr 1fr; gap:12px;
+    margin-bottom:22px;
+  }
+  .nav-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:16px 20px; border-radius:14px;
+    font-family:inherit; font-size:16px; font-weight:800;
     text-decoration:none; cursor:pointer; border:none;
+    transition:all .25s ease; text-align:center;
+  }
+  .nav-btn.primary{
+    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
+    box-shadow:0 8px 22px rgba(30,64,175,.35);
+  }
+  .nav-btn.primary:hover{transform:translateY(-2px); box-shadow:0 12px 32px rgba(30,64,175,.5)}
+  .nav-btn.ghost{
+    background:var(--card-soft); color:var(--primary-deep);
+    border:2px solid var(--border);
+  }
+  .nav-btn.ghost:hover{background:#fff; border-color:var(--primary); transform:translateY(-2px); box-shadow:0 8px 20px rgba(30,64,175,.15)}
+
+  .toolbar{
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    padding:14px 18px; background:var(--card-soft);
+    border:1.5px solid var(--border); border-radius:14px;
+    margin-bottom:22px;
+  }
+  .toolbar label{font-size:15px; color:var(--muted); font-weight:700}
+  .toolbar select{
+    padding:10px 16px; border-radius:12px;
+    font-family:inherit; font-size:15px; font-weight:700;
+    border:2px solid var(--border); background:#fff; color:var(--text);
+    cursor:pointer; transition:all .2s;
+  }
+  .toolbar select:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 4px rgba(30,64,175,.15)}
+  .toolbar .refresh-btn{
+    padding:10px 18px; border-radius:12px;
+    font-family:inherit; font-size:15px; font-weight:800;
+    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
+    border:none; cursor:pointer;
+    box-shadow:0 4px 14px rgba(30,64,175,.3);
     transition:all .2s;
   }
-  .nav .primary{
-    background:linear-gradient(135deg,#0ea5e9,#6366f1);
-    color:#fff; box-shadow:0 4px 14px rgba(14,165,233,.35);
-  }
-  .nav .primary:hover{transform:translateY(-1px)}
-  .nav .ghost{
-    background:transparent; color:var(--muted);
-    border:1.5px solid var(--border-strong);
-  }
-  .nav .ghost:hover{background:var(--card-soft); color:var(--text)}
+  .toolbar .refresh-btn:hover{transform:translateY(-1px); box-shadow:0 6px 18px rgba(30,64,175,.45)}
+  .toolbar #lastUpdate{font-size:13px; color:var(--muted); font-weight:600; margin-right:auto}
 
-  /* خلاصه */
+  /* ═══════════ خلاصه ═══════════ */
   .summary{
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
     gap:12px; margin-bottom:24px;
   }
   .stat-box{
-    background:#fff; border:1px solid var(--border); border-radius:14px;
-    padding:14px 18px; text-align:center;
-    box-shadow:0 4px 12px rgba(12,30,62,.06);
+    background:linear-gradient(180deg,#f0f7ff,#dbeafe);
+    border:1.5px solid var(--border); border-radius:18px;
+    padding:18px 14px; text-align:center;
+    transition:all .25s ease;
   }
+  .stat-box:hover{transform:translateY(-3px); box-shadow:0 8px 22px rgba(30,64,175,.15)}
   .stat-box .num{
-    font-size:28px; font-weight:800;
-    background:linear-gradient(135deg,#0369a1,#6366f1);
+    font-size:32px; font-weight:900;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
     -webkit-background-clip:text; background-clip:text; color:transparent;
+    line-height:1;
   }
-  .stat-box .lbl{font-size:12px; color:var(--muted); margin-top:4px}
+  .stat-box .lbl{font-size:14px; color:var(--primary-deep); margin-top:8px; font-weight:700}
 
-  /* کارت پیام */
+  /* ═══════════ کارت پیام ═══════════ */
   .msg-card{
-    background:#fff; border:1px solid var(--border); border-radius:18px;
-    padding:20px 22px; margin-bottom:16px;
-    box-shadow:0 4px 14px rgba(12,30,62,.06), 0 12px 28px rgba(14,165,233,.08);
-    animation:in .3s ease;
+    background:var(--card); border:1px solid var(--border);
+    border-radius:22px; padding:24px 22px; margin-bottom:16px;
+    box-shadow:0 6px 20px rgba(12,30,62,.06), 0 14px 36px rgba(30,64,175,.08);
+    animation:in .35s ease;
+    position:relative; overflow:hidden;
   }
-  @keyframes in{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .msg-card::before{
+    content:''; position:absolute; top:0; right:0; left:0; height:3px;
+    background:linear-gradient(90deg,#1e40af,#3b82f6); opacity:0;
+    transition:opacity .25s;
+  }
+  .msg-card:hover::before{opacity:1}
+
+  @keyframes in{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
 
   .msg-header{
     display:flex; justify-content:space-between; align-items:flex-start;
-    gap:10px; flex-wrap:wrap; margin-bottom:12px;
-    padding-bottom:12px; border-bottom:1px dashed var(--border);
+    gap:10px; flex-wrap:wrap; margin-bottom:14px;
+    padding-bottom:14px; border-bottom:2px dashed var(--border);
   }
   .msg-header .group{
     display:inline-flex; align-items:center; gap:6px;
-    background:rgba(14,165,233,.1); color:var(--accent-deep);
-    padding:4px 12px; border-radius:999px; font-size:12px; font-weight:600;
+    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
+    padding:6px 16px; border-radius:999px; font-size:14px; font-weight:800;
+    box-shadow:0 3px 10px rgba(30,64,175,.25);
   }
-  .msg-header .time{color:var(--muted); font-size:12px}
-  .msg-body{
-    font-size:15px; line-height:1.75; white-space:pre-wrap;
-    word-break:break-word; margin-bottom:12px;
-  }
-  .msg-body img{max-width:100%; border-radius:10px; margin-top:8px; display:block}
+  .msg-header .time{color:var(--muted); font-size:13px; font-weight:600}
 
-  /* گرید آمار */
-  .msg-stats{
-    display:grid; grid-template-columns:1fr; gap:14px;
-    margin-top:14px; padding-top:14px; border-top:1px dashed var(--border);
+  .msg-body{
+    font-size:18px; line-height:1.85; white-space:pre-wrap;
+    word-break:break-word; margin-bottom:14px; font-weight:500;
+  }
+  .msg-body img{max-width:100%; border-radius:14px; margin-top:12px; display:block}
+
+  /* ═══════════ بخش‌های آماری ═══════════ */
+  .stats-grid{
+    display:grid; grid-template-columns:1fr; gap:16px;
+    margin-top:16px; padding-top:16px;
+    border-top:2px dashed var(--border);
   }
   @media (min-width:640px){
-    .msg-stats{grid-template-columns:1fr 1fr}
-    .msg-stats .full{grid-column:1/-1}
+    .stats-grid{grid-template-columns:1fr 1fr}
+    .stats-grid .full{grid-column:1/-1}
   }
 
   .stat-col h4{
-    font-size:13px; margin:0 0 8px; font-weight:700;
-    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+    font-size:16px; margin:0 0 12px; font-weight:800;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
   }
-  .stat-col h4.blue{color:#0369a1}
-  .stat-col h4.red{color:#dc2626}
-  .stat-col h4.green{color:#16a34a}
-  .stat-col h4.purple{color:#7c3aed}
-  .stat-col h4.gray{color:#5b7ba6}
+  .stat-col h4.green{color:#047857}
+  .stat-col h4.blue{color:#1e40af}
+  .stat-col h4.purple{color:#6d28d9}
+  .stat-col h4.gray{color:var(--muted)}
 
-  .pill-list{display:flex; flex-direction:column; gap:6px}
+  .count-pill{
+    background:var(--card-soft); padding:4px 12px; border-radius:999px;
+    font-size:13px; font-weight:800; color:var(--primary-deep);
+    border:1.5px solid var(--border);
+  }
+  .count-pill.green{background:#ecfdf5; color:#047857; border-color:#a7f3d0}
+  .count-pill.purple{background:#f5f3ff; color:#6d28d9; border-color:#ddd6fe}
+
+  /* ═══════════ اعضا ═══════════ */
+  .member-list{display:flex; flex-direction:column; gap:8px}
+
   .member-row{
     display:flex; align-items:center; gap:10px;
-    padding:8px 12px; border-radius:10px;
-    font-size:13px; border:1px solid;
-    transition:all .2s;
+    padding:12px 16px; border-radius:14px;
+    font-size:15px; border:2px solid;
+    transition:all .2s ease;
+    font-weight:600;
   }
+  .member-row:hover{transform:translateX(-3px)}
   .member-row.seen{
-    background:#ecfdf5; border-color:#a7f3d0; color:#047857;
+    background:linear-gradient(135deg,#ecfdf5,#d1fae5);
+    border-color:#6ee7b7; color:#047857;
   }
   .member-row.unseen{
-    background:#fef2f2; border-color:#fecaca; color:#b91c1c;
+    background:linear-gradient(135deg,#fef2f2,#fee2e2);
+    border-color:#fca5a5; color:#b91c1c;
   }
-  .member-row .status{font-size:16px; width:20px; text-align:center}
-  .member-row .name{font-weight:600}
+  .member-row .status{font-size:20px; width:24px; text-align:center}
+  .member-row .name{font-weight:800; font-size:16px}
   .member-row .role{
-    font-size:11px; opacity:.75;
-    background:rgba(0,0,0,.05); padding:2px 8px; border-radius:999px;
+    font-size:12px; padding:3px 10px; border-radius:999px;
+    background:rgba(0,0,0,.06); font-weight:700;
   }
   .member-row .phone{
-    font-size:11px; margin-right:auto;
-    color:#0369a1; text-decoration:none;
+    font-size:13px; margin-right:auto;
+    color:var(--primary); text-decoration:none; font-weight:700;
   }
   .member-row .phone:hover{text-decoration:underline}
   .member-row time{
-    font-size:10px; opacity:.7; margin-right:auto;
+    font-size:12px; opacity:.75; margin-right:auto; font-weight:600;
   }
 
-  .pill{
-    background:var(--card-soft); border:1px solid var(--border);
-    padding:4px 10px; border-radius:999px;
-    font-size:12px; color:var(--text);
-    display:inline-flex; align-items:center; gap:5px;
-    margin:2px;
-  }
-  .pill.react{background:#eff6ff; border-color:#bfdbfe; color:#1e40af}
-  .pill.reply{background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9}
-
-  .reply-item{
-    background:var(--card-soft); border-right:3px solid var(--accent-2);
-    border-radius:10px; padding:8px 12px; margin:6px 0; font-size:13px;
-  }
-  .reply-item b{color:#6d28d9}
-  .reply-item time{color:var(--muted); font-size:11px; margin-right:8px}
-
-  .empty{text-align:center; color:var(--muted); padding:60px 20px}
-  .empty::before{content:'📊'; display:block; font-size:60px; margin-bottom:12px; opacity:.4}
-  .loading{text-align:center; color:var(--muted); padding:40px; font-size:15px}
-  .loading::before{content:'⏳'; display:block; font-size:40px; margin-bottom:10px; animation:pulse 1s ease-in-out infinite}
-  @keyframes pulse{50%{opacity:.4}}
-  .error{
-    background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;
-    padding:16px 20px; border-radius:12px; text-align:center; font-size:14px;
-  }
+  /* ═══════════ نوار پیشرفت ═══════════ */
   .progress-bar{
-    height:6px; background:#e0f2fe; border-radius:4px; overflow:hidden;
-    margin:6px 0;
+    height:10px; background:#e0f2fe; border-radius:6px; overflow:hidden;
+    margin:8px 0 14px;
+    box-shadow:inset 0 2px 4px rgba(12,30,62,.06);
   }
   .progress-bar > div{
-    height:100%; background:linear-gradient(90deg,#0ea5e9,#6366f1);
-    transition:width .3s ease;
+    height:100%;
+    background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
+    border-radius:6px;
+    transition:width .4s ease;
+    box-shadow:0 2px 8px rgba(30,64,175,.3);
+  }
+
+  /* ═══════════ ری‌اکشن‌ها ═══════════ */
+  .pills-row{display:flex; flex-wrap:wrap; gap:8px}
+  .pill{
+    background:var(--card-soft); border:1.5px solid var(--border);
+    padding:7px 14px; border-radius:999px;
+    font-size:14px; color:var(--text);
+    display:inline-flex; align-items:center; gap:6px;
+    font-weight:700;
+  }
+  .pill.react{background:linear-gradient(135deg,#eff6ff,#dbeafe); border-color:#93c5fd; color:#1e40af}
+
+  /* ═══════════ پاسخ‌ها ═══════════ */
+  .reply-item{
+    background:linear-gradient(180deg,#f5f3ff,#ede9fe);
+    border-right:4px solid #7c3aed;
+    border-radius:12px; padding:12px 16px; margin:8px 0; font-size:15px;
+  }
+  .reply-item b{color:#6d28d9; font-weight:800; font-size:15px}
+  .reply-item time{color:var(--muted); font-size:12px; margin-right:8px; font-weight:600}
+  .reply-item div{margin-top:6px; line-height:1.7}
+
+  /* ═══════════ وضعیت‌ها ═══════════ */
+  .empty{text-align:center; color:var(--muted); padding:80px 20px; font-size:18px; font-weight:600}
+  .empty::before{content:'📊'; display:block; font-size:64px; margin-bottom:16px; opacity:.4}
+
+  .loading{text-align:center; color:var(--muted); padding:60px; font-size:17px; font-weight:600}
+  .loading::before{content:'⏳'; display:block; font-size:52px; margin-bottom:14px; animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.4}}
+
+  .error{
+    background:linear-gradient(135deg,#fef2f2,#fee2e2);
+    border:2px solid #fca5a5; color:#b91c1c;
+    padding:22px 26px; border-radius:18px; text-align:center;
+    font-size:16px; font-weight:700; line-height:1.7;
+  }
+  .error::before{content:'⚠️'; display:block; font-size:42px; margin-bottom:10px}
+
+  /* ═══════════ موبایل ═══════════ */
+  @media (max-width:480px){
+    body{padding:20px 14px 40px; font-size:15px}
+    .header .icon{width:68px; height:68px; font-size:34px; border-radius:20px}
+    .header h1{font-size:24px}
+    .header .subtitle{font-size:14px}
+    .main-card{padding:22px 18px; border-radius:24px}
+    .nav-row{grid-template-columns:1fr; gap:10px}
+    .nav-btn{font-size:15px; padding:14px 16px}
+    .toolbar{padding:12px 14px; gap:8px}
+    .toolbar select{font-size:14px; padding:8px 12px}
+    .toolbar .refresh-btn{font-size:14px; padding:8px 14px}
+    .stat-box .num{font-size:26px}
+    .stat-box .lbl{font-size:12px}
+    .msg-card{padding:18px 16px; border-radius:18px}
+    .msg-body{font-size:16px}
+    .member-row{padding:10px 12px; font-size:14px}
+    .member-row .name{font-size:14px}
+    .member-row .phone{font-size:12px}
   }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>📊 سامانه ۱۱ — آمار</h1>
-  <div class="subtitle">نمایش کامل بینندگان، ری‌اکشن‌ها و پاسخ‌ها</div>
 
-  <div class="nav">
-    <a href="./send.html" class="primary">⚙️ پنل ادمین</a>
-    <a href="./index.html" class="ghost">🌐 نمایش پیام‌ها</a>
-    <button onclick="loadStats()" class="ghost">🔄 به‌روزرسانی</button>
-    <span id="lastUpdate" style="font-size:12px;color:var(--muted); margin-right:auto; align-self:center;"></span>
+  <div class="header">
+    <div class="icon">📊</div>
+    <h1>سامانه پیام‌رسان سما</h1>
+    <div class="subtitle">صفحه آمار — نسخه ۵/۱۱</div>
   </div>
 
-  <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
-    <label style="font-size:13px; color:#5b7ba6; font-weight:600;">فیلتر گروه:</label>
-    <select id="groupFilter" style="padding:8px 14px; border-radius:10px; font-family:inherit; font-size:14px; border:1.5px solid #dbeafe; background:#f8fbff; color:#0c1e3e; cursor:pointer;">
-      <option value="all">🌐 همه گروه‌ها</option>
-    </select>
-  </div>
+  <div class="main-card">
 
-  <div class="summary" id="summary"></div>
-  <div id="content"></div>
+    <!-- نوار ناوبری -->
+    <div class="nav-row">
+      <a href="./send.html" class="nav-btn primary">👑 پنل ادمین</a>
+      <a href="./index.html" class="nav-btn ghost">🌐 نمایش پیام‌ها</a>
+    </div>
+
+    <!-- نوار ابزار -->
+    <div class="toolbar">
+      <label>🔍 فیلتر گروه:</label>
+      <select id="groupFilter">
+        <option value="all">🌐 همه گروه‌ها</option>
+      </select>
+      <button class="refresh-btn" onclick="loadStats()">🔄 به‌روزرسانی</button>
+      <span id="lastUpdate"></span>
+    </div>
+
+    <!-- خلاصه -->
+    <div class="summary" id="summary"></div>
+
+    <!-- محتوا -->
+    <div id="content"></div>
+
+  </div>
 </div>
 
 <script src="config.js"></script>
 <script>
 const C = window.CONFIG;
 const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/messages.json`;
+const MEMBERS_API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/members.json`;
 
 const b64decode = b64 => {
   const bin = atob(b64.replace(/\n/g,''));
@@ -235,24 +383,35 @@ const fmtTimeShort = iso => {
 };
 
 let db = null;
+let membersDb = { members: [] };
 
 async function loadStats() {
   const content = document.getElementById('content');
   content.innerHTML = '<div class="loading">در حال بارگذاری آمار...</div>';
 
   try {
+    // پیام‌ها
     const r = await fetch(API + '?t=' + Date.now(), { cache: 'no-store' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const j = await r.json();
     db = JSON.parse(b64decode(j.content));
 
+    // اعضا
+    try {
+      const r2 = await fetch(MEMBERS_API + '?t=' + Date.now(), { cache: 'no-store' });
+      if (r2.ok) {
+        const j2 = await r2.json();
+        membersDb = JSON.parse(b64decode(j2.content));
+      }
+    } catch(e) { console.warn('members.json:', e); }
+
     document.getElementById('lastUpdate').textContent =
-      'آخرین به‌روزرسانی: ' + new Date().toLocaleTimeString('fa-IR');
+      '⏱ ' + new Date().toLocaleTimeString('fa-IR');
 
     renderSummary();
     renderMessages();
   } catch (e) {
-    content.innerHTML = `<div class="error">❌ خطا در دریافت اطلاعات: ${esc(e.message)}</div>`;
+    content.innerHTML = `<div class="error">خطا در دریافت اطلاعات<br><small>${esc(e.message)}</small></div>`;
   }
 }
 
@@ -296,95 +455,107 @@ function renderMessageCard(m) {
   const group = C.groups[m.group];
   const groupName = group ? group.emoji + ' ' + group.name : '—';
 
-  // بینندگان این پیام
   const seen = (db.seen || []).filter(s => s.messageId === m.id);
   const seenNames = seen.map(s => s.from);
 
-  // لیست اعضای گروه
-  const members = group?.members || [];
-  const totalMembers = members.length;
-  const seenCount = members.length
-    ? members.filter(mb => seenNames.includes(mb.name)).length
-    : seen.length;
+  const members = membersDb.members.filter(mb => mb.group === m.group || !mb.group);
+
+  let seenSection = '';
+
+  if (members.length) {
+    const seenCount = members.filter(mb =>
+      seenNames.includes(mb.fullName) || seenNames.includes(mb.firstName)
+    ).length;
+
+    const pct = Math.round(seenCount / members.length * 100);
+
+    seenSection = `
+      <div class="stat-col">
+        <h4 class="green">
+          👁 بینندگان
+          <span class="count-pill green">${seenCount} از ${members.length} — ${pct}%</span>
+        </h4>
+        <div class="progress-bar">
+          <div style="width:${pct}%"></div>
+        </div>
+        <div class="member-list">
+          ${members.map(mb => {
+            const seenItem = seen.find(s =>
+              s.from === mb.fullName || s.from === mb.firstName
+            );
+            const isSeen = !!seenItem;
+            const phoneLink = mb.phone
+              ? `<a class="phone" href="tel:${esc(mb.phone)}">📞 ${esc(mb.phone)}</a>`
+              : '';
+            const provinceTag = mb.province
+              ? `<span class="role">📍 ${esc(mb.province)}</span>`
+              : '';
+            const fullName = mb.fullName || (mb.firstName + ' ' + mb.lastName);
+            return `
+              <div class="member-row ${isSeen ? 'seen' : 'unseen'}">
+                <span class="status">${isSeen ? '✅' : '❌'}</span>
+                <span class="name">${esc(fullName)}</span>
+                ${provinceTag}
+                ${phoneLink}
+                ${isSeen
+                  ? `<time>${fmtTimeShort(seenItem.time)}</time>`
+                  : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    seenSection = `
+      <div class="stat-col">
+        <h4 class="green">
+          👁 بینندگان
+          <span class="count-pill green">${seen.length}</span>
+        </h4>
+        <div class="member-list">
+          ${seen.length
+            ? seen.map(s => `
+                <div class="member-row seen">
+                  <span class="status">✅</span>
+                  <span class="name">${esc(s.from)}</span>
+                  <time>${fmtTimeShort(s.time)}</time>
+                </div>
+              `).join('')
+            : '<div style="font-size:14px;color:#94a3b8;padding:12px;text-align:center;font-weight:600">هنوز کسی ندیده</div>'}
+        </div>
+      </div>
+    `;
+  }
 
   // ری‌اکشن‌ها
   const reactions = (db.reactions || []).filter(r => r.messageId === m.id);
+  const rxSection = `
+    <div class="stat-col">
+      <h4 class="blue">❤️ ری‌اکشن‌ها <span class="count-pill">${reactions.length}</span></h4>
+      <div class="pills-row">
+        ${reactions.length
+          ? reactions.map(r => `<span class="pill react">${r.emoji} ${esc(r.from)}</span>`).join('')
+          : '<div style="font-size:14px;color:#94a3b8;padding:8px 0;font-weight:600">هنوز کسی ری‌اکشن نداده</div>'}
+      </div>
+    </div>
+  `;
 
   // پاسخ‌ها
   const replies = (db.replies || []).filter(r => r.messageId === m.id)
     .sort((a,b) => new Date(a.time) - new Date(b.time));
-
-  // ساخت لیست اعضا
-  let membersListHtml = '';
-  if (members.length) {
-    membersListHtml = members.map(mb => {
-      const seenItem = seen.find(s => s.from === mb.name);
-      const isSeen = !!seenItem;
-      const phoneLink = mb.phone
-        ? `<a class="phone" href="tel:${esc(mb.phone)}" title="تماس">📞 ${esc(mb.phone)}</a>`
-        : '';
-      const roleTag = mb.role
-        ? `<span class="role">${esc(mb.role)}</span>`
-        : '';
-      return `
-        <div class="member-row ${isSeen ? 'seen' : 'unseen'}">
-          <span class="status">${isSeen ? '✅' : '❌'}</span>
-          <span class="name">${esc(mb.name)}</span>
-          ${roleTag}
-          ${phoneLink}
-          ${isSeen
-            ? `<time>${fmtTimeShort(seenItem.time)}</time>`
-            : '<span class="phone" style="color:#b91c1c">ندیده</span>'}
-        </div>
-      `;
-    }).join('');
-  } else {
-    // اگه لیست اعضا خالی باشه، فقط کسایی که دیدن رو نشون بده
-    membersListHtml = seen.map(s => `
-      <div class="member-row seen">
-        <span class="status">✅</span>
-        <span class="name">${esc(s.from)}</span>
-        <time>${fmtTimeShort(s.time)}</time>
-      </div>
-    `).join('') || '<div style="font-size:12px;color:var(--muted);padding:8px 0">هنوز کسی ندیده</div>';
-  }
-
-  const pct = totalMembers ? Math.round(seenCount / totalMembers * 100) : 0;
-  const seenTitle = totalMembers
-    ? `👁 بینندگان <span class="pill" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0">${seenCount} از ${totalMembers} (${pct}%)</span>`
-    : `👁 بینندگان <span class="pill" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0">${seenCount}</span>`;
-
-  const rxSection = reactions.length ? `
-    <div class="stat-col">
-      <h4 class="blue">❤️ ری‌اکشن‌ها (${reactions.length})</h4>
-      <div class="pill-list" style="flex-direction:row;flex-wrap:wrap">
-        ${reactions.map(r => `
-          <span class="pill react">${r.emoji} ${esc(r.from)}</span>
-        `).join('')}
-      </div>
-    </div>
-  ` : `
-    <div class="stat-col">
-      <h4 class="gray">❤️ ری‌اکشن‌ها (0)</h4>
-      <div style="font-size:12px;color:var(--muted);padding:4px 0">هنوز کسی ری‌اکشن نداده</div>
-    </div>
-  `;
-
-  const replySection = replies.length ? `
+  const replySection = `
     <div class="stat-col full">
-      <h4 class="purple">💬 پاسخ‌ها (${replies.length})</h4>
-      ${replies.map(r => `
-        <div class="reply-item">
-          <b>${esc(r.from)}</b>
-          <time>${fmtTimeShort(r.time)}</time>
-          <div>${esc(r.text)}</div>
-        </div>
-      `).join('')}
-    </div>
-  ` : `
-    <div class="stat-col full">
-      <h4 class="gray">💬 پاسخ‌ها (0)</h4>
-      <div style="font-size:12px;color:var(--muted);padding:4px 0">هنوز کسی پاسخ نداده</div>
+      <h4 class="purple">💬 پاسخ‌ها <span class="count-pill purple">${replies.length}</span></h4>
+      ${replies.length
+        ? replies.map(r => `
+            <div class="reply-item">
+              <b>${esc(r.from)}</b>
+              <time>${fmtTimeShort(r.time)}</time>
+              <div>${esc(r.text)}</div>
+            </div>
+          `).join('')
+        : '<div style="font-size:14px;color:#94a3b8;padding:8px 0;font-weight:600">هنوز کسی پاسخ نداده</div>'}
     </div>
   `;
 
@@ -396,12 +567,8 @@ function renderMessageCard(m) {
       </div>
       ${m.text ? `<div class="msg-body">${esc(m.text)}</div>` : ''}
       ${m.image ? `<div class="msg-body"><img src="${esc(m.image)}" loading="lazy"></div>` : ''}
-      <div class="progress-bar"><div style="width:${pct}%"></div></div>
-      <div class="msg-stats">
-        <div class="stat-col">
-          <h4 class="green">${seenTitle}</h4>
-          <div class="pill-list">${membersListHtml}</div>
-        </div>
+      <div class="stats-grid">
+        ${seenSection}
         ${rxSection}
         ${replySection}
       </div>
@@ -409,7 +576,6 @@ function renderMessageCard(m) {
   `;
 }
 
-// بوت
 loadStats();
 setInterval(loadStats, 2 * 60 * 1000);
 </script>
