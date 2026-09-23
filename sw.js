@@ -1,67 +1,65 @@
 // ═══════════════════════════════════════════════════════
 // Service Worker — سامانه پیام‌رسان سما
-// HTML/JS/CSS/JSON همیشه از شبکه (تازه‌ترین نسخه)
+// نسخه ۷ — بدون کش برای فایل‌های اصلی
+// ───────────────────────────────────────────────────────
+// هدف: همیشه نسخه تازه از سایت بیاد
 // ═══════════════════════════════════════════════════════
 
-const CACHE = 'sama-' + Date.now();
+const CACHE_NAME = 'sama-v7-' + Date.now();
 
 self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => !k.startsWith('sama-')).map(k => caches.delete(k))
-      )
-    ).then(() => self.clients.claim())
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
 
-  const url = new URL(e.request.url);
+  const url = new URL(event.request.url);
 
-  // 1. API گیت‌هاب → همیشه از شبکه
+  // API گیت‌هاب → همیشه از شبکه
   if (url.hostname === 'api.github.com') {
-    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(event.request))
+    );
     return;
   }
 
-  // 2. فایل‌های اصلی → همیشه از شبکه
+  // همه فایل‌های HTML، JS، CSS، JSON → همیشه از شبکه (تازه)
   const isCoreFile =
     url.pathname.endsWith('.html') ||
     url.pathname.endsWith('.js')   ||
     url.pathname.endsWith('.css')  ||
     url.pathname.endsWith('.json') ||
     url.pathname.endsWith('/my-messages/') ||
-    url.pathname.endsWith('/my-messages');
+    url.pathname.endsWith('/my-messages') ||
+    url.pathname.endsWith('/');
 
   if (isCoreFile) {
-    e.respondWith(
-      fetch(e.request).then(res => {
-        if (res.ok && url.origin === self.location.origin) {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-        }
-        return res;
-      }).catch(() => caches.match(e.request))
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match(event.request))
     );
     return;
   }
 
-  // 3. بقیه (عکس‌ها، فونت‌ها) → cache-first
-  e.respondWith(
-    caches.match(e.request).then(r =>
-      r || fetch(e.request).then(res => {
-        if (res.ok && url.origin === self.location.origin) {
+  // بقیه (عکس‌ها، فونت‌ها) → cache-first با fallback شبکه
+  event.respondWith(
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+      return fetch(event.request).then(res => {
+        if (res && res.ok && url.origin === self.location.origin) {
           const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
+          caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
         }
         return res;
-      })
-    )
+      });
+    })
   );
 });
