@@ -155,15 +155,25 @@
   <h1>📊 سامانه ۱۱ — آمار</h1>
   <div class="subtitle">نمایش کامل بینندگان، ری‌اکشن‌ها و پاسخ‌ها</div>
 
-  <div class="toolbar">
-    <label>فیلتر گروه:</label>
-    <select id="groupFilter">
-      <option value="all">🌐 همه گروه‌ها</option>
-    </select>
-    <button class="primary" onclick="loadStats()">🔄 به‌روزرسانی</button>
-    <button onclick="location.href='./send.html'">⚙️ پنل ادمین</button>
-    <span id="lastUpdate" style="font-size:12px;color:var(--muted);margin-right:auto"></span>
-  </div>
+<div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+  <a href="./send.html" style="display:inline-flex; align-items:center; gap:6px; padding:11px 20px; background:linear-gradient(135deg,#0ea5e9,#6366f1); color:#fff; text-decoration:none; border-radius:12px; font-weight:600; font-size:15px; box-shadow:0 4px 14px rgba(14,165,233,.35); transition:all .2s;">
+    ⚙️ برگشت به پنل ادمین
+  </a>
+  <a href="./index.html" style="display:inline-flex; align-items:center; gap:6px; padding:11px 20px; background:transparent; color:#5b7ba6; text-decoration:none; border-radius:12px; font-weight:600; font-size:15px; border:1.5px solid #bfdbfe; transition:all .2s;">
+    🌐 نمایش پیام‌ها
+  </a>
+  <button onclick="loadStats()" style="display:inline-flex; align-items:center; gap:6px; padding:11px 20px; background:#f8fbff; color:#0c1e3e; border:1.5px solid #dbeafe; border-radius:12px; font-weight:600; font-size:15px; font-family:inherit; cursor:pointer;">
+    🔄 به‌روزرسانی
+  </button>
+  <span id="lastUpdate" style="font-size:12px; color:#5b7ba6; margin-right:auto; align-self:center;"></span>
+</div>
+
+<div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
+  <label style="font-size:13px; color:#5b7ba6; font-weight:600;">فیلتر گروه:</label>
+  <select id="groupFilter" style="padding:8px 14px; border-radius:10px; font-family:inherit; font-size:14px; border:1.5px solid #dbeafe; background:#f8fbff; color:#0c1e3e; cursor:pointer;">
+    <option value="all">🌐 همه گروه‌ها</option>
+  </select>
+</div>  </div>
 
   <div class="summary" id="summary"></div>
   <div id="content"></div>
