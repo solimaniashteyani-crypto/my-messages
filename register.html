@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0ea5e9">
+<title>سامانه ۱۱ — ثبت‌نام</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+  :root{
+    --accent:#0ea5e9; --accent-2:#6366f1; --accent-deep:#0369a1;
+    --text:#0c1e3e; --muted:#5b7ba6;
+    --border:#dbeafe; --border-strong:#bfdbfe;
+    --ok:#16a34a; --err:#dc2626;
+    --card:#fff; --card-soft:#f8fbff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:Vazirmatn,system-ui,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 100% -10%, #bae6fd 0%, transparent 55%),
+      radial-gradient(900px 500px at -10% 110%, #c7d2fe 0%, transparent 55%),
+      linear-gradient(160deg,#e0f2fe 0%, #f0f9ff 45%, #fff 100%);
+    background-attachment:fixed;
+    color:var(--text);
+    padding:24px 20px 60px;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+
+  .wrap{max-width:520px; margin:0 auto; padding-top:20px}
+
+  .logo{
+    text-align:center; margin-bottom:24px;
+  }
+  .logo .icon{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:80px; height:80px; border-radius:22px;
+    background:linear-gradient(135deg,#0ea5e9,#6366f1);
+    color:#fff; font-size:42px; font-weight:800;
+    box-shadow:0 12px 32px rgba(14,165,233,.35);
+    margin-bottom:14px;
+  }
+  .logo h1{
+    font-size:24px; margin:0; font-weight:800;
+    background:linear-gradient(135deg,#0369a1,#6366f1);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .logo .subtitle{color:var(--muted); font-size:14px; margin-top:6px}
+
+  .card{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:20px; padding:24px 22px;
+    box-shadow:0 8px 24px rgba(12,30,62,.08), 0 20px 40px rgba(14,165,233,.10);
+    animation:in .4s cubic-bezier(.21,1.02,.73,1);
+  }
+  @keyframes in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+  .welcome{
+    text-align:center; padding:8px 0 20px;
+    border-bottom:1px dashed var(--border); margin-bottom:20px;
+  }
+  .welcome h2{
+    font-size:17px; margin:0 0 6px; font-weight:700;
+  }
+  .welcome p{
+    color:var(--muted); font-size:13px; margin:0;
+  }
+
+  .field{margin-bottom:16px}
+  .field label{
+    display:flex; align-items:center; gap:6px;
+    font-size:14px; font-weight:600; color:var(--text);
+    margin-bottom:8px;
+  }
+  .field label .req{
+    color:var(--err); font-weight:700;
+  }
+  .field input{
+    width:100%; padding:13px 16px;
+    background:var(--card-soft);
+    border:1.5px solid var(--border);
+    color:var(--text); border-radius:14px;
+    font-family:inherit; font-size:15px;
+    transition:all .2s ease;
+  }
+  .field input:focus{
+    outline:none; border-color:var(--accent);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(14,165,233,.12);
+  }
+  .field input.valid{
+    border-color:#86efac;
+    background:#f0fdf4;
+  }
+  .field input.invalid{
+    border-color:#fca5a5;
+    background:#fef2f2;
+  }
+  .field .hint{
+    font-size:12px; color:var(--muted); margin-top:6px;
+    display:flex; align-items:center; gap:4px;
+    min-height:16px;
+  }
+  .field .hint.err{color:var(--err)}
+  .field .hint.ok{color:var(--ok)}
+
+  .phone-input{
+    display:flex; align-items:center; gap:8px;
+  }
+  .phone-input input{
+    font-family:'Courier New',monospace;
+    letter-spacing:2px;
+    text-align:center;
+    font-weight:600;
+  }
+
+  button[type="submit"]{
+    width:100%; padding:15px 24px;
+    background:linear-gradient(135deg,#0ea5e9,#6366f1);
+    color:#fff; border:none;
+    border-radius:14px; cursor:pointer;
+    font-family:inherit; font-size:16px; font-weight:700;
+    box-shadow:0 6px 20px rgba(14,165,233,.35);
+    transition:all .2s ease;
+    margin-top:8px;
+  }
+  button[type="submit"]:hover:not(:disabled){
+    transform:translateY(-1px);
+    box-shadow:0 8px 28px rgba(14,165,233,.45);
+  }
+  button[type="submit"]:active{transform:translateY(0) scale(.98)}
+  button[type="submit"]:disabled{
+    opacity:.55; cursor:not-allowed; box-shadow:none;
+  }
+
+  .status{
+    margin-top:16px; padding:12px 16px;
+    border-radius:12px; font-size:14px; font-weight:500;
+    text-align:center; display:none;
+  }
+  .status.show{display:block; animation:in .3s ease}
+  .status.ok{background:#ecfdf5; color:#047857; border:1px solid #a7f3d0}
+  .status.err{background:#fef2f2; color:#b91c1c; border:1px solid #fecaca}
+  .status.loading{background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe}
+
+  .spinner{
+    display:inline-block; width:16px; height:16px;
+    border:2px solid rgba(30,64,175,.3);
+    border-top-color:#1e40af;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    vertical-align:middle;
+    margin-left:8px;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .privacy{
+    text-align:center; font-size:12px; color:var(--muted);
+    margin-top:20px; line-height:1.7;
+  }
+  .privacy b{color:var(--accent-deep)}
+
+  @media (max-width:400px){
+    .logo h1{font-size:20px}
+    .card{padding:20px 18px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo">
+    <div class="icon">۱۱</div>
+    <h1>سامانه ۱۱</h1>
+    <div class="subtitle">پیام‌رسان شخصی، بدون واسطه</div>
+  </div>
+
+  <div class="card">
+
+    <div class="welcome">
+      <h2>👋 خوش آمدی!</h2>
+      <p>برای استفاده از سامانه، لطفاً اطلاعاتت رو تکمیل کن</p>
+    </div>
+
+    <form id="registerForm" novalidate>
+
+      <div class="field">
+        <label>👤 نام <span class="req">*</span></label>
+        <input type="text" id="firstName" placeholder="مثلاً: جواد"
+               autocomplete="given-name" required>
+        <div class="hint" id="hintFirst"></div>
+      </div>
+
+      <div class="field">
+        <label>👥 نام خانوادگی <span class="req">*</span></label>
+        <input type="text" id="lastName" placeholder="مثلاً: رضایی"
+               autocomplete="family-name" required>
+        <div class="hint" id="hintLast"></div>
+      </div>
+
+      <div class="field">
+        <label>📍 استان <span class="req">*</span></label>
+        <input type="text" id="province" placeholder="مثلاً: تهران"
+               autocomplete="address-level1" required>
+        <div class="hint" id="hintProvince"></div>
+      </div>
+
+      <div class="field">
+        <label>📱 شماره موبایل <span class="req">*</span></label>
+        <div class="phone-input">
+          <input type="tel" id="phone" placeholder="09123456789"
+                 inputmode="numeric" maxlength="11"
+                 autocomplete="tel-national" required>
+        </div>
+        <div class="hint" id="hintPhone">۱۱ رقم، با ۰۹ شروع بشه</div>
+      </div>
+
+      <button type="submit" id="submitBtn" disabled>ثبت‌نام و ورود 🚀</button>
+
+      <div class="status" id="status"></div>
+
+    </form>
+
+  </div>
+
+  <div class="privacy">
+    🔒 اطلاعات شما فقط برای <b>شناسایی در سامانه</b> استفاده می‌شود.<br>
+    هیچ‌کسی به‌جز مدیر سامانه به اطلاعات شما دسترسی ندارد.
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+// 📝 منطق فرم ثبت‌نام
+// ═══════════════════════════════════════════════════════
+
+const C = window.CONFIG;
+const REGISTER_TOPIC = C.interactionsTopic + '-reg';  // تاپیک مخصوص ثبت‌نام
+
+const form       = document.getElementById('registerForm');
+const firstName  = document.getElementById('firstName');
+const lastName   = document.getElementById('lastName');
+const province   = document.getElementById('province');
+const phone      = document.getElementById('phone');
+const submitBtn  = document.getElementById('submitBtn');
+const statusEl   = document.getElementById('status');
+
+// ───── اعتبارسنجی ─────
+function validateText(el, hintEl, label, minLen = 2) {
+  const v = el.value.trim();
+  if (!v) {
+    el.classList.remove('valid', 'invalid');
+    hintEl.textContent = '';
+    hintEl.className = 'hint';
+    return false;
+  }
+  if (v.length < minLen) {
+    el.classList.add('invalid');
+    el.classList.remove('valid');
+    hintEl.textContent = `حداقل ${minLen} حرف وارد کن`;
+    hintEl.className = 'hint err';
+    return false;
+  }
+  el.classList.add('valid');
+  el.classList.remove('invalid');
+  hintEl.textContent = `✓ ${label} درست است`;
+  hintEl.className = 'hint ok';
+  return true;
+}
+
+function validatePhone() {
+  const v = phone.value.replace(/\D/g, '');
+  phone.value = v;
+
+  if (!v) {
+    phone.classList.remove('valid', 'invalid');
+    document.getElementById('hintPhone').textContent = '۱۱ رقم، با ۰۹ شروع بشه';
+    document.getElementById('hintPhone').className = 'hint';
+    return false;
+  }
+
+  if (!/^09\d{9}$/.test(v)) {
+    phone.classList.add('invalid');
+    phone.classList.remove('valid');
+    document.getElementById('hintPhone').textContent =
+      'شماره باید با ۰۹ شروع شده و ۱۱ رقم باشد';
+    document.getElementById('hintPhone').className = 'hint err';
+    return false;
+  }
+
+  phone.classList.add('valid');
+  phone.classList.remove('invalid');
+  document.getElementById('hintPhone').textContent = '✓ شماره معتبر است';
+  document.getElementById('hintPhone').className = 'hint ok';
+  return true;
+}
+
+// ───── چک کردن کل فرم ─────
+function updateSubmitBtn() {
+  const ok =
+    firstName.value.trim().length >= 2 &&
+    lastName.value.trim().length >= 2 &&
+    province.value.trim().length >= 2 &&
+    /^09\d{9}$/.test(phone.value);
+
+  submitBtn.disabled = !ok;
+}
+
+// ───── متصل کردن رویدادها ─────
+firstName.oninput = () => { validateText(firstName, document.getElementById('hintFirst'), 'نام'); updateSubmitBtn(); };
+lastName.oninput  = () => { validateText(lastName,  document.getElementById('hintLast'),  'نام خانوادگی'); updateSubmitBtn(); };
+province.oninput  = () => { validateText(province,  document.getElementById('hintProvince'), 'استان'); updateSubmitBtn(); };
+phone.oninput     = () => { validatePhone(); updateSubmitBtn(); };
+
+// ───── نمایش وضعیت ─────
+function showStatus(type, msg) {
+  statusEl.className = 'status show ' + type;
+  statusEl.innerHTML = msg;
+}
+
+// ───── ثبت‌نام ─────
+form.onsubmit = async (e) => {
+  e.preventDefault();
+
+  const data = {
+    type: 'register',
+    firstName: firstName.value.trim(),
+    lastName:  lastName.value.trim(),
+    province:  province.value.trim(),
+    phone:     phone.value,
+    fullName:  firstName.value.trim() + ' ' + lastName.value.trim(),
+    time:      new Date().toISOString()
+  };
+
+  submitBtn.disabled = true;
+  showStatus('loading', 'در حال ثبت اطلاعات... <span class="spinner"></span>');
+
+  try {
+    // ارسال به ntfy
+    const res = await fetch(`${C.ntfyBase}/${REGISTER_TOPIC}`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) throw new Error('خطا در ارسال: ' + res.status);
+
+    // ذخیره در localStorage
+    localStorage.setItem('myName',     data.fullName);
+    localStorage.setItem('myFullInfo', JSON.stringify(data));
+    localStorage.setItem('myGroup',    'friends');  // پیش‌فرض
+    localStorage.setItem('registered', 'true');
+
+    showStatus('ok',
+      '✅ ثبت‌نام موفق!<br>در حال انتقال به سامانه...');
+
+    setTimeout(() => {
+      location.href = './index.html';
+    }, 1500);
+
+  } catch (err) {
+    submitBtn.disabled = false;
+    showStatus('err', '❌ خطا: ' + err.message);
+  }
+};
+
+// ───── اگه قبلاً ثبت‌نام کرده، مستقیم بره PWA ─────
+if (localStorage.getItem('registered') === 'true' && localStorage.getItem('myName')) {
+  location.href = './index.html';
+}
+</script>
+</body>
+</html>
