@@ -37,7 +37,36 @@
       "time": "2026-09-23T00:19:19.238Z"
     }
   ],
-  "reactions": [],
+  "reactions": [
+    {
+      "id": "9y7mYQrrirBY",
+      "messageId": "3bbbebc8-05ff-466f-ad72-300c689b0087",
+      "emoji": "😂",
+      "from": "مهدی",
+      "time": "2026-09-23T00:51:05.000Z"
+    },
+    {
+      "id": "4ZZJ8GosQdAc",
+      "messageId": "3bbbebc8-05ff-466f-ad72-300c689b0087",
+      "emoji": "😂",
+      "from": "مهدی",
+      "time": "2026-09-23T00:51:08.000Z"
+    },
+    {
+      "id": "mTZD9EdJ47jw",
+      "messageId": "3bbbebc8-05ff-466f-ad72-300c689b0087",
+      "emoji": "😂",
+      "from": "مهدی",
+      "time": "2026-09-23T00:51:12.000Z"
+    },
+    {
+      "id": "4ma7GvRN1Fn0",
+      "messageId": "3bbbebc8-05ff-466f-ad72-300c689b0087",
+      "emoji": "😂",
+      "from": "مهدی",
+      "time": "2026-09-23T00:51:13.000Z"
+    }
+  ],
   "replies": [],
   "seen": [
     {
@@ -109,6 +138,31 @@
       "messageId": "3bbbebc8-05ff-466f-ad72-300c689b0087",
       "from": "جواد جوادی",
       "time": "2026-09-23T00:26:23.000Z"
+    },
+    {
+      "messageId": "95bf4bda-332b-403c-b8d7-f86d2d860f0e",
+      "from": "مهدی",
+      "time": "2026-09-23T00:50:48.000Z"
+    },
+    {
+      "messageId": "3bbbebc8-05ff-466f-ad72-300c689b0087",
+      "from": "مهدی",
+      "time": "2026-09-23T00:50:48.000Z"
+    },
+    {
+      "messageId": "53d36915-c0d8-494c-9bbe-ecbc386d6e5a",
+      "from": "مهدی",
+      "time": "2026-09-23T00:50:48.000Z"
+    },
+    {
+      "messageId": "eecf890d-e774-4680-90c7-4b6abea42e02",
+      "from": "مهدی",
+      "time": "2026-09-23T00:51:20.000Z"
+    },
+    {
+      "messageId": "c514d21e-643f-4d48-bead-239443e3384c",
+      "from": "مهدی",
+      "time": "2026-09-23T00:51:22.000Z"
     }
   ]
 }
