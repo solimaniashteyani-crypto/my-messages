@@ -10,9 +10,8 @@ const isRegistered = localStorage.getItem('registered') === 'true';
 const hasName      = !!localStorage.getItem('myName');
 
 if (!isRegistered || !hasName) {
-  // کاربر ثبت‌نام نکرده → برو به صفحه ثبت‌نام
   location.href = './register.html';
-  return;  // ⚠️ مهم: ادامه کد اجرا نشه
+  return;
 }
 
 const state = {
@@ -23,10 +22,18 @@ const state = {
   etag: null
 };
 
+// ═══════════════════════════════════════════════════════
+// 📏 تعداد نمایش اولیه پیام‌ها
+// ═══════════════════════════════════════════════════════
+const INITIAL_COUNT = 3;
+const LOAD_STEP = 7;
+
+// ───── ابزارها ─────
 const b64decode = b64 => {
   const bin = atob(b64.replace(/\n/g,''));
   return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
 };
+
 const fmtTime = iso => {
   const d = new Date(iso);
   const diff = (Date.now() - d) / 1000;
@@ -35,22 +42,27 @@ const fmtTime = iso => {
   if (diff < 86400) return `${Math.floor(diff/3600)} ساعت پیش`;
   return d.toLocaleDateString('fa-IR');
 };
+
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
 const setStatus = (txt, err) => {
   const el = document.getElementById('status');
   el.textContent = txt || '';
   el.className = 'status' + (err ? ' err' : '');
 };
+
 const uid = () => (crypto.randomUUID ? crypto.randomUUID()
                                      : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2));
 
+// ───── ذخیره محلی ─────
 async function saveLocal() {
   try { await DB.set('messages',  state.messages);  } catch {}
   try { await DB.set('reactions', state.reactions); } catch {}
   try { await DB.set('replies',   state.replies);   } catch {}
   try { await DB.set('seen',      state.seen);      } catch {}
 }
+
 async function loadLocal() {
   try {
     state.messages  = (await DB.get('messages'))  || [];
@@ -61,12 +73,16 @@ async function loadLocal() {
   } catch {}
 }
 
+// ───── آنلاین/آفلاین ─────
 function updateOnlineBadge() {
   document.getElementById('offline').hidden = navigator.onLine;
 }
 window.addEventListener('online',  () => { updateOnlineBadge(); loadMessages(true); });
 window.addEventListener('offline', updateOnlineBadge);
 
+// ═══════════════════════════════════════════════════════
+// 📥 دریافت پیام‌ها از گیت‌هاب
+// ═══════════════════════════════════════════════════════
 async function loadMessages(force = false) {
   if (!navigator.onLine) { setStatus('آفلاین'); return; }
   try {
@@ -90,10 +106,14 @@ async function loadMessages(force = false) {
   }
 }
 
+// ═══════════════════════════════════════════════════════
+// 🎨 نمایش صفحه
+// ═══════════════════════════════════════════════════════
 function render() {
   const tabs = document.getElementById('tabs');
   const feed = document.getElementById('feed');
 
+  // ───── تب‌های گروه ─────
   const groups = [['all','🌐 همه'],
     ...Object.entries(C.groups).map(([k,g]) => [k, `${g.emoji} ${g.name}`])];
   tabs.innerHTML = groups.map(([k,label]) =>
@@ -101,6 +121,7 @@ function render() {
   tabs.querySelectorAll('button').forEach(b =>
     b.onclick = () => { state.filter = b.dataset.g; render(); });
 
+  // ───── لیست پیام‌ها ─────
   const list = state.messages
     .filter(m => state.filter === 'all' || m.group === state.filter)
     .sort((a,b) => new Date(b.time) - new Date(a.time));
@@ -110,57 +131,65 @@ function render() {
     return;
   }
 
-  const EMOJIS = ['❤️','👍','😂','😮','😢'];
+  // ───── محدودیت نمایش ─────
+  const currentLimit = parseInt(localStorage.getItem('feedLimit') || INITIAL_COUNT, 10);
+  const visible = list.slice(0, currentLimit);
+  const hasMore = list.length > currentLimit;
 
-  feed.innerHTML = list.map(m => {
-    const rx = state.reactions.filter(r => r.messageId === m.id);
-    const grouped = {};
-    for (const r of rx) grouped[r.emoji] = (grouped[r.emoji]||0) + 1;
-    const chips = Object.entries(grouped).map(([e,n]) =>
-      `<button data-mid="${m.id}" data-emoji="${e}">${e} <span class="badge">${n}</span></button>`
-    ).join('');
+  // ───── رندر پیام‌ها ─────
+  feed.innerHTML = visible.map(m => renderMessageCard(m)).join('');
 
-    const palette = EMOJIS.map(e =>
-      grouped[e] ? '' : `<button data-mid="${m.id}" data-emoji="${e}">${e}</button>`).join('');
+  // ───── دکمه «بیشتر» یا «کمتر» ─────
+  if (hasMore) {
+    const btn = document.createElement('div');
+    btn.style.cssText = 'text-align:center; margin: 20px 0 12px;';
+    btn.innerHTML = `
+      <button id="loadMoreBtn" style="
+        padding:14px 32px;
+        background:linear-gradient(135deg,#1e40af,#3b82f6);
+        color:#fff;
+        border:none;
+        border-radius:14px;
+        cursor:pointer;
+        font-family:inherit;
+        font-size:16px;
+        font-weight:700;
+        box-shadow:0 6px 20px rgba(30,64,175,.35);
+        transition:all .2s;
+      ">
+        نمایش ${Math.min(LOAD_STEP, list.length - currentLimit)} پیام قدیمی‌تر 👇
+      </button>
+    `;
+    feed.appendChild(btn);
+    document.getElementById('loadMoreBtn').onclick = () => {
+      localStorage.setItem('feedLimit', currentLimit + LOAD_STEP);
+      render();
+    };
+  } else if (list.length > INITIAL_COUNT) {
+    const btn = document.createElement('div');
+    btn.style.cssText = 'text-align:center; margin: 20px 0 12px;';
+    btn.innerHTML = `
+      <button id="showLessBtn" style="
+        padding:10px 24px;
+        background:transparent;
+        color:#5b7ba6;
+        border:1.5px solid #bfdbfe;
+        border-radius:12px;
+        cursor:pointer;
+        font-family:inherit;
+        font-size:14px;
+        font-weight:600;
+        transition:all .2s;
+      ">نمایش کمتر ☝️</button>
+    `;
+    feed.appendChild(btn);
+    document.getElementById('showLessBtn').onclick = () => {
+      localStorage.setItem('feedLimit', INITIAL_COUNT);
+      render();
+    };
+  }
 
-    const replies = state.replies
-      .filter(r => r.messageId === m.id)
-      .sort((a,b) => new Date(a.time) - new Date(b.time));
-    const repliesHtml = replies.length ? `
-      <div class="replies">
-        ${replies.map(r => `
-          <div class="reply">
-            <b>${esc(r.from)}</b>
-            <time>${fmtTime(r.time)}</time>
-            <div>${esc(r.text)}</div>
-          </div>`).join('')}
-      </div>` : '';
-
-    const seenBy = state.seen.filter(s => s.messageId === m.id);
-    const seenHtml = seenBy.length ? `<span class="seen-badge">👁 ${seenBy.length}</span>` : '';
-
-    const g = C.groups[m.group];
-    const imgHtml = m.image
-      ? `<img class="img" src="${esc(m.image)}" loading="lazy" alt="" data-full="${esc(m.image)}">`
-      : '';
-
-    return `
-      <article class="card" data-mid="${m.id}">
-        ${m.text ? `<div class="text">${esc(m.text)}</div>` : ''}
-        ${imgHtml}
-        <div class="meta">
-          <span>${g ? g.emoji + ' ' + g.name : ''}</span>
-          <span>${fmtTime(m.time)}</span>
-        </div>
-        <div class="reactions">
-          ${chips}${palette}
-          ${seenHtml}
-          <button class="reply-btn" data-mid="${m.id}">💬 پاسخ</button>
-        </div>
-        ${repliesHtml}
-      </article>`;
-  }).join('');
-
+  // ───── اتصال رویدادها ─────
   feed.querySelectorAll('.reactions button[data-emoji]').forEach(b =>
     b.onclick = () => sendReaction(b.dataset.mid, b.dataset.emoji));
   feed.querySelectorAll('.reply-btn').forEach(b =>
@@ -171,6 +200,63 @@ function render() {
   observeSeen();
 }
 
+// ═══════════════════════════════════════════════════════
+// 🎴 ساخت کارت هر پیام
+// ═══════════════════════════════════════════════════════
+function renderMessageCard(m) {
+  const rx = state.reactions.filter(r => r.messageId === m.id);
+  const grouped = {};
+  for (const r of rx) grouped[r.emoji] = (grouped[r.emoji]||0) + 1;
+
+  const chips = Object.entries(grouped).map(([e,n]) =>
+    `<button data-mid="${m.id}" data-emoji="${e}">${e} <span class="badge">${n}</span></button>`
+  ).join('');
+
+  const EMOJIS = ['❤️','👍','😂','😮','😢'];
+  const palette = EMOJIS.map(e =>
+    grouped[e] ? '' : `<button data-mid="${m.id}" data-emoji="${e}">${e}</button>`).join('');
+
+  const replies = state.replies
+    .filter(r => r.messageId === m.id)
+    .sort((a,b) => new Date(a.time) - new Date(b.time));
+  const repliesHtml = replies.length ? `
+    <div class="replies">
+      ${replies.map(r => `
+        <div class="reply">
+          <b>${esc(r.from)}</b>
+          <time>${fmtTime(r.time)}</time>
+          <div>${esc(r.text)}</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  const seenBy = state.seen.filter(s => s.messageId === m.id);
+  const seenHtml = seenBy.length ? `<span class="seen-badge">👁 ${seenBy.length}</span>` : '';
+
+  const g = C.groups[m.group];
+  const imgHtml = m.image
+    ? `<img class="img" src="${esc(m.image)}" loading="lazy" alt="" data-full="${esc(m.image)}">`
+    : '';
+
+  return `
+    <article class="card" data-mid="${m.id}">
+      ${m.text ? `<div class="text">${esc(m.text)}</div>` : ''}
+      ${imgHtml}
+      <div class="meta">
+        <span>${g ? g.emoji + ' ' + g.name : ''}</span>
+        <span>${fmtTime(m.time)}</span>
+      </div>
+      <div class="reactions">
+        ${chips}${palette}
+        ${seenHtml}
+        <button class="reply-btn" data-mid="${m.id}">💬 پاسخ</button>
+      </div>
+      ${repliesHtml}
+    </article>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// ❤️ ارسال ری‌اکشن
+// ═══════════════════════════════════════════════════════
 async function sendReaction(messageId, emoji) {
   if (!state.myName) return setStatus('اول از ⚙️ نامت رو وارد کن', true);
   try {
@@ -186,7 +272,11 @@ async function sendReaction(messageId, emoji) {
   } catch (e) { setStatus('خطا: ' + e.message, true); }
 }
 
+// ═══════════════════════════════════════════════════════
+// 💬 پاسخ دادن
+// ═══════════════════════════════════════════════════════
 let replyTargetId = null;
+
 function openReply(mid) {
   if (!state.myName) return setStatus('اول از ⚙️ نامت رو وارد کن', true);
   replyTargetId = mid;
@@ -215,6 +305,9 @@ async function submitReply() {
   } catch (e) { setStatus('خطا: ' + e.message, true); }
 }
 
+// ═══════════════════════════════════════════════════════
+// 👁 رسید خوانده‌شدن
+// ═══════════════════════════════════════════════════════
 const seenSent = new Set(JSON.parse(localStorage.getItem('seenSent') || '[]'));
 let seenObserver = null;
 
@@ -242,6 +335,9 @@ function sendSeen(messageId) {
   }).catch(() => {});
 }
 
+// ═══════════════════════════════════════════════════════
+// 🔄 دریافت بلادرنگ (SSE)
+// ═══════════════════════════════════════════════════════
 function subscribeSSE() {
   const myTopic = C.groups[state.myGroup]?.topic;
   if (myTopic) {
@@ -295,6 +391,9 @@ function subscribeSSE() {
   };
 }
 
+// ═══════════════════════════════════════════════════════
+// ⚙️ تنظیمات
+// ═══════════════════════════════════════════════════════
 function setupSettings() {
   const dlg = document.getElementById('settingsDlg');
   const sel = document.getElementById('myGroup');
@@ -317,6 +416,9 @@ function setupSettings() {
   document.getElementById('replySendBtn').onclick = submitReply;
 }
 
+// ═══════════════════════════════════════════════════════
+// 🚀 شروع
+// ═══════════════════════════════════════════════════════
 async function init() {
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
   updateOnlineBadge();
