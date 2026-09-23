@@ -1,0 +1,73 @@
+name: Sync members
+
+on:
+  schedule: [{ cron: '*/2 * * * *' }]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch registrations from ntfy
+        run: |
+          TOPIC=$(node -e "
+            const fs=require('fs');
+            const s={}; new Function('window',fs.readFileSync('config.js','utf8'))(s);
+            console.log(s.CONFIG.interactionsTopic + '-reg');
+          ")
+          curl -s "https://ntfy.sh/$TOPIC/json?poll=1&since=all" > /tmp/raw.ndjson
+          jq -c 'try {id: .id, time: .time, data: (.message | fromjson)} catch empty' \
+            /tmp/raw.ndjson > /tmp/reg.ndjson || true
+          echo "تعداد ثبت‌نام‌ها: $(wc -l < /tmp/reg.ndjson)"
+
+      - name: Merge into members.json
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const db = JSON.parse(fs.readFileSync('members.json','utf8'));
+          db.members ||= [];
+
+          const existingPhones = new Set(db.members.map(m => m.phone));
+          const lines = fs.existsSync('/tmp/reg.ndjson')
+            ? fs.readFileSync('/tmp/reg.ndjson','utf8').trim().split('\n').filter(Boolean)
+            : [];
+
+          let added = 0;
+          for (const line of lines) {
+            try {
+              const { id, time, data } = JSON.parse(line);
+              if (!id || !data || data.type !== 'register') continue;
+              if (!data.phone || existingPhones.has(data.phone)) continue;
+
+              db.members.push({
+                id,
+                firstName: data.firstName,
+                lastName:  data.lastName,
+                fullName:  data.fullName || (data.firstName + ' ' + data.lastName),
+                province:  data.province,
+                phone:     data.phone,
+                group:     data.group || 'friends',
+                registeredAt: data.time || new Date((time||Date.now()/1000)*1000).toISOString()
+              });
+              existingPhones.add(data.phone);
+              added++;
+            } catch (e) {}
+          }
+
+          fs.writeFileSync('members.json', JSON.stringify(db, null, 2));
+          console.log(`اعضای جدید اضافه‌شده: ${added}`);
+          console.log(`کل اعضا: ${db.members.length}`);
+          EOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add members.json
+          git diff --cached --quiet || git commit -m "sync members"
+          git push
