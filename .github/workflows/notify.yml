@@ -14,6 +14,7 @@ jobs:
       - name: Detect new messages & push to ntfy
         env:
           NTFY: https://ntfy.sh
+          PWA_URL: https://solimaniashteyani-crypto.github.io/my-messages/
         run: |
           set -e
           git show HEAD~1:messages.json > /tmp/old.json 2>/dev/null \
@@ -44,15 +45,21 @@ jobs:
 
             if [ -n "$IMG" ]; then
               curl -s \
-                -H "Title: پیام جدید برای $NAME" \
-                -H "Tags: framed_picture" \
+                -H "Title: 🔔 پیام جدید برای $NAME" \
+                -H "Priority: max" \
+                -H "Tags: rotating_light,framed_picture" \
+                -H "Click: ${PWA_URL}" \
                 -H "Attach: $IMG" \
+                -H "Actions: view, 🚀 باز کردن پیام, ${PWA_URL}" \
                 -H "X-Message-Id: $ID" \
                 -d "$TXT" "$NTFY/$TOPIC" > /dev/null
             else
               curl -s \
-                -H "Title: پیام جدید برای $NAME" \
-                -H "Tags: speech_balloon" \
+                -H "Title: 🔔 پیام جدید برای $NAME" \
+                -H "Priority: max" \
+                -H "Tags: rotating_light,speech_balloon" \
+                -H "Click: ${PWA_URL}" \
+                -H "Actions: view, 🚀 باز کردن پیام, ${PWA_URL}" \
                 -H "X-Message-Id: $ID" \
                 -d "$TXT" "$NTFY/$TOPIC" > /dev/null
             fi
