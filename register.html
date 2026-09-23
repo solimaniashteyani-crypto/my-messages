@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1e40af">
-<meta name="description" content="سامانه پیام‌رسان سما — نسخه 5/11">
-<title>سامانه پیام‌رسان سما — نسخه ۵/۱۱</title>
+<meta name="description" content="سامانه پیام‌رسان شخصی سما — نسخه 5/11">
+<title>سما — سامانه پیام‌رسان شخصی</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
@@ -47,25 +47,32 @@
   /* ───── لوگو ───── */
   .logo{text-align:center; margin-bottom:32px}
   .logo .icon{
-    display:inline-flex; align-items:center; justify-content:center;
-    width:110px; height:110px; border-radius:32px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:180px;
+    height:130px;
+    padding:0 32px;
+    border-radius:32px;
     background:linear-gradient(135deg,#1e40af,#3b82f6,#60a5fa);
     background-size:200% 200%;
     color:#fff;
-    font-size:60px;
+    font-size:64px;
     font-weight:900;
     box-shadow:0 20px 50px rgba(30,64,175,.45);
-    margin-bottom:20px;
+    margin-bottom:24px;
     animation:shine 6s ease infinite;
-    font-family:sans-serif;
-    text-shadow:0 3px 10px rgba(0,0,0,.2);
+    font-family:Vazirmatn,sans-serif;
+    text-shadow:0 4px 16px rgba(0,0,0,.25);
+    letter-spacing:4px;
+    line-height:1;
   }
   @keyframes shine{
     0%,100%{background-position:0% 50%}
     50%{background-position:100% 50%}
   }
-  .logo h1{
-    font-size:34px;
+  .logo .title-line{
+    font-size:32px;
     margin:0;
     font-weight:900;
     background:linear-gradient(135deg,#1e40af,#2563eb,#3b82f6);
@@ -73,23 +80,26 @@
     background-clip:text;
     color:transparent;
     letter-spacing:-.5px;
+    line-height:1.4;
   }
   .logo .subtitle{
     color:var(--text-soft);
-    font-size:18px;
-    margin-top:10px;
+    font-size:19px;
+    margin-top:12px;
     font-weight:600;
+    line-height:1.6;
   }
   .logo .version{
     display:inline-block;
-    margin-top:14px;
+    margin-top:16px;
     background:linear-gradient(135deg,#1e40af,#3b82f6);
     color:#fff;
-    padding:8px 20px;
+    padding:10px 24px;
     border-radius:999px;
-    font-size:15px;
-    font-weight:700;
-    box-shadow:0 6px 18px rgba(30,64,175,.35);
+    font-size:16px;
+    font-weight:800;
+    box-shadow:0 8px 22px rgba(30,64,175,.4);
+    letter-spacing:.5px;
   }
 
   /* ───── کارت ───── */
@@ -142,9 +152,7 @@
     color:var(--text);
     margin-bottom:14px;
   }
-  .field label .icon-label{
-    font-size:22px;
-  }
+  .field label .icon-label{font-size:22px}
   .field label .req{
     color:var(--err);
     font-weight:900;
@@ -176,14 +184,8 @@
     box-shadow:0 0 0 6px rgba(30,64,175,.15);
     transform:translateY(-2px);
   }
-  .field input.valid{
-    border-color:#6ee7b7;
-    background:#f0fdf4;
-  }
-  .field input.invalid{
-    border-color:#fca5a5;
-    background:#fef2f2;
-  }
+  .field input.valid{border-color:#6ee7b7; background:#f0fdf4}
+  .field input.invalid{border-color:#fca5a5; background:#fef2f2}
   .field .hint{
     font-size:15px;
     color:var(--muted);
@@ -225,9 +227,7 @@
     transform:translateY(-3px);
     box-shadow:0 18px 42px rgba(30,64,175,.55);
   }
-  button[type="submit"]:active:not(:disabled){
-    transform:translateY(0) scale(.98);
-  }
+  button[type="submit"]:active:not(:disabled){transform:translateY(0) scale(.98)}
   button[type="submit"]:disabled{
     opacity:.5;
     cursor:not-allowed;
@@ -275,9 +275,13 @@
 
   @media (max-width:480px){
     body{font-size:16px; padding:20px 16px 40px}
-    .logo .icon{width:90px; height:90px; font-size:50px; border-radius:26px}
-    .logo h1{font-size:26px}
+    .logo .icon{
+      min-width:150px; height:110px; font-size:52px;
+      border-radius:26px; letter-spacing:3px;
+    }
+    .logo .title-line{font-size:26px}
     .logo .subtitle{font-size:16px}
+    .logo .version{font-size:14px; padding:8px 18px}
     .card{padding:26px 22px; border-radius:22px}
     .welcome h2{font-size:22px}
     .welcome p{font-size:15px}
@@ -294,8 +298,8 @@
 <div class="wrap">
 
   <div class="logo">
-    <div class="icon">۱۱</div>
-    <h1>سامانه پیام‌رسان سما</h1>
+    <div class="icon">سما</div>
+    <h1 class="title-line">سامانه پیام‌رسان شخصی</h1>
     <div class="subtitle">پیام‌رسان شخصی، بدون واسطه</div>
     <div class="version">نسخه ۵/۱۱</div>
   </div>
