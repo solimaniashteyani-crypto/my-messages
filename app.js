@@ -17,35 +17,17 @@ if (!isRegistered || !hasName) {
 // ═══════════════════════════════════════════════════════
 // 👑 بررسی ادمین بودن — از URL یا localStorage
 // ═══════════════════════════════════════════════════════
-// اگه URL شامل #admin باشه → کاربر ادمین میشه
-if (location.hash === '#admin' || location.hash === '#admin-panel') {
-  localStorage.setItem('isAdmin', 'true');
-  // پاک کردن hash از URL (که بار بعدی هم بمونه ولی تمیز باشه)
-  setTimeout(() => history.replaceState(null, '', location.pathname), 100);
-}
-// اگه URL شامل #logout-admin باشه → از حالت ادمین خارج میشه
-if (location.hash === '#logout-admin') {
-  localStorage.removeItem('isAdmin');
-  setTimeout(() => history.replaceState(null, '', location.pathname), 100);
-}
-
-const isAdmin = localStorage.getItem('isAdmin') === 'true';
-const adminBar = document.getElementById('adminBar');
-if (adminBar) {
-  adminBar.hidden = !isAdmin;
-}
-// ═══════════════════════════════════════════════════════
-// 👑 نوار ادمین — فقط اگه کاربر مدیر باشه
-// ═══════════════════════════════════════════════════════
-const isAdmin = localStorage.getItem('isAdmin') === 'true';
-const adminBar = document.getElementById('adminBar');
-if (adminBar) {
-  if (isAdmin) {
-    adminBar.hidden = false;
-  } else {
-    adminBar.hidden = true;
+try {
+  if (location.hash === '#admin' || location.hash === '#admin-panel') {
+    localStorage.setItem('isAdmin', 'true');
+    setTimeout(() => { try { history.replaceState(null, '', location.pathname); } catch(e){} }, 100);
   }
-}
+  if (location.hash === '#logout-admin') {
+    localStorage.removeItem('isAdmin');
+    setTimeout(() => { try { history.replaceState(null, '', location.pathname); } catch(e){} }, 100);
+  }
+} catch(e) { console.warn('admin hash check:', e); }
+
 const state = {
   messages: [], reactions: [], replies: [], seen: [],
   myName: localStorage.getItem('myName') || '',
@@ -80,6 +62,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g,
 
 const setStatus = (txt, err) => {
   const el = document.getElementById('status');
+  if (!el) return;
   el.textContent = txt || '';
   el.className = 'status' + (err ? ' err' : '');
 };
@@ -107,13 +90,14 @@ async function loadLocal() {
 
 // ───── آنلاین/آفلاین ─────
 function updateOnlineBadge() {
-  document.getElementById('offline').hidden = navigator.onLine;
+  const el = document.getElementById('offline');
+  if (el) el.hidden = navigator.onLine;
 }
 window.addEventListener('online',  () => { updateOnlineBadge(); loadMessages(true); });
 window.addEventListener('offline', updateOnlineBadge);
 
 // ═══════════════════════════════════════════════════════
-// 📥 دریافت پیام‌ها از گیت‌هاب
+// 📥 دریافت پیام‌ها
 // ═══════════════════════════════════════════════════════
 async function loadMessages(force = false) {
   if (!navigator.onLine) { setStatus('آفلاین'); return; }
@@ -142,8 +126,14 @@ async function loadMessages(force = false) {
 // 🎨 نمایش صفحه
 // ═══════════════════════════════════════════════════════
 function render() {
+  // ───── نوار ادمین ─────
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const adminBar = document.getElementById('adminBar');
+  if (adminBar) adminBar.hidden = !isAdmin;
+
   const tabs = document.getElementById('tabs');
   const feed = document.getElementById('feed');
+  if (!tabs || !feed) return;
 
   // ───── تب‌های گروه ─────
   const groups = [['all','🌐 همه'],
@@ -187,7 +177,6 @@ function render() {
         font-size:16px;
         font-weight:700;
         box-shadow:0 6px 20px rgba(30,64,175,.35);
-        transition:all .2s;
       ">
         نمایش ${Math.min(LOAD_STEP, list.length - currentLimit)} پیام قدیمی‌تر 👇
       </button>
@@ -211,7 +200,6 @@ function render() {
         font-family:inherit;
         font-size:14px;
         font-weight:600;
-        transition:all .2s;
       ">نمایش کمتر ☝️</button>
     `;
     feed.appendChild(btn);
@@ -313,14 +301,20 @@ function openReply(mid) {
   if (!state.myName) return setStatus('اول از ⚙️ نامت رو وارد کن', true);
   replyTargetId = mid;
   const m = state.messages.find(x => x.id === mid);
-  document.getElementById('replyQuote').textContent = m?.text || '[عکس]';
-  document.getElementById('replyText').value = '';
-  document.getElementById('replyDlg').showModal();
-  setTimeout(() => document.getElementById('replyText').focus(), 50);
+  const q = document.getElementById('replyQuote');
+  const t = document.getElementById('replyText');
+  const dlg = document.getElementById('replyDlg');
+  if (!q || !t || !dlg) return;
+  q.textContent = m?.text || '[عکس]';
+  t.value = '';
+  dlg.showModal();
+  setTimeout(() => t.focus(), 50);
 }
 
 async function submitReply() {
-  const text = document.getElementById('replyText').value.trim();
+  const t = document.getElementById('replyText');
+  if (!t) return;
+  const text = t.value.trim();
   if (!text || !replyTargetId) return;
   try {
     await fetch(`${C.ntfyBase}/${C.interactionsTopic}`, {
@@ -331,7 +325,8 @@ async function submitReply() {
       id: 'local-' + uid(), messageId: replyTargetId, text,
       from: state.myName, time: new Date().toISOString()
     });
-    document.getElementById('replyDlg').close();
+    const dlg = document.getElementById('replyDlg');
+    if (dlg) dlg.close();
     replyTargetId = null;
     render();
   } catch (e) { setStatus('خطا: ' + e.message, true); }
@@ -371,56 +366,60 @@ function sendSeen(messageId) {
 // 🔄 دریافت بلادرنگ (SSE)
 // ═══════════════════════════════════════════════════════
 function subscribeSSE() {
-  const myTopic = C.groups[state.myGroup]?.topic;
-  if (myTopic) {
-    const es = new EventSource(`${C.ntfyBase}/${myTopic}/sse`);
-    es.onmessage = ev => {
+  try {
+    const myTopic = C.groups[state.myGroup]?.topic;
+    if (myTopic) {
+      const es = new EventSource(`${C.ntfyBase}/${myTopic}/sse`);
+      es.onmessage = ev => {
+        try {
+          const d = JSON.parse(ev.data);
+          if (d.event === 'message' && d.message) setTimeout(() => loadMessages(true), 500);
+        } catch {}
+      };
+      es.onerror = () => {};
+    }
+
+    const esIx = new EventSource(`${C.ntfyBase}/${C.interactionsTopic}/sse`);
+    esIx.onmessage = ev => {
       try {
         const d = JSON.parse(ev.data);
-        if (d.event === 'message' && d.message) setTimeout(() => loadMessages(true), 500);
+        if (d.event !== 'message') return;
+        const data = JSON.parse(d.message);
+        const iso = new Date((d.time || Date.now()/1000)*1000).toISOString();
+
+        if (data.type === 'reaction') {
+          if (state.reactions.some(r => r.id === d.id)) return;
+          if (data.from === state.myName) {
+            const i = state.reactions.findIndex(r =>
+              r.id.startsWith('local-') && r.messageId === data.messageId && r.emoji === data.emoji);
+            if (i >= 0) state.reactions.splice(i, 1);
+          }
+          state.reactions.push({
+            id: d.id, messageId: data.messageId,
+            emoji: data.emoji, from: data.from, time: iso
+          });
+        } else if (data.type === 'reply') {
+          if (state.replies.some(r => r.id === d.id)) return;
+          if (data.from === state.myName) {
+            const i = state.replies.findIndex(r =>
+              r.id.startsWith('local-') && r.messageId === data.messageId && r.text === data.text);
+            if (i >= 0) state.replies.splice(i, 1);
+          }
+          state.replies.push({
+            id: d.id, messageId: data.messageId,
+            text: data.text, from: data.from, time: iso
+          });
+        } else if (data.type === 'seen') {
+          if (state.seen.some(s => s.messageId === data.messageId && s.from === data.from)) return;
+          state.seen.push({ messageId: data.messageId, from: data.from, time: iso });
+        } else return;
+
+        saveLocal();
+        render();
       } catch {}
     };
-  }
-
-  const esIx = new EventSource(`${C.ntfyBase}/${C.interactionsTopic}/sse`);
-  esIx.onmessage = ev => {
-    try {
-      const d = JSON.parse(ev.data);
-      if (d.event !== 'message') return;
-      const data = JSON.parse(d.message);
-      const iso = new Date((d.time || Date.now()/1000)*1000).toISOString();
-
-      if (data.type === 'reaction') {
-        if (state.reactions.some(r => r.id === d.id)) return;
-        if (data.from === state.myName) {
-          const i = state.reactions.findIndex(r =>
-            r.id.startsWith('local-') && r.messageId === data.messageId && r.emoji === data.emoji);
-          if (i >= 0) state.reactions.splice(i, 1);
-        }
-        state.reactions.push({
-          id: d.id, messageId: data.messageId,
-          emoji: data.emoji, from: data.from, time: iso
-        });
-      } else if (data.type === 'reply') {
-        if (state.replies.some(r => r.id === d.id)) return;
-        if (data.from === state.myName) {
-          const i = state.replies.findIndex(r =>
-            r.id.startsWith('local-') && r.messageId === data.messageId && r.text === data.text);
-          if (i >= 0) state.replies.splice(i, 1);
-        }
-        state.replies.push({
-          id: d.id, messageId: data.messageId,
-          text: data.text, from: data.from, time: iso
-        });
-      } else if (data.type === 'seen') {
-        if (state.seen.some(s => s.messageId === data.messageId && s.from === data.from)) return;
-        state.seen.push({ messageId: data.messageId, from: data.from, time: iso });
-      } else return;
-
-      saveLocal();
-      render();
-    } catch {}
-  };
+    esIx.onerror = () => {};
+  } catch(e) { console.warn('SSE:', e); }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -429,14 +428,19 @@ function subscribeSSE() {
 function setupSettings() {
   const dlg = document.getElementById('settingsDlg');
   const sel = document.getElementById('myGroup');
+  const nameInput = document.getElementById('myName');
+  if (!dlg || !sel || !nameInput) return;
+
   sel.innerHTML = Object.entries(C.groups)
     .map(([k,g]) => `<option value="${k}">${g.emoji} ${g.name}</option>`).join('');
-  document.getElementById('myName').value = state.myName;
+  nameInput.value = state.myName;
   sel.value = state.myGroup;
 
-  document.getElementById('settingsBtn').onclick = () => dlg.showModal();
+  const btn = document.getElementById('settingsBtn');
+  if (btn) btn.onclick = () => dlg.showModal();
+
   dlg.addEventListener('close', () => {
-    const n = document.getElementById('myName').value.trim();
+    const n = nameInput.value.trim();
     if (n) state.myName = n;
     state.myGroup = sel.value;
     localStorage.setItem('myName',  state.myName);
@@ -444,21 +448,30 @@ function setupSettings() {
     observeSeen();
   });
 
-  document.getElementById('refreshBtn').onclick = () => loadMessages(true);
-  document.getElementById('replySendBtn').onclick = submitReply;
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) refreshBtn.onclick = () => loadMessages(true);
+
+  const replyBtn = document.getElementById('replySendBtn');
+  if (replyBtn) replyBtn.onclick = submitReply;
 }
 
 // ═══════════════════════════════════════════════════════
 // 🚀 شروع
 // ═══════════════════════════════════════════════════════
 async function init() {
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
-  updateOnlineBadge();
-  setupSettings();
-  await loadLocal();
-  await loadMessages(true);
-  subscribeSSE();
-  setInterval(() => loadMessages(true), 5 * 60 * 1000);
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+    updateOnlineBadge();
+    setupSettings();
+    await loadLocal();
+    await loadMessages(true);
+    subscribeSSE();
+    setInterval(() => loadMessages(true), 5 * 60 * 1000);
+  } catch (e) {
+    console.error('init error:', e);
+  }
 }
 
 init();
