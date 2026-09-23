@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1e40af">
-<meta name="description" content="سامانه پیام‌رسان شخصی سما — نسخه 5/11">
-<title>سما — سامانه پیام‌رسان شخصی</title>
+<meta name="description" content="سامانه پیام‌رسان سما — ثبت‌نام">
+<title>سما — ثبت‌نام</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
@@ -13,238 +13,164 @@
     --primary:#1e40af;
     --primary-2:#3b82f6;
     --primary-deep:#1e3a8a;
-    --accent:#2563eb;
-    --bg-soft:#eff6ff;
     --text:#0c1e3e;
-    --text-soft:#1e40af;
     --muted:#64748b;
     --border:#bfdbfe;
     --border-strong:#93c5fd;
     --ok:#16a34a;
     --err:#dc2626;
-    --card:#ffffff;
+    --card:#fff;
     --card-soft:#f0f7ff;
   }
   *{box-sizing:border-box}
   html,body{margin:0;min-height:100%}
   body{
     font-family:Vazirmatn,system-ui,sans-serif;
-    font-size:18px;
+    font-size:17px;
     background:
       radial-gradient(1200px 600px at 100% -10%, #93c5fd 0%, transparent 55%),
       radial-gradient(900px 500px at -10% 110%, #bfdbfe 0%, transparent 55%),
       linear-gradient(160deg,#dbeafe 0%, #eff6ff 45%, #fff 100%);
     background-attachment:fixed;
     color:var(--text);
-    padding:32px 20px 60px;
+    padding:28px 20px 60px;
+    line-height:1.75;
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
-    line-height:1.8;
   }
 
-  .wrap{max-width:600px; margin:0 auto; padding-top:20px}
+  .wrap{max-width:600px; margin:0 auto}
 
-  /* ───── لوگو ───── */
-  .logo{text-align:center; margin-bottom:32px}
-  .logo .icon{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-width:180px;
-    height:130px;
-    padding:0 32px;
-    border-radius:32px;
+  /* هدر */
+  .header{text-align:center; margin-bottom:24px}
+  .header .icon{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:90px; height:90px; border-radius:26px;
     background:linear-gradient(135deg,#1e40af,#3b82f6,#60a5fa);
     background-size:200% 200%;
-    color:#fff;
-    font-size:64px;
-    font-weight:900;
-    box-shadow:0 20px 50px rgba(30,64,175,.45);
-    margin-bottom:24px;
+    color:#fff; font-size:48px; font-weight:900;
+    box-shadow:0 16px 40px rgba(30,64,175,.4);
+    margin-bottom:14px;
     animation:shine 6s ease infinite;
     font-family:Vazirmatn,sans-serif;
-    text-shadow:0 4px 16px rgba(0,0,0,.25);
-    letter-spacing:4px;
-    line-height:1;
   }
-  @keyframes shine{
-    0%,100%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-  }
-  .logo .title-line{
-    font-size:32px;
-    margin:0;
-    font-weight:900;
-    background:linear-gradient(135deg,#1e40af,#2563eb,#3b82f6);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-    letter-spacing:-.5px;
-    line-height:1.4;
-  }
-  .logo .subtitle{
-    color:var(--text-soft);
-    font-size:19px;
-    margin-top:12px;
-    font-weight:600;
-    line-height:1.6;
-  }
-  .logo .version{
-    display:inline-block;
-    margin-top:16px;
+  @keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .header h1{
+    font-size:28px; margin:0 0 6px; font-weight:900;
     background:linear-gradient(135deg,#1e40af,#3b82f6);
-    color:#fff;
-    padding:10px 24px;
-    border-radius:999px;
-    font-size:16px;
-    font-weight:800;
-    box-shadow:0 8px 22px rgba(30,64,175,.4);
-    letter-spacing:.5px;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    letter-spacing:-.5px;
   }
+  .header .subtitle{color:var(--muted); font-size:15px; font-weight:600}
 
-  /* ───── کارت ───── */
+  /* کارت */
   .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:28px;
-    padding:36px 32px;
-    box-shadow:
-      0 10px 30px rgba(12,30,62,.08),
-      0 25px 60px rgba(30,64,175,.15);
+    background:var(--card); border:1px solid var(--border);
+    border-radius:24px; padding:28px 24px;
+    box-shadow:0 12px 40px rgba(30,64,175,.15), 0 4px 14px rgba(12,30,62,.06);
+    position:relative; overflow:hidden;
     animation:in .5s cubic-bezier(.21,1.02,.73,1);
-    position:relative;
-    overflow:hidden;
   }
   .card::before{
-    content:'';
-    position:absolute; top:0; right:0; left:0; height:6px;
+    content:''; position:absolute; top:0; right:0; left:0; height:5px;
     background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
   }
-  @keyframes in{
-    from{opacity:0;transform:translateY(20px)}
-    to{opacity:1;transform:none}
-  }
+  @keyframes in{from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none}}
 
   .welcome{
-    text-align:center; padding:6px 0 28px;
-    border-bottom:2px dashed var(--border); margin-bottom:28px;
+    text-align:center; padding:4px 0 22px;
+    border-bottom:2px dashed var(--border); margin-bottom:22px;
   }
-  .welcome h2{
-    font-size:26px;
-    margin:0 0 10px;
-    font-weight:900;
-    color:var(--primary-deep);
-  }
-  .welcome p{
-    color:var(--muted);
-    font-size:17px;
-    margin:0;
-    line-height:1.7;
-    font-weight:500;
-  }
+  .welcome h2{font-size:22px; margin:0 0 8px; font-weight:900; color:var(--primary-deep)}
+  .welcome p{color:var(--muted); font-size:15px; margin:0; line-height:1.7; font-weight:600}
 
-  /* ───── فرم ───── */
-  .field{margin-bottom:26px}
+  /* فیلدها */
+  .field{margin-bottom:20px}
   .field label{
-    display:flex; align-items:center; gap:10px;
-    font-size:19px;
-    font-weight:800;
-    color:var(--text);
-    margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;
+    font-size:17px; font-weight:800; color:var(--text);
+    margin-bottom:10px;
   }
-  .field label .icon-label{font-size:22px}
-  .field label .req{
-    color:var(--err);
-    font-weight:900;
-    font-size:22px;
-    margin-right:auto;
-  }
+  .field label .icon-label{font-size:20px}
+  .field label .req{color:var(--err); font-weight:900; font-size:18px; margin-right:auto}
+
   .field input{
-    width:100%;
-    padding:20px 24px;
-    background:var(--card-soft);
-    border:2.5px solid var(--border);
-    color:var(--text);
-    border-radius:18px;
-    font-family:inherit;
-    font-size:20px;
-    font-weight:600;
+    width:100%; padding:16px 20px;
+    background:var(--card-soft); border:2.5px solid var(--border);
+    color:var(--text); border-radius:16px;
+    font-family:inherit; font-size:17px; font-weight:600;
     transition:all .25s ease;
   }
-  .field input::placeholder{
-    color:var(--muted);
-    opacity:.6;
-    font-weight:400;
-    font-size:18px;
-  }
+  .field input::placeholder{color:var(--muted); opacity:.6; font-weight:500; font-size:16px}
   .field input:focus{
-    outline:none;
-    border-color:var(--primary);
-    background:#fff;
-    box-shadow:0 0 0 6px rgba(30,64,175,.15);
-    transform:translateY(-2px);
+    outline:none; border-color:var(--primary); background:#fff;
+    box-shadow:0 0 0 6px rgba(30,64,175,.15); transform:translateY(-1px);
   }
   .field input.valid{border-color:#6ee7b7; background:#f0fdf4}
   .field input.invalid{border-color:#fca5a5; background:#fef2f2}
+
   .field .hint{
-    font-size:15px;
-    color:var(--muted);
-    margin-top:10px;
-    display:flex; align-items:center; gap:6px;
-    min-height:22px;
-    font-weight:600;
-    transition:all .2s ease;
+    font-size:14px; color:var(--muted); margin-top:8px;
+    min-height:20px; font-weight:600;
   }
   .field .hint.err{color:var(--err); font-weight:700}
   .field .hint.ok{color:var(--ok); font-weight:700}
 
   .phone-input input{
     font-family:'Courier New',monospace;
-    letter-spacing:5px;
-    text-align:center;
-    font-weight:800;
-    font-size:22px;
+    letter-spacing:4px; text-align:center;
+    font-weight:800; font-size:20px;
   }
 
-  /* ───── دکمه ───── */
+  /* گروه‌ها */
+  .group-chips{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px; margin-top:8px;
+  }
+  .group-chips input[type="radio"]{display:none}
+  .group-chips label{
+    display:flex; align-items:center; justify-content:center;
+    gap:8px; padding:14px 12px;
+    background:var(--card-soft); border:2.5px solid var(--border);
+    border-radius:14px; cursor:pointer;
+    font-size:15px; font-weight:800; color:var(--muted);
+    margin:0; transition:all .25s ease; text-align:center;
+  }
+  .group-chips label:hover{border-color:var(--primary); color:var(--primary-deep); transform:translateY(-2px)}
+  .group-chips input[type="radio"]:checked + label{
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    border-color:transparent; color:#fff;
+    box-shadow:0 8px 22px rgba(30,64,175,.4);
+    transform:translateY(-2px);
+  }
+
+  /* دکمه */
   button[type="submit"]{
-    width:100%;
-    padding:22px 32px;
-    background:linear-gradient(135deg,#1e40af,#2563eb,#3b82f6);
-    color:#fff;
-    border:none;
-    border-radius:18px;
-    cursor:pointer;
-    font-family:inherit;
-    font-size:22px;
-    font-weight:900;
-    box-shadow:0 12px 32px rgba(30,64,175,.4);
-    transition:all .25s ease;
-    margin-top:18px;
+    width:100%; padding:20px 28px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; border:none; border-radius:16px;
+    cursor:pointer; font-family:inherit;
+    font-size:20px; font-weight:900;
+    box-shadow:0 10px 28px rgba(30,64,175,.4);
+    transition:all .25s ease; margin-top:14px;
     letter-spacing:-.3px;
   }
   button[type="submit"]:hover:not(:disabled){
     transform:translateY(-3px);
-    box-shadow:0 18px 42px rgba(30,64,175,.55);
+    box-shadow:0 14px 36px rgba(30,64,175,.55);
   }
   button[type="submit"]:active:not(:disabled){transform:translateY(0) scale(.98)}
   button[type="submit"]:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-    box-shadow:none;
+    opacity:.5; cursor:not-allowed; box-shadow:none;
     background:linear-gradient(135deg,#94a3b8,#cbd5e1);
   }
 
-  /* ───── وضعیت ───── */
+  /* وضعیت */
   .status{
-    margin-top:22px;
-    padding:18px 22px;
-    border-radius:16px;
-    font-size:17px;
-    font-weight:700;
-    text-align:center;
-    display:none;
-    line-height:1.7;
+    margin-top:18px; padding:16px 20px;
+    border-radius:14px; font-size:16px; font-weight:700;
+    text-align:center; display:none; line-height:1.7;
   }
   .status.show{display:block; animation:in .3s ease}
   .status.ok{background:#ecfdf5; color:#047857; border:2px solid #a7f3d0}
@@ -252,63 +178,48 @@
   .status.loading{background:#eff6ff; color:#1e40af; border:2px solid #bfdbfe}
 
   .spinner{
-    display:inline-block;
-    width:22px; height:22px;
+    display:inline-block; width:20px; height:20px;
     border:3px solid rgba(30,64,175,.25);
     border-top-color:var(--primary);
-    border-radius:50%;
-    animation:spin .8s linear infinite;
-    vertical-align:middle;
-    margin-left:10px;
+    border-radius:50%; animation:spin .8s linear infinite;
+    vertical-align:middle; margin-left:8px;
   }
   @keyframes spin{to{transform:rotate(360deg)}}
 
   .privacy{
-    text-align:center;
-    font-size:15px;
-    color:var(--muted);
-    margin-top:28px;
-    line-height:2;
-    font-weight:600;
+    text-align:center; font-size:14px; color:var(--muted);
+    margin-top:24px; line-height:1.9; font-weight:600;
   }
   .privacy b{color:var(--primary); font-weight:800}
 
   @media (max-width:480px){
-    body{font-size:16px; padding:20px 16px 40px}
-    .logo .icon{
-      min-width:150px; height:110px; font-size:52px;
-      border-radius:26px; letter-spacing:3px;
-    }
-    .logo .title-line{font-size:26px}
-    .logo .subtitle{font-size:16px}
-    .logo .version{font-size:14px; padding:8px 18px}
-    .card{padding:26px 22px; border-radius:22px}
-    .welcome h2{font-size:22px}
-    .welcome p{font-size:15px}
-    .field label{font-size:17px}
-    .field input{padding:16px 18px; font-size:17px; border-radius:16px}
-    .field input::placeholder{font-size:15px}
-    .phone-input input{font-size:19px; letter-spacing:3px}
-    button[type="submit"]{padding:18px 24px; font-size:19px; border-radius:16px}
-    .privacy{font-size:13px}
+    body{padding:20px 14px 40px; font-size:16px}
+    .header .icon{width:78px; height:78px; font-size:40px; border-radius:22px}
+    .header h1{font-size:24px}
+    .card{padding:22px 18px; border-radius:22px}
+    .welcome h2{font-size:19px}
+    .field label{font-size:16px}
+    .field input{padding:14px 16px; font-size:16px}
+    .phone-input input{font-size:18px; letter-spacing:3px}
+    .group-chips{grid-template-columns:1fr}
+    button[type="submit"]{padding:18px 22px; font-size:18px}
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="logo">
+  <div class="header">
     <div class="icon">سما</div>
-    <h1 class="title-line">سامانه پیام‌رسان شخصی</h1>
-    <div class="subtitle">پیام‌رسان شخصی، بدون واسطه</div>
-    <div class="version">نسخه ۵/۱۱</div>
+    <h1>سامانه پیام‌رسان سما</h1>
+    <div class="subtitle">ثبت‌نام — نسخه ۵/۱۱</div>
   </div>
 
   <div class="card">
 
     <div class="welcome">
       <h2>👋 خوش آمدی!</h2>
-      <p>برای استفاده از سامانه، لطفاً اطلاعاتت رو تکمیل کن</p>
+      <p>برای استفاده از سما، لطفاً اطلاعاتت رو تکمیل کن</p>
     </div>
 
     <form id="registerForm" novalidate>
@@ -344,6 +255,12 @@
         <div class="hint" id="hintPhone">۱۱ رقم، با ۰۹ شروع بشه</div>
       </div>
 
+      <div class="field">
+        <label><span class="icon-label">📁</span> گروه من <span class="req">*</span></label>
+        <div class="group-chips" id="groupChips"></div>
+        <div class="hint" id="hintGroup" style="margin-top:10px"></div>
+      </div>
+
       <button type="submit" id="submitBtn" disabled>ثبت‌نام و ورود 🚀</button>
 
       <div class="status" id="status"></div>
@@ -353,7 +270,7 @@
   </div>
 
   <div class="privacy">
-    🔒 اطلاعات شما فقط برای <b>شناسایی در سامانه</b> استفاده می‌شود.<br>
+    🔒 اطلاعات شما فقط برای <b>شناسایی در سما</b> استفاده می‌شود.<br>
     هیچ‌کسی به‌جز مدیر سامانه به اطلاعات شما دسترسی ندارد.
   </div>
 
@@ -371,7 +288,38 @@ const province   = document.getElementById('province');
 const phone      = document.getElementById('phone');
 const submitBtn  = document.getElementById('submitBtn');
 const statusEl   = document.getElementById('status');
+const hintGroup  = document.getElementById('hintGroup');
 
+// ───── ساخت گروه‌ها از config.js ─────
+const groupChips = document.getElementById('groupChips');
+const groupEntries = Object.entries(C.groups);
+groupChips.innerHTML = groupEntries.map(([k,g], i) => `
+  <input type="radio" name="group" id="g-${k}" value="${k}">
+  <label for="g-${k}">${g.emoji} ${g.name}</label>
+`).join('');
+
+function getSelectedGroup() {
+  const el = document.querySelector('input[name="group"]:checked');
+  return el ? el.value : '';
+}
+
+// چک گروه
+document.querySelectorAll('input[name="group"]').forEach(radio => {
+  radio.onchange = () => {
+    const g = getSelectedGroup();
+    if (g) {
+      const group = C.groups[g];
+      hintGroup.textContent = `✓ گروه «${group.name}» انتخاب شد`;
+      hintGroup.className = 'hint ok';
+    } else {
+      hintGroup.textContent = 'لطفاً گروهت رو انتخاب کن';
+      hintGroup.className = 'hint err';
+    }
+    updateSubmitBtn();
+  };
+});
+
+// ───── اعتبارسنجی ─────
 function validateText(el, hintEl, label, minLen = 2) {
   const v = el.value.trim();
   if (!v) {
@@ -426,7 +374,8 @@ function updateSubmitBtn() {
     firstName.value.trim().length >= 2 &&
     lastName.value.trim().length >= 2 &&
     province.value.trim().length >= 2 &&
-    /^09\d{9}$/.test(phone.value);
+    /^09\d{9}$/.test(phone.value) &&
+    !!getSelectedGroup();
   submitBtn.disabled = !ok;
 }
 
@@ -443,6 +392,12 @@ function showStatus(type, msg) {
 form.onsubmit = async (e) => {
   e.preventDefault();
 
+  const group = getSelectedGroup();
+  if (!group) {
+    showStatus('err', '❌ لطفاً گروهت رو انتخاب کن');
+    return;
+  }
+
   const data = {
     type: 'register',
     firstName: firstName.value.trim(),
@@ -450,6 +405,7 @@ form.onsubmit = async (e) => {
     province:  province.value.trim(),
     phone:     phone.value,
     fullName:  firstName.value.trim() + ' ' + lastName.value.trim(),
+    group:     group,
     time:      new Date().toISOString()
   };
 
@@ -466,10 +422,10 @@ form.onsubmit = async (e) => {
 
     localStorage.setItem('myName',     data.fullName);
     localStorage.setItem('myFullInfo', JSON.stringify(data));
-    localStorage.setItem('myGroup',    'friends');
+    localStorage.setItem('myGroup',    group);
     localStorage.setItem('registered', 'true');
 
-    showStatus('ok', '✅ ثبت‌نام موفق!<br>در حال انتقال به سامانه...');
+    showStatus('ok', '✅ ثبت‌نام موفق!<br>در حال انتقال به سما...');
 
     setTimeout(() => {
       location.href = './index.html';
