@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#1e40af">
   <meta name="description" content="سامانه پیام‌رسان شخصی سما — نسخه 5/11">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="سما">
   <title>سما — سامانه پیام‌رسان شخصی</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
@@ -19,15 +20,14 @@
     <h1>📬 سما</h1>
     <div class="header-actions">
       <button id="refreshBtn" title="به‌روزرسانی">🔄</button>
-      <button id="settingsBtn" title="تنظیمات">⚙️</button>
     </div>
   </header>
 
-  <!-- پنل ادمین — فقط برای مدیر -->
-  <div id="adminBar" class="admin-bar" hidden>
-    <span class="admin-label">👑 پنل مدیر</span>
-    <a href="./send.html" class="admin-btn primary">⚙️ ارسال پیام</a>
-    <a href="./stats.html" class="admin-btn">📊 آمار</a>
+  <!-- 👑 دکمه ورود به پنل مدیریت -->
+  <div class="admin-entry">
+    <a href="./send.html" class="admin-entry-btn">
+      👑 ورود به پنل مدیریت
+    </a>
   </div>
 
   <div id="offline" class="offline-bar" hidden>📴 حالت آفلاین — آخرین نسخه ذخیره‌شده</div>
