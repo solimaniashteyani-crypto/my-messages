@@ -3,6 +3,18 @@ const C = window.CONFIG;
 const DB = window.MsgDB;
 const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/messages.json?ref=${C.branch}`;
 
+// ═══════════════════════════════════════════════════════
+// 🔐 چک ثبت‌نام — اگه کاربر ثبت‌نام نکرده، بفرست به register.html
+// ═══════════════════════════════════════════════════════
+const isRegistered = localStorage.getItem('registered') === 'true';
+const hasName      = !!localStorage.getItem('myName');
+
+if (!isRegistered || !hasName) {
+  // کاربر ثبت‌نام نکرده → برو به صفحه ثبت‌نام
+  location.href = './register.html';
+  return;  // ⚠️ مهم: ادامه کد اجرا نشه
+}
+
 const state = {
   messages: [], reactions: [], replies: [], seen: [],
   myName: localStorage.getItem('myName') || '',
