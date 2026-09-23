@@ -15,6 +15,26 @@ if (!isRegistered || !hasName) {
 }
 
 // ═══════════════════════════════════════════════════════
+// 👑 بررسی ادمین بودن — از URL یا localStorage
+// ═══════════════════════════════════════════════════════
+// اگه URL شامل #admin باشه → کاربر ادمین میشه
+if (location.hash === '#admin' || location.hash === '#admin-panel') {
+  localStorage.setItem('isAdmin', 'true');
+  // پاک کردن hash از URL (که بار بعدی هم بمونه ولی تمیز باشه)
+  setTimeout(() => history.replaceState(null, '', location.pathname), 100);
+}
+// اگه URL شامل #logout-admin باشه → از حالت ادمین خارج میشه
+if (location.hash === '#logout-admin') {
+  localStorage.removeItem('isAdmin');
+  setTimeout(() => history.replaceState(null, '', location.pathname), 100);
+}
+
+const isAdmin = localStorage.getItem('isAdmin') === 'true';
+const adminBar = document.getElementById('adminBar');
+if (adminBar) {
+  adminBar.hidden = !isAdmin;
+}
+// ═══════════════════════════════════════════════════════
 // 👑 نوار ادمین — فقط اگه کاربر مدیر باشه
 // ═══════════════════════════════════════════════════════
 const isAdmin = localStorage.getItem('isAdmin') === 'true';
