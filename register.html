@@ -16,7 +16,6 @@
     --text:#0c1e3e;
     --muted:#64748b;
     --border:#bfdbfe;
-    --border-strong:#93c5fd;
     --ok:#16a34a;
     --err:#dc2626;
     --card:#fff;
@@ -41,20 +40,16 @@
 
   .wrap{max-width:600px; margin:0 auto}
 
-  /* هدر */
   .header{text-align:center; margin-bottom:24px}
   .header .icon{
     display:inline-flex; align-items:center; justify-content:center;
     width:90px; height:90px; border-radius:26px;
     background:linear-gradient(135deg,#1e40af,#3b82f6,#60a5fa);
-    background-size:200% 200%;
-    color:#fff; font-size:48px; font-weight:900;
+    color:#fff; font-size:42px; font-weight:900;
     box-shadow:0 16px 40px rgba(30,64,175,.4);
     margin-bottom:14px;
-    animation:shine 6s ease infinite;
     font-family:Vazirmatn,sans-serif;
   }
-  @keyframes shine{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   .header h1{
     font-size:28px; margin:0 0 6px; font-weight:900;
     background:linear-gradient(135deg,#1e40af,#3b82f6);
@@ -63,29 +58,25 @@
   }
   .header .subtitle{color:var(--muted); font-size:15px; font-weight:600}
 
-  /* کارت */
   .card{
     background:var(--card); border:1px solid var(--border);
     border-radius:24px; padding:28px 24px;
     box-shadow:0 12px 40px rgba(30,64,175,.15), 0 4px 14px rgba(12,30,62,.06);
     position:relative; overflow:hidden;
-    animation:in .5s cubic-bezier(.21,1.02,.73,1);
   }
   .card::before{
     content:''; position:absolute; top:0; right:0; left:0; height:5px;
     background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
   }
-  @keyframes in{from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none}}
 
   .welcome{
     text-align:center; padding:4px 0 22px;
     border-bottom:2px dashed var(--border); margin-bottom:22px;
   }
   .welcome h2{font-size:22px; margin:0 0 8px; font-weight:900; color:var(--primary-deep)}
-  .welcome p{color:var(--muted); font-size:15px; margin:0; line-height:1.7; font-weight:600}
+  .welcome p{color:var(--muted); font-size:15px; margin:0; font-weight:600}
 
-  /* فیلدها */
-  .field{margin-bottom:20px}
+  .field{margin-bottom:22px}
   .field label{
     display:flex; align-items:center; gap:8px;
     font-size:17px; font-weight:800; color:var(--text);
@@ -93,7 +84,6 @@
   }
   .field label .icon-label{font-size:20px}
   .field label .req{color:var(--err); font-weight:900; font-size:18px; margin-right:auto}
-
   .field input{
     width:100%; padding:16px 20px;
     background:var(--card-soft); border:2.5px solid var(--border);
@@ -101,18 +91,14 @@
     font-family:inherit; font-size:17px; font-weight:600;
     transition:all .25s ease;
   }
-  .field input::placeholder{color:var(--muted); opacity:.6; font-weight:500; font-size:16px}
+  .field input::placeholder{color:var(--muted); opacity:.6; font-size:16px}
   .field input:focus{
     outline:none; border-color:var(--primary); background:#fff;
-    box-shadow:0 0 0 6px rgba(30,64,175,.15); transform:translateY(-1px);
+    box-shadow:0 0 0 6px rgba(30,64,175,.15);
   }
   .field input.valid{border-color:#6ee7b7; background:#f0fdf4}
   .field input.invalid{border-color:#fca5a5; background:#fef2f2}
-
-  .field .hint{
-    font-size:14px; color:var(--muted); margin-top:8px;
-    min-height:20px; font-weight:600;
-  }
+  .field .hint{font-size:14px; color:var(--muted); margin-top:8px; min-height:20px; font-weight:600}
   .field .hint.err{color:var(--err); font-weight:700}
   .field .hint.ok{color:var(--ok); font-weight:700}
 
@@ -122,19 +108,17 @@
     font-weight:800; font-size:20px;
   }
 
-  /* گروه‌ها */
   .group-chips{
-    display:grid;
-    grid-template-columns:1fr 1fr;
+    display:grid; grid-template-columns:1fr 1fr;
     gap:10px; margin-top:8px;
   }
   .group-chips input[type="radio"]{display:none}
   .group-chips label{
     display:flex; align-items:center; justify-content:center;
-    gap:8px; padding:14px 12px;
+    gap:8px; padding:16px 12px;
     background:var(--card-soft); border:2.5px solid var(--border);
     border-radius:14px; cursor:pointer;
-    font-size:15px; font-weight:800; color:var(--muted);
+    font-size:16px; font-weight:800; color:var(--muted);
     margin:0; transition:all .25s ease; text-align:center;
   }
   .group-chips label:hover{border-color:var(--primary); color:var(--primary-deep); transform:translateY(-2px)}
@@ -145,7 +129,6 @@
     transform:translateY(-2px);
   }
 
-  /* دکمه */
   button[type="submit"]{
     width:100%; padding:20px 28px;
     background:linear-gradient(135deg,#1e40af,#3b82f6);
@@ -154,25 +137,22 @@
     font-size:20px; font-weight:900;
     box-shadow:0 10px 28px rgba(30,64,175,.4);
     transition:all .25s ease; margin-top:14px;
-    letter-spacing:-.3px;
+  }
+  button[type="submit"]:disabled{
+    opacity:.5; cursor:not-allowed; box-shadow:none;
+    background:linear-gradient(135deg,#94a3b8,#cbd5e1);
   }
   button[type="submit"]:hover:not(:disabled){
     transform:translateY(-3px);
     box-shadow:0 14px 36px rgba(30,64,175,.55);
   }
-  button[type="submit"]:active:not(:disabled){transform:translateY(0) scale(.98)}
-  button[type="submit"]:disabled{
-    opacity:.5; cursor:not-allowed; box-shadow:none;
-    background:linear-gradient(135deg,#94a3b8,#cbd5e1);
-  }
 
-  /* وضعیت */
   .status{
     margin-top:18px; padding:16px 20px;
     border-radius:14px; font-size:16px; font-weight:700;
-    text-align:center; display:none; line-height:1.7;
+    text-align:center; display:none;
   }
-  .status.show{display:block; animation:in .3s ease}
+  .status.show{display:block}
   .status.ok{background:#ecfdf5; color:#047857; border:2px solid #a7f3d0}
   .status.err{background:#fef2f2; color:#b91c1c; border:2px solid #fecaca}
   .status.loading{background:#eff6ff; color:#1e40af; border:2px solid #bfdbfe}
@@ -194,15 +174,10 @@
 
   @media (max-width:480px){
     body{padding:20px 14px 40px; font-size:16px}
-    .header .icon{width:78px; height:78px; font-size:40px; border-radius:22px}
+    .header .icon{width:78px; height:78px; font-size:38px; border-radius:22px}
     .header h1{font-size:24px}
-    .card{padding:22px 18px; border-radius:22px}
-    .welcome h2{font-size:19px}
-    .field label{font-size:16px}
-    .field input{padding:14px 16px; font-size:16px}
-    .phone-input input{font-size:18px; letter-spacing:3px}
+    .card{padding:22px 18px}
     .group-chips{grid-template-columns:1fr}
-    button[type="submit"]{padding:18px 22px; font-size:18px}
   }
 </style>
 </head>
@@ -226,31 +201,26 @@
 
       <div class="field">
         <label><span class="icon-label">👤</span> نام <span class="req">*</span></label>
-        <input type="text" id="firstName" placeholder="مثلاً: جواد"
-               autocomplete="given-name" required>
+        <input type="text" id="firstName" placeholder="مثلاً: جواد" required>
         <div class="hint" id="hintFirst"></div>
       </div>
 
       <div class="field">
         <label><span class="icon-label">👥</span> نام خانوادگی <span class="req">*</span></label>
-        <input type="text" id="lastName" placeholder="مثلاً: رضایی"
-               autocomplete="family-name" required>
+        <input type="text" id="lastName" placeholder="مثلاً: رضایی" required>
         <div class="hint" id="hintLast"></div>
       </div>
 
       <div class="field">
         <label><span class="icon-label">📍</span> استان <span class="req">*</span></label>
-        <input type="text" id="province" placeholder="مثلاً: تهران"
-               autocomplete="address-level1" required>
+        <input type="text" id="province" placeholder="مثلاً: تهران" required>
         <div class="hint" id="hintProvince"></div>
       </div>
 
       <div class="field">
         <label><span class="icon-label">📱</span> شماره موبایل <span class="req">*</span></label>
         <div class="phone-input">
-          <input type="tel" id="phone" placeholder="09123456789"
-                 inputmode="numeric" maxlength="11"
-                 autocomplete="tel-national" required>
+          <input type="tel" id="phone" placeholder="09123456789" maxlength="11" required>
         </div>
         <div class="hint" id="hintPhone">۱۱ رقم، با ۰۹ شروع بشه</div>
       </div>
@@ -258,20 +228,17 @@
       <div class="field">
         <label><span class="icon-label">📁</span> گروه من <span class="req">*</span></label>
         <div class="group-chips" id="groupChips"></div>
-        <div class="hint" id="hintGroup" style="margin-top:10px"></div>
+        <div class="hint" id="hintGroup" style="margin-top:10px">لطفاً گروهت رو انتخاب کن</div>
       </div>
 
       <button type="submit" id="submitBtn" disabled>ثبت‌نام و ورود 🚀</button>
 
       <div class="status" id="status"></div>
-
     </form>
-
   </div>
 
   <div class="privacy">
-    🔒 اطلاعات شما فقط برای <b>شناسایی در سما</b> استفاده می‌شود.<br>
-    هیچ‌کسی به‌جز مدیر سامانه به اطلاعات شما دسترسی ندارد.
+    🔒 اطلاعات شما فقط برای <b>شناسایی در سما</b> استفاده می‌شود.
   </div>
 
 </div>
@@ -290,10 +257,8 @@ const submitBtn  = document.getElementById('submitBtn');
 const statusEl   = document.getElementById('status');
 const hintGroup  = document.getElementById('hintGroup');
 
-// ───── ساخت گروه‌ها از config.js ─────
 const groupChips = document.getElementById('groupChips');
-const groupEntries = Object.entries(C.groups);
-groupChips.innerHTML = groupEntries.map(([k,g], i) => `
+groupChips.innerHTML = Object.entries(C.groups).map(([k,g]) => `
   <input type="radio" name="group" id="g-${k}" value="${k}">
   <label for="g-${k}">${g.emoji} ${g.name}</label>
 `).join('');
@@ -303,7 +268,6 @@ function getSelectedGroup() {
   return el ? el.value : '';
 }
 
-// چک گروه
 document.querySelectorAll('input[name="group"]').forEach(radio => {
   radio.onchange = () => {
     const g = getSelectedGroup();
@@ -311,59 +275,48 @@ document.querySelectorAll('input[name="group"]').forEach(radio => {
       const group = C.groups[g];
       hintGroup.textContent = `✓ گروه «${group.name}» انتخاب شد`;
       hintGroup.className = 'hint ok';
-    } else {
-      hintGroup.textContent = 'لطفاً گروهت رو انتخاب کن';
-      hintGroup.className = 'hint err';
     }
     updateSubmitBtn();
   };
 });
 
-// ───── اعتبارسنجی ─────
 function validateText(el, hintEl, label, minLen = 2) {
   const v = el.value.trim();
   if (!v) {
-    el.classList.remove('valid', 'invalid');
+    el.classList.remove('valid','invalid');
     hintEl.textContent = '';
     hintEl.className = 'hint';
     return false;
   }
   if (v.length < minLen) {
-    el.classList.add('invalid');
-    el.classList.remove('valid');
-    hintEl.textContent = `حداقل ${minLen} حرف وارد کن`;
+    el.classList.add('invalid'); el.classList.remove('valid');
+    hintEl.textContent = `حداقل ${minLen} حرف`;
     hintEl.className = 'hint err';
     return false;
   }
-  el.classList.add('valid');
-  el.classList.remove('invalid');
+  el.classList.add('valid'); el.classList.remove('invalid');
   hintEl.textContent = `✓ ${label} درست است`;
   hintEl.className = 'hint ok';
   return true;
 }
 
 function validatePhone() {
-  const v = phone.value.replace(/\D/g, '');
+  const v = phone.value.replace(/\D/g,'');
   phone.value = v;
   const hintEl = document.getElementById('hintPhone');
-
   if (!v) {
-    phone.classList.remove('valid', 'invalid');
+    phone.classList.remove('valid','invalid');
     hintEl.textContent = '۱۱ رقم، با ۰۹ شروع بشه';
     hintEl.className = 'hint';
     return false;
   }
-
   if (!/^09\d{9}$/.test(v)) {
-    phone.classList.add('invalid');
-    phone.classList.remove('valid');
-    hintEl.textContent = 'شماره باید با ۰۹ شروع شده و ۱۱ رقم باشد';
+    phone.classList.add('invalid'); phone.classList.remove('valid');
+    hintEl.textContent = 'باید با ۰۹ شروع شده و ۱۱ رقم باشد';
     hintEl.className = 'hint err';
     return false;
   }
-
-  phone.classList.add('valid');
-  phone.classList.remove('invalid');
+  phone.classList.add('valid'); phone.classList.remove('invalid');
   hintEl.textContent = '✓ شماره معتبر است';
   hintEl.className = 'hint ok';
   return true;
@@ -380,8 +333,8 @@ function updateSubmitBtn() {
 }
 
 firstName.oninput = () => { validateText(firstName, document.getElementById('hintFirst'), 'نام'); updateSubmitBtn(); };
-lastName.oninput  = () => { validateText(lastName,  document.getElementById('hintLast'),  'نام خانوادگی'); updateSubmitBtn(); };
-province.oninput  = () => { validateText(province,  document.getElementById('hintProvince'), 'استان'); updateSubmitBtn(); };
+lastName.oninput  = () => { validateText(lastName, document.getElementById('hintLast'), 'نام خانوادگی'); updateSubmitBtn(); };
+province.oninput  = () => { validateText(province, document.getElementById('hintProvince'), 'استان'); updateSubmitBtn(); };
 phone.oninput     = () => { validatePhone(); updateSubmitBtn(); };
 
 function showStatus(type, msg) {
@@ -391,49 +344,40 @@ function showStatus(type, msg) {
 
 form.onsubmit = async (e) => {
   e.preventDefault();
-
   const group = getSelectedGroup();
-  if (!group) {
-    showStatus('err', '❌ لطفاً گروهت رو انتخاب کن');
-    return;
-  }
+  if (!group) return showStatus('err', '❌ لطفاً گروهت رو انتخاب کن');
 
   const data = {
     type: 'register',
     firstName: firstName.value.trim(),
-    lastName:  lastName.value.trim(),
-    province:  province.value.trim(),
-    phone:     phone.value,
-    fullName:  firstName.value.trim() + ' ' + lastName.value.trim(),
-    group:     group,
-    time:      new Date().toISOString()
+    lastName: lastName.value.trim(),
+    province: province.value.trim(),
+    phone: phone.value,
+    fullName: firstName.value.trim() + ' ' + lastName.value.trim(),
+    group: group,
+    time: new Date().toISOString()
   };
 
   submitBtn.disabled = true;
-  showStatus('loading', 'در حال ثبت اطلاعات... <span class="spinner"></span>');
+  showStatus('loading', 'در حال ثبت...');
 
   try {
     const res = await fetch(`${C.ntfyBase}/${REGISTER_TOPIC}`, {
       method: 'POST',
       body: JSON.stringify(data)
     });
+    if (!res.ok) throw new Error('خطا ' + res.status);
 
-    if (!res.ok) throw new Error('خطا در ارسال: ' + res.status);
-
-    localStorage.setItem('myName',     data.fullName);
+    localStorage.setItem('myName', data.fullName);
     localStorage.setItem('myFullInfo', JSON.stringify(data));
-    localStorage.setItem('myGroup',    group);
+    localStorage.setItem('myGroup', group);
     localStorage.setItem('registered', 'true');
 
-    showStatus('ok', '✅ ثبت‌نام موفق!<br>در حال انتقال به سما...');
-
-    setTimeout(() => {
-      location.href = './index.html';
-    }, 1500);
-
+    showStatus('ok', '✅ ثبت‌نام موفق!');
+    setTimeout(() => location.href = './index.html', 1500);
   } catch (err) {
     submitBtn.disabled = false;
-    showStatus('err', '❌ خطا: ' + err.message);
+    showStatus('err', '❌ ' + err.message);
   }
 };
 
