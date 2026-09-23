@@ -14,6 +14,18 @@ if (!isRegistered || !hasName) {
   return;
 }
 
+// ═══════════════════════════════════════════════════════
+// 👑 نوار ادمین — فقط اگه کاربر مدیر باشه
+// ═══════════════════════════════════════════════════════
+const isAdmin = localStorage.getItem('isAdmin') === 'true';
+const adminBar = document.getElementById('adminBar');
+if (adminBar) {
+  if (isAdmin) {
+    adminBar.hidden = false;
+  } else {
+    adminBar.hidden = true;
+  }
+}
 const state = {
   messages: [], reactions: [], replies: [], seen: [],
   myName: localStorage.getItem('myName') || '',
