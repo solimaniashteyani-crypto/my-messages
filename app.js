@@ -4,7 +4,7 @@ const DB = window.MsgDB;
 const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/messages.json?ref=${C.branch}`;
 
 // ═══════════════════════════════════════════════════════
-// 🔐 چک ثبت‌نام — اگه کاربر ثبت‌نام نکرده، بفرست به register.html
+// 🔐 چک ثبت‌نام
 // ═══════════════════════════════════════════════════════
 const isRegistered = localStorage.getItem('registered') === 'true';
 const hasName      = !!localStorage.getItem('myName');
@@ -15,18 +15,22 @@ if (!isRegistered || !hasName) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 👑 بررسی ادمین بودن — از URL یا localStorage
+// 👑 بررسی ادمین بودن — از URL hash یا localStorage
+// ───────────────────────────────────────────────────────
+// فعال‌سازی: باز کردن آدرس با #admin
+// غیرفعال: باز کردن آدرس با #logout-admin
 // ═══════════════════════════════════════════════════════
 try {
-  if (location.hash === '#admin' || location.hash === '#admin-panel') {
+  const hash = location.hash;
+  if (hash === '#admin' || hash === '#admin-panel') {
     localStorage.setItem('isAdmin', 'true');
     setTimeout(() => { try { history.replaceState(null, '', location.pathname); } catch(e){} }, 100);
   }
-  if (location.hash === '#logout-admin') {
+  if (hash === '#logout-admin') {
     localStorage.removeItem('isAdmin');
     setTimeout(() => { try { history.replaceState(null, '', location.pathname); } catch(e){} }, 100);
   }
-} catch(e) { console.warn('admin hash check:', e); }
+} catch(e) { console.warn('admin hash:', e); }
 
 const state = {
   messages: [], reactions: [], replies: [], seen: [],
@@ -37,7 +41,7 @@ const state = {
 };
 
 // ═══════════════════════════════════════════════════════
-// 📏 تعداد نمایش اولیه پیام‌ها
+// 📏 تعداد نمایش پیام‌ها
 // ═══════════════════════════════════════════════════════
 const INITIAL_COUNT = 3;
 const LOAD_STEP = 7;
@@ -126,10 +130,12 @@ async function loadMessages(force = false) {
 // 🎨 نمایش صفحه
 // ═══════════════════════════════════════════════════════
 function render() {
-  // ───── نوار ادمین ─────
+  // ───── نمایش دکمه ادمین ─────
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
-  const adminBar = document.getElementById('adminBar');
-  if (adminBar) adminBar.hidden = !isAdmin;
+  const adminEntry = document.getElementById('adminEntry');
+  if (adminEntry) {
+    adminEntry.hidden = !isAdmin;
+  }
 
   const tabs = document.getElementById('tabs');
   const feed = document.getElementById('feed');
@@ -158,7 +164,6 @@ function render() {
   const visible = list.slice(0, currentLimit);
   const hasMore = list.length > currentLimit;
 
-  // ───── رندر پیام‌ها ─────
   feed.innerHTML = visible.map(m => renderMessageCard(m)).join('');
 
   // ───── دکمه «بیشتر» یا «کمتر» ─────
@@ -221,7 +226,7 @@ function render() {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎴 ساخت کارت هر پیام
+// 🎴 کارت پیام
 // ═══════════════════════════════════════════════════════
 function renderMessageCard(m) {
   const rx = state.reactions.filter(r => r.messageId === m.id);
@@ -363,7 +368,7 @@ function sendSeen(messageId) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🔄 دریافت بلادرنگ (SSE)
+// 🔄 SSE — دریافت بلادرنگ
 // ═══════════════════════════════════════════════════════
 function subscribeSSE() {
   try {
