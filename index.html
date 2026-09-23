@@ -10,7 +10,6 @@
   <meta name="apple-mobile-web-app-title" content="سما">
   <title>سما — سامانه پیام‌رسان شخصی</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
@@ -23,8 +22,8 @@
     </div>
   </header>
 
-  <!-- 👑 دکمه ورود به پنل مدیریت -->
-  <div class="admin-entry">
+  <!-- 👑 دکمه ورود به پنل مدیریت — فقط برای مدیر نمایش داده میشه -->
+  <div class="admin-entry" id="adminEntry" hidden>
     <a href="./send.html" class="admin-entry-btn">
       👑 ورود به پنل مدیریت
     </a>
@@ -62,6 +61,44 @@
       </menu>
     </form>
   </dialog>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // 👑 فعال‌سازی حالت ادمین
+    // ─────────────────────────────────────────────────────────────
+    // برای ادمین شدن، یک بار این آدرس رو باز کن:
+    //   .../my-messages/#admin
+    //
+    // برای لغو ادمین بودن:
+    //   .../my-messages/#logout-admin
+    // ═══════════════════════════════════════════════════════════════
+    (function() {
+      try {
+        var hash = location.hash;
+        if (hash === '#admin' || hash === '#admin-panel') {
+          localStorage.setItem('isAdmin', 'true');
+          setTimeout(function() {
+            try { history.replaceState(null, '', location.pathname); } catch(e){}
+          }, 100);
+        }
+        if (hash === '#logout-admin') {
+          localStorage.removeItem('isAdmin');
+          setTimeout(function() {
+            try { history.replaceState(null, '', location.pathname); } catch(e){}
+          }, 100);
+        }
+
+        // نمایش یا مخفی کردن دکمه پنل مدیریت
+        var isAdmin = localStorage.getItem('isAdmin') === 'true';
+        var entry = document.getElementById('adminEntry');
+        if (entry && isAdmin) {
+          entry.hidden = false;
+        }
+      } catch(e) {
+        console.warn('admin check error:', e);
+      }
+    })();
+  </script>
 
   <script src="db.js"></script>
   <script src="config.js"></script>
