@@ -2,9 +2,9 @@
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>سامانه پیام‌رسان سما — پنل ادمین</title>
-<meta name="description" content="پنل ارسال پیام سامانه پیام‌رسان سما">
+<meta name="description" content="پنل ارسال پیام سامانه پیام‌رسان سما — نسخه 5/11">
 <link rel="manifest" href="admin-manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,249 +16,345 @@
     --primary:#1e40af;
     --primary-2:#3b82f6;
     --primary-deep:#1e3a8a;
+    --accent:#2563eb;
     --text:#0c1e3e;
     --muted:#64748b;
     --border:#bfdbfe;
     --border-strong:#93c5fd;
     --ok:#16a34a;
     --err:#dc2626;
-    --card:#fff;
+    --card:#ffffff;
     --card-soft:#f0f7ff;
+    --shadow-card:0 12px 40px rgba(30,64,175,.15), 0 4px 14px rgba(12,30,62,.06);
   }
   *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
   body{
     font-family:Vazirmatn,system-ui,sans-serif;
-    max-width:720px;
-    margin:auto;
-    padding:28px 22px 60px;
-    font-size:17px;
-    color:var(--text);
+    font-size:18px;
     background:
       radial-gradient(1200px 600px at 100% -10%, #93c5fd 0%, transparent 55%),
       radial-gradient(900px 500px at -10% 110%, #bfdbfe 0%, transparent 55%),
       linear-gradient(160deg,#dbeafe 0%, #eff6ff 45%, #fff 100%);
     background-attachment:fixed;
-    min-height:100vh;
-    line-height:1.7;
+    color:var(--text);
+    padding:32px 20px 60px;
+    line-height:1.75;
     -webkit-font-smoothing:antialiased;
+    min-height:100vh;
   }
 
-  /* هدر */
+  .wrap{
+    max-width:600px;
+    margin:0 auto;
+  }
+
+  /* ═══════════ هدر ═══════════ */
   .header{
     text-align:center;
-    margin-bottom:20px;
+    margin-bottom:28px;
   }
-  .header h2{
-    font-size:26px; margin:0 0 6px; font-weight:900;
-    background:linear-gradient(135deg,#1e40af,#3b82f6);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .header .subtitle{
-    color:var(--muted); font-size:15px; font-weight:600;
-  }
-
-  /* نوار ناوبری */
-  .nav-row{
-    display:flex; gap:10px; margin:20px 0 24px; flex-wrap:wrap;
-  }
-  .nav-row a, .nav-row button{
+  .header .icon{
     display:inline-flex;
     align-items:center;
-    gap:8px;
-    padding:12px 22px;
-    border-radius:14px;
+    justify-content:center;
+    width:80px; height:80px;
+    border-radius:24px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff;
+    font-size:40px;
+    box-shadow:0 16px 40px rgba(30,64,175,.35);
+    margin-bottom:14px;
+  }
+  .header h1{
+    font-size:30px;
+    margin:0 0 6px;
+    font-weight:900;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    letter-spacing:-.5px;
+  }
+  .header .subtitle{
+    color:var(--muted);
+    font-size:16px;
+    font-weight:600;
+  }
+
+  /* ═══════════ کارت اصلی ═══════════ */
+  .main-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:32px 28px;
+    box-shadow:var(--shadow-card);
+    position:relative;
+    overflow:hidden;
+  }
+  .main-card::before{
+    content:'';
+    position:absolute;
+    top:0; right:0; left:0;
+    height:5px;
+    background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
+  }
+
+  /* ═══════════ دکمه‌های ناوبری ═══════════ */
+  .nav-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:26px;
+    padding-bottom:26px;
+    border-bottom:2px dashed var(--border);
+  }
+  .nav-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:18px 20px;
+    border-radius:16px;
     font-family:inherit;
-    font-size:15px;
-    font-weight:700;
+    font-size:18px;
+    font-weight:800;
     text-decoration:none;
     cursor:pointer;
     border:none;
-    transition:all .2s ease;
+    transition:all .25s ease;
+    text-align:center;
   }
-  .nav-row .primary{
+  .nav-btn.primary{
     background:linear-gradient(135deg,#1e40af,#3b82f6);
     color:#fff;
-    box-shadow:0 6px 20px rgba(30,64,175,.35);
+    box-shadow:0 8px 22px rgba(30,64,175,.35);
   }
-  .nav-row .primary:hover{transform:translateY(-1px); box-shadow:0 8px 26px rgba(30,64,175,.5)}
-  .nav-row .ghost{
-    background:transparent;
-    color:var(--muted);
-    border:1.5px solid var(--border-strong);
+  .nav-btn.primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 32px rgba(30,64,175,.5);
   }
-  .nav-row .ghost:hover{background:var(--card-soft); color:var(--text); border-color:var(--primary)}
+  .nav-btn.ghost{
+    background:var(--card-soft);
+    color:var(--primary-deep);
+    border:2px solid var(--border);
+  }
+  .nav-btn.ghost:hover{
+    background:#fff;
+    border-color:var(--primary);
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(30,64,175,.15);
+  }
 
-  /* کارت توکن */
-  .token-saved{
-    background:linear-gradient(135deg,#d1fae5,#a7f3d0);
-    border:1.5px solid #6ee7b7;
+  /* ═══════════ کارت توکن ═══════════ */
+  .token-card{
+    background:linear-gradient(135deg,#ecfdf5,#d1fae5);
+    border:2px solid #6ee7b7;
     border-radius:16px;
-    padding:16px 22px;
+    padding:18px 22px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:12px;
+    gap:14px;
     flex-wrap:wrap;
-    margin-bottom:22px;
-    box-shadow:0 4px 14px rgba(16,185,129,.15);
+    margin-bottom:24px;
+    box-shadow:0 6px 18px rgba(16,185,129,.15);
   }
-  .token-saved[hidden]{display:none}
-  .token-saved .info{
-    display:flex; align-items:center; gap:10px;
-    font-weight:800; color:#047857; font-size:16px;
+  .token-card[hidden]{display:none}
+  .token-card .info{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:800;
+    color:#047857;
+    font-size:17px;
   }
-  .token-saved .info .icon{font-size:22px}
-  .token-saved button{
+  .token-card .info .icon{font-size:26px}
+  .token-card .logout-btn{
     background:transparent;
     color:#047857;
-    border:1.5px solid #047857;
-    padding:8px 18px;
-    font-size:14px;
-    font-weight:700;
-    border-radius:10px;
-    font-family:inherit;
-    cursor:pointer;
-    transition:all .2s ease;
-  }
-  .token-saved button:hover{background:#047857; color:#fff}
-
-  /* فرم توکن */
-  #tokenForm[hidden]{display:none}
-  #tokenForm label{
-    display:block; margin:14px 0 8px;
-    font-size:15px; font-weight:700; color:var(--text);
-  }
-  #tokenForm input{
-    width:100%; padding:14px 18px;
-    background:var(--card-soft);
-    border:2px solid var(--border);
-    color:var(--text);
-    border-radius:14px;
-    font-family:inherit;
-    font-size:16px;
-    font-weight:500;
-    transition:all .2s ease;
-    box-sizing:border-box;
-  }
-  #tokenForm input:focus{
-    outline:none; border-color:var(--primary);
-    background:#fff;
-    box-shadow:0 0 0 5px rgba(30,64,175,.15);
-  }
-  #tokenForm .row{margin-top:14px; display:flex; align-items:center; gap:12px; flex-wrap:wrap}
-
-  /* دکمه اصلی */
-  .btn-primary{
-    padding:12px 24px;
-    background:linear-gradient(135deg,#1e40af,#3b82f6);
-    color:#fff;
-    border:none;
-    border-radius:14px;
-    cursor:pointer;
-    font-family:inherit;
-    font-size:16px;
+    border:2px solid #047857;
+    padding:10px 20px;
+    font-size:15px;
     font-weight:800;
-    box-shadow:0 6px 20px rgba(30,64,175,.35);
+    border-radius:12px;
+    font-family:inherit;
+    cursor:pointer;
     transition:all .2s ease;
   }
-  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 10px 28px rgba(30,64,175,.5)}
-  .btn-primary:active{transform:translateY(0) scale(.98)}
-  .btn-primary:disabled{opacity:.5; cursor:not-allowed; box-shadow:none}
-
-  /* بخش اصلی فرم */
-  .form-section{margin-top:8px}
-  .form-section label{
-    display:block; margin:20px 0 10px;
-    font-size:16px; font-weight:800; color:var(--text);
+  .token-card .logout-btn:hover{
+    background:#047857;
+    color:#fff;
   }
 
-  /* گروه‌ها */
-  .group-chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:8px}
+  /* ═══════════ فرم توکن ═══════════ */
+  .token-form[hidden]{display:none}
+  .field-label{
+    display:block;
+    margin:0 0 12px;
+    font-size:18px;
+    font-weight:800;
+    color:var(--text);
+  }
+  .field-label .req{
+    color:var(--err);
+    margin-right:6px;
+  }
+  .token-input{
+    width:100%;
+    padding:18px 22px;
+    background:var(--card-soft);
+    border:2.5px solid var(--border);
+    color:var(--text);
+    border-radius:16px;
+    font-family:inherit;
+    font-size:18px;
+    font-weight:500;
+    transition:all .25s ease;
+  }
+  .token-input:focus{
+    outline:none;
+    border-color:var(--primary);
+    background:#fff;
+    box-shadow:0 0 0 6px rgba(30,64,175,.15);
+  }
+  .save-token-row{
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .token-msg{
+    margin-top:14px;
+    font-size:16px;
+    font-weight:700;
+  }
+
+  /* ═══════════ گروه‌ها ═══════════ */
+  .group-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:24px;
+  }
   .group-chips input[type="radio"]{display:none}
   .group-chips label{
-    display:inline-flex; align-items:center; gap:6px;
-    padding:12px 20px;
-    background:#fff;
-    border:2px solid var(--border);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 22px;
+    background:var(--card-soft);
+    border:2.5px solid var(--border);
     border-radius:14px;
     cursor:pointer;
-    font-size:16px;
-    font-weight:700;
+    font-size:18px;
+    font-weight:800;
     color:var(--muted);
     margin:0;
-    transition:all .2s ease;
-    box-shadow:0 2px 6px rgba(12,30,62,.04);
+    transition:all .25s ease;
   }
   .group-chips label:hover{
     border-color:var(--primary);
     color:var(--primary-deep);
-    transform:translateY(-1px);
+    transform:translateY(-2px);
   }
   .group-chips input[type="radio"]:checked + label{
     background:linear-gradient(135deg,#1e40af,#3b82f6);
     border-color:transparent;
     color:#fff;
-    box-shadow:0 6px 20px rgba(30,64,175,.4);
-    transform:translateY(-1px);
+    box-shadow:0 8px 22px rgba(30,64,175,.4);
+    transform:translateY(-2px);
   }
 
-  /* تکست‌اریا و فایل */
-  textarea, input[type="file"]{
-    width:100%; padding:16px 20px;
+  /* ═══════════ فیلدها ═══════════ */
+  .field{margin-bottom:24px}
+  .field textarea,
+  .field input[type="file"]{
+    width:100%;
+    padding:18px 22px;
     background:var(--card-soft);
-    border:2px solid var(--border);
+    border:2.5px solid var(--border);
     color:var(--text);
     border-radius:16px;
     font-family:inherit;
-    font-size:16px;
+    font-size:18px;
     font-weight:500;
     resize:vertical;
-    box-sizing:border-box;
-    transition:all .2s ease;
+    transition:all .25s ease;
   }
-  textarea{min-height:130px; line-height:1.7}
-  textarea:focus{
-    outline:none; border-color:var(--primary);
+  .field textarea{min-height:150px; line-height:1.8}
+  .field textarea:focus{
+    outline:none;
+    border-color:var(--primary);
     background:#fff;
-    box-shadow:0 0 0 5px rgba(30,64,175,.15);
+    box-shadow:0 0 0 6px rgba(30,64,175,.15);
   }
-  input[type="file"]{padding:12px 16px; cursor:pointer}
+  .field input[type="file"]{padding:14px 18px; cursor:pointer}
 
-  /* پیش‌نمایش عکس */
   .preview{
-    max-width:220px;
-    border-radius:14px;
-    margin-top:14px;
+    max-width:240px;
+    border-radius:16px;
+    margin-top:16px;
     display:none;
-    box-shadow:0 6px 20px rgba(30,64,175,.2);
+    box-shadow:0 8px 24px rgba(30,64,175,.2);
   }
 
-  /* دکمه‌های پایین */
-  .actions-row{
-    display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;
+  /* ═══════════ دکمه‌های اکشن ═══════════ */
+  .actions{
+    display:flex;
+    gap:14px;
+    margin-top:28px;
+    flex-wrap:wrap;
   }
-  .actions-row .btn-primary{flex:1; min-width:160px; font-size:17px; padding:16px 24px}
-  .actions-row .ghost{
-    padding:14px 24px;
-    background:transparent;
-    color:var(--muted);
-    border:1.5px solid var(--border-strong);
-    border-radius:14px;
+  .btn-main{
+    flex:1;
+    min-width:180px;
+    padding:20px 28px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff;
+    border:none;
+    border-radius:16px;
     cursor:pointer;
     font-family:inherit;
-    font-size:15px;
-    font-weight:700;
-    transition:all .2s ease;
+    font-size:20px;
+    font-weight:900;
+    box-shadow:0 10px 26px rgba(30,64,175,.4);
+    transition:all .25s ease;
   }
-  .actions-row .ghost:hover{background:var(--card-soft); color:var(--text); border-color:var(--primary)}
+  .btn-main:hover:not(:disabled){
+    transform:translateY(-3px);
+    box-shadow:0 14px 34px rgba(30,64,175,.55);
+  }
+  .btn-main:active:not(:disabled){transform:translateY(0) scale(.98)}
+  .btn-main:disabled{opacity:.5; cursor:not-allowed; box-shadow:none}
 
-  /* نوار پیشرفت */
+  .btn-ghost{
+    padding:18px 26px;
+    background:transparent;
+    color:var(--muted);
+    border:2.5px solid var(--border-strong);
+    border-radius:16px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:16px;
+    font-weight:800;
+    transition:all .25s ease;
+  }
+  .btn-ghost:hover{
+    background:var(--card-soft);
+    color:var(--text);
+    border-color:var(--primary);
+    transform:translateY(-2px);
+  }
+
+  /* ═══════════ نوار پیشرفت ═══════════ */
   .progress{
     height:8px;
     background:#dbeafe;
-    border-radius:4px;
+    border-radius:6px;
     overflow:hidden;
-    margin-top:16px;
+    margin-top:20px;
     display:none;
   }
   .progress > div{
@@ -271,119 +367,110 @@
   }
   @keyframes shine{to{background-position:-200% 0}}
 
-  /* وضعیت */
+  /* ═══════════ وضعیت ═══════════ */
   #status{
-    margin-top:18px;
-    font-size:16px;
-    font-weight:700;
-    min-height:26px;
+    margin-top:20px;
+    font-size:17px;
+    font-weight:800;
+    min-height:28px;
     text-align:center;
+    line-height:1.6;
   }
   .ok{color:var(--ok)}
   .err{color:var(--err)}
 
-  /* پیام‌های اخیر */
-  .recent-title{
-    color:var(--primary-deep);
-    font-size:20px;
-    font-weight:800;
-    margin:36px 0 16px;
-    padding-top:20px;
-    border-top:2px dashed var(--border);
+  /* ═══════════ موبایل ═══════════ */
+  @media (max-width:480px){
+    body{padding:20px 14px 40px; font-size:16px}
+    .header .icon{width:68px; height:68px; font-size:34px; border-radius:20px}
+    .header h1{font-size:24px}
+    .header .subtitle{font-size:14px}
+    .main-card{padding:24px 20px; border-radius:24px}
+    .nav-grid{grid-template-columns:1fr; gap:10px}
+    .nav-btn{font-size:16px; padding:16px 18px}
+    .field-label{font-size:16px}
+    .token-input, .field textarea, .field input[type="file"]{font-size:16px; padding:14px 18px}
+    .group-chips label{font-size:16px; padding:12px 18px}
+    .btn-main{font-size:18px; padding:18px 22px}
+    .btn-ghost{font-size:15px; padding:16px 22px}
   }
-  .msg-item{
-    background:#fff;
-    border:1.5px solid var(--border);
-    border-radius:18px;
-    padding:18px 22px;
-    margin:12px 0;
-    font-size:15px;
-    box-shadow:0 4px 14px rgba(12,30,62,.06);
-    transition:all .2s ease;
-  }
-  .msg-item:hover{box-shadow:0 8px 22px rgba(30,64,175,.12); transform:translateY(-1px)}
-  .msg-item .head{
-    display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:8px; flex-wrap:wrap; gap:8px;
-  }
-  .msg-item .head b{color:var(--primary-deep); font-size:16px; font-weight:800}
-  .msg-item .head time{color:var(--muted); font-size:13px; font-weight:600}
-  .msg-item img{max-width:100%; border-radius:12px; margin-top:10px}
-  .msg-item .del-btn{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-    color:#fff;
-    border:none;
-    padding:8px 18px;
-    font-size:14px;
-    font-weight:700;
-    border-radius:10px;
-    cursor:pointer;
-    font-family:inherit;
-    margin-top:12px;
-    box-shadow:0 4px 12px rgba(220,38,38,.3);
-    transition:all .2s ease;
-  }
-  .msg-item .del-btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(220,38,38,.45)}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="header">
-  <h2>📤 سامانه پیام‌رسان سما</h2>
-  <div class="subtitle">پنل ادمین — نسخه ۵/۱۱</div>
-</div>
-
-<!-- نوار ناوبری -->
-<div class="nav-row">
-  <a href="./index.html" class="primary">🌐 نمایش پیام‌ها</a>
-  <a href="./stats.html" class="ghost">📊 صفحه آمار</a>
-</div>
-
-<!-- کارت توکن ذخیره‌شده -->
-<div class="token-saved" id="tokenSaved" hidden>
-  <div class="info">
-    <span class="icon">✅</span>
-    <span>توکن ذخیره شده — آماده ارسال</span>
-  </div>
-  <button onclick="logout()">خروج از حساب</button>
-</div>
-
-<!-- فرم توکن (اگه توکن نداریم) -->
-<div id="tokenForm">
-  <label>🔑 توکن گیت‌هاب (فقط یک بار وارد کن، ذخیره میشه)</label>
-  <input type="password" id="token" placeholder="github_pat_..." autocomplete="off">
-  <div class="row">
-    <button class="btn-primary" onclick="saveToken()">💾 ذخیره توکن</button>
-    <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#2563eb; font-size:14px; font-weight:600">
-      از این صفحه بساز ↗
-    </a>
-  </div>
-  <div id="tokenMsg" style="margin-top:10px; font-size:14px; font-weight:600"></div>
-</div>
-
-<!-- بخش فرم اصلی (فقط بعد از توکن) -->
-<div class="form-section">
-  <label>📁 گروه مقصد</label>
-  <div class="group-chips" id="groupChips"></div>
-
-  <label>✍️ متن پیام (اختیاری اگر عکس داری)</label>
-  <textarea id="msg" placeholder="سلام..."></textarea>
-
-  <label>🖼 عکس (اختیاری)</label>
-  <input type="file" id="imgFile" accept="image/*">
-  <img id="preview" class="preview">
-
-  <div class="actions-row">
-    <button class="btn-primary" onclick="send()">ارسال 🚀</button>
-    <button class="ghost" onclick="reload()">🔄 به‌روزرسانی لیست</button>
+  <!-- هدر -->
+  <div class="header">
+    <div class="icon">📤</div>
+    <h1>سامانه پیام‌رسان سما</h1>
+    <div class="subtitle">پنل ادمین — نسخه ۵/۱۱</div>
   </div>
 
-  <div class="progress" id="prog"><div id="progBar"></div></div>
-  <div id="status"></div>
-</div>
+  <!-- کارت اصلی -->
+  <div class="main-card">
 
-<h3 class="recent-title">📨 پیام‌های اخیر</h3>
-<div id="list"></div>
+    <!-- دکمه‌های ناوبری -->
+    <div class="nav-grid">
+      <a href="./index.html" class="nav-btn primary">🌐 نمایش پیام‌ها</a>
+      <a href="./stats.html" class="nav-btn ghost">📊 صفحه آمار</a>
+    </div>
+
+    <!-- کارت توکن ذخیره‌شده -->
+    <div class="token-card" id="tokenSaved" hidden>
+      <div class="info">
+        <span class="icon">✅</span>
+        <span>توکن ذخیره شده — آماده ارسال</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">خروج از حساب</button>
+    </div>
+
+    <!-- فرم توکن -->
+    <div class="token-form" id="tokenForm">
+      <label class="field-label">🔑 توکن گیت‌هاب <span class="req">*</span></label>
+      <input type="password" id="token" class="token-input"
+             placeholder="github_pat_..." autocomplete="off">
+      <div class="save-token-row">
+        <button class="btn-main" style="flex:0; padding:16px 26px; font-size:17px; min-width:auto"
+                onclick="saveToken()">💾 ذخیره توکن</button>
+        <a href="https://github.com/settings/tokens?type=beta" target="_blank"
+           style="color:#2563eb; font-size:15px; font-weight:700">
+          از این صفحه بساز ↗
+        </a>
+      </div>
+      <div id="tokenMsg" class="token-msg"></div>
+    </div>
+
+    <!-- گروه مقصد -->
+    <div class="field" style="margin-bottom:20px">
+      <label class="field-label">📁 گروه مقصد</label>
+      <div class="group-chips" id="groupChips"></div>
+    </div>
+
+    <!-- متن پیام -->
+    <div class="field">
+      <label class="field-label">✍️ متن پیام <span style="font-size:14px; color:var(--muted); font-weight:600">(اختیاری اگر عکس داری)</span></label>
+      <textarea id="msg" placeholder="سلام..."></textarea>
+    </div>
+
+    <!-- عکس -->
+    <div class="field">
+      <label class="field-label">🖼 عکس <span style="font-size:14px; color:var(--muted); font-weight:600">(اختیاری)</span></label>
+      <input type="file" id="imgFile" accept="image/*">
+      <img id="preview" class="preview">
+    </div>
+
+    <!-- دکمه‌ها -->
+    <div class="actions">
+      <button class="btn-main" onclick="send()">ارسال 🚀</button>
+      <button class="btn-ghost" onclick="reload()">🔄</button>
+    </div>
+
+    <div class="progress" id="prog"><div id="progBar"></div></div>
+    <div id="status"></div>
+
+  </div>
+
+</div>
 
 <script src="config.js"></script>
 <script>
@@ -394,20 +481,14 @@ const TOKEN_KEY = 'gh_token';
 
 const tokenEl = document.getElementById('token');
 
-function getToken() {
-  return localStorage.getItem(TOKEN_KEY) || '';
-}
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 
 function saveToken() {
   const t = tokenEl.value.trim();
   const msgEl = document.getElementById('tokenMsg');
-  if (!t) {
-    msgEl.innerHTML = '<span style="color:#dc2626">❌ توکن رو وارد کن</span>';
-    return;
-  }
+  if (!t) { msgEl.innerHTML = '<span style="color:#dc2626">❌ توکن رو وارد کن</span>'; return; }
   if (!t.startsWith('github_pat_') && !t.startsWith('ghp_')) {
-    msgEl.innerHTML = '<span style="color:#dc2626">❌ فرمت توکن اشتباهه</span>';
-    return;
+    msgEl.innerHTML = '<span style="color:#dc2626">❌ فرمت توکن اشتباهه</span>'; return;
   }
   localStorage.setItem(TOKEN_KEY, t);
   msgEl.innerHTML = '<span style="color:#16a34a">✅ توکن ذخیره شد!</span>';
@@ -420,7 +501,6 @@ function logout() {
   localStorage.removeItem(TOKEN_KEY);
   tokenEl.value = '';
   updateTokenUI();
-  document.getElementById('list').innerHTML = '';
   setStatus('');
 }
 
@@ -428,13 +508,8 @@ function updateTokenUI() {
   const t = getToken();
   const saved = document.getElementById('tokenSaved');
   const form = document.getElementById('tokenForm');
-  if (t) {
-    saved.hidden = false;
-    form.hidden = true;
-  } else {
-    saved.hidden = true;
-    form.hidden = false;
-  }
+  if (t) { saved.hidden = false; form.hidden = true; }
+  else   { saved.hidden = true;  form.hidden = false; }
 }
 
 // گروه‌ها
@@ -498,10 +573,7 @@ async function putFile(path, base64Content, sha, commitMsg) {
     headers: { Authorization: `token ${getToken()}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
-  if (!r.ok) {
-    const t = await r.text();
-    throw new Error('آپدیت نشد (' + r.status + ')');
-  }
+  if (!r.ok) throw new Error('آپدیت نشد (' + r.status + ')');
   return r.json();
 }
 
@@ -554,7 +626,6 @@ async function send() {
     document.getElementById('msg').value = '';
     imgFile.value = ''; preview.style.display = 'none';
     setStatus('✅ ارسال شد! اعلان تا چند لحظه دیگه میاد 📲', 'ok');
-    renderList(db.messages);
   } catch (e) {
     setStatus('❌ ' + e.message, 'err');
   } finally {
@@ -562,48 +633,11 @@ async function send() {
   }
 }
 
-async function del(id) {
-  if (!confirm('این پیام حذف بشه؟')) return;
-  try {
-    const { sha, data: db } = await getFile(MSG_PATH);
-    db.messages  = db.messages.filter(m => m.id !== id);
-    db.reactions = (db.reactions||[]).filter(r => r.messageId !== id);
-    db.replies   = (db.replies||[]).filter(r => r.messageId !== id);
-    db.seen      = (db.seen||[]).filter(s => s.messageId !== id);
-    await putFile(MSG_PATH, b64encodeStr(JSON.stringify(db, null, 2)), sha, 'delete message');
-    setStatus('🗑 حذف شد', 'ok');
-    renderList(db.messages);
-  } catch (e) { setStatus('❌ ' + e.message, 'err'); }
-}
-
-function renderList(msgs) {
-  const list = document.getElementById('list');
-  const sorted = [...msgs].sort((a,b) => new Date(b.time) - new Date(a.time)).slice(0, 30);
-  list.innerHTML = sorted.map(m => {
-    const g = C.groups[m.group];
-    return `<div class="msg-item">
-      <div class="head">
-        <b>${g ? g.emoji + ' ' + g.name : '—'}</b>
-        <time>${new Date(m.time).toLocaleString('fa-IR')}</time>
-      </div>
-      ${m.text ? `<div style="white-space:pre-wrap; margin:6px 0">${escapeHtml(m.text)}</div>` : ''}
-      ${m.image ? `<img src="${m.image}" loading="lazy">` : ''}
-      <button class="del-btn" onclick="del('${m.id}')">🗑 حذف</button>
-    </div>`;
-  }).join('') || '<div style="color:#94a3b8; padding:20px; text-align:center">هنوز پیامی نیست</div>';
-}
-
-function escapeHtml(s) {
-  return String(s ?? '').replace(/[&<>"']/g,
-    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
 async function reload() {
   if (!getToken()) return;
   try {
     const { data: db } = await getFile(MSG_PATH);
     if (!db) return setStatus('messages.json پیدا نشد', 'err');
-    renderList(db.messages || []);
     setStatus(`📨 ${db.messages?.length||0} پیام، ${db.reactions?.length||0} ری‌اکشن، ${db.replies?.length||0} پاسخ`, 'ok');
   } catch (e) { setStatus('❌ ' + e.message, 'err'); }
 }
