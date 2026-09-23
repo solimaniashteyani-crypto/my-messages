@@ -137,6 +137,10 @@
 <body>
 <h2>📤 ارسال پیام — پنل ادمین</h2>
 <div class="subtitle">سامانه ۱۱ — نسخه ۱.۰.۰</div>
+  <div style="display:flex; gap:8px; margin-bottom:16px">
+  <button class="ghost" onclick="location.href='./stats.html'">📊 صفحه آمار</button>
+  <button class="ghost" onclick="location.href='./index.html'">🌐 نمایش پیام‌ها</button>
+</div>
 
 <!-- کارت وضعیت توکن (فقط وقتی توکن ذخیره شده) -->
 <div id="tokenSaved" class="token-status hidden">
@@ -179,6 +183,7 @@
 <div class="row" style="margin-top:14px">
   <button onclick="send()">ارسال 🚀</button>
   <button class="ghost" onclick="reload()">🔄 به‌روزرسانی لیست</button>
+    <button class="ghost" onclick="location.href='./stats.html'">📊 آمار</button>
   <button class="ghost" onclick="location.href='./stats.html'">📊 آمار</button>
 </div>
 
