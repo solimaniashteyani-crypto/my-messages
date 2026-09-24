@@ -10,47 +10,32 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="پنل ادمین سما">
 <meta name="theme-color" content="#1e40af">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
   :root{
-    --primary:#1e40af;
-    --primary-2:#3b82f6;
-    --primary-deep:#1e3a8a;
-    --text:#0c1e3e;
-    --muted:#64748b;
-    --border:#bfdbfe;
-    --border-strong:#93c5fd;
-    --ok:#16a34a;
-    --err:#dc2626;
-    --card:#fff;
-    --card-soft:#f0f7ff;
+    --primary:#1e40af; --primary-2:#3b82f6; --primary-deep:#1e3a8a;
+    --text:#0c1e3e; --muted:#64748b; --border:#bfdbfe; --border-strong:#93c5fd;
+    --ok:#16a34a; --err:#dc2626; --card:#fff; --card-soft:#f0f7ff;
   }
   *{box-sizing:border-box}
   html,body{margin:0;min-height:100%}
   body{
-    font-family:Vazirmatn,system-ui,sans-serif;
-    font-size:17px;
-    background:
-      radial-gradient(1200px 600px at 100% -10%, #93c5fd 0%, transparent 55%),
+    font-family:Vazirmatn,system-ui,sans-serif; font-size:17px;
+    background:radial-gradient(1200px 600px at 100% -10%, #93c5fd 0%, transparent 55%),
       radial-gradient(900px 500px at -10% 110%, #bfdbfe 0%, transparent 55%),
       linear-gradient(160deg,#dbeafe 0%, #eff6ff 45%, #fff 100%);
-    background-attachment:fixed;
-    color:var(--text);
-    padding:28px 20px 60px;
-    line-height:1.75;
-    min-height:100vh;
+    background-attachment:fixed; color:var(--text);
+    padding:28px 20px 60px; line-height:1.75; min-height:100vh;
   }
-
   .wrap{max-width:820px; margin:0 auto}
-
   .header{text-align:center; margin-bottom:24px}
   .header .icon{
     display:inline-flex; align-items:center; justify-content:center;
     width:80px; height:80px; border-radius:24px;
     background:linear-gradient(135deg,#1e40af,#3b82f6);
     color:#fff; font-size:38px;
-    box-shadow:0 16px 40px rgba(30,64,175,.35);
-    margin-bottom:14px;
+    box-shadow:0 16px 40px rgba(30,64,175,.35); margin-bottom:14px;
   }
   .header h1{
     font-size:28px; margin:0 0 6px; font-weight:900;
@@ -58,7 +43,6 @@
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
   .header .subtitle{color:var(--muted); font-size:15px; font-weight:600}
-
   .card{
     background:var(--card); border:1px solid var(--border);
     border-radius:24px; padding:28px 24px;
@@ -69,378 +53,179 @@
     content:''; position:absolute; top:0; right:0; left:0; height:5px;
     background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
   }
-
- .nav-row{
-  display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;
-  margin-bottom:22px;
-}
-@media(max-width:640px){
-  .nav-row{grid-template-columns:1fr}
-}
-}
-@media(max-width:640px){
-  .nav-row{grid-template-columns:1fr}
-}
+  .nav-row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:22px}
+  @media(max-width:640px){.nav-row{grid-template-columns:1fr}}
   .nav-btn{
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    padding:16px 20px; border-radius:14px;
-    font-family:inherit; font-size:16px; font-weight:800;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:14px 16px; border-radius:14px;
+    font-family:inherit; font-size:15px; font-weight:800;
     text-decoration:none; cursor:pointer; border:none;
     transition:all .25s ease; text-align:center;
   }
   .nav-btn.primary{
     background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
-    box-shadow:0 8px 22px rgba(30,64,175,.35);
+    box-shadow:0 6px 18px rgba(30,64,175,.35);
   }
-  .nav-btn.primary:hover{transform:translateY(-2px)}
-  .nav-btn.ghost{
-    background:var(--card-soft); color:var(--primary-deep);
-    border:2px solid var(--border);
-  }
-  .nav-btn.ghost:hover{background:#fff; border-color:var(--primary)}
-
+  .nav-btn.ghost{background:var(--card-soft); color:var(--primary-deep); border:2px solid var(--border)}
   .token-card{
     background:linear-gradient(135deg,#ecfdf5,#d1fae5);
-    border:2px solid #6ee7b7;
-    border-radius:16px; padding:18px 22px;
+    border:2px solid #6ee7b7; border-radius:16px; padding:16px 20px;
     display:flex; justify-content:space-between; align-items:center;
-    gap:14px; flex-wrap:wrap; margin-bottom:24px;
+    gap:14px; flex-wrap:wrap; margin-bottom:22px;
   }
   .token-card[hidden]{display:none}
-  .token-card .info{
-    display:flex; align-items:center; gap:12px;
-    font-weight:800; color:#047857; font-size:17px;
-  }
-  .token-card .info .icon{font-size:26px}
+  .token-card .info{display:flex; align-items:center; gap:10px; font-weight:800; color:#047857; font-size:16px}
   .token-card .logout-btn{
-    background:transparent; color:#047857;
-    border:2px solid #047857; padding:10px 20px;
-    font-size:15px; font-weight:800; border-radius:12px;
+    background:transparent; color:#047857; border:2px solid #047857;
+    padding:8px 18px; font-size:14px; font-weight:800; border-radius:10px;
     font-family:inherit; cursor:pointer;
   }
-  .token-card .logout-btn:hover{background:#047857; color:#fff}
-
   .token-form[hidden]{display:none}
-  .field-label{
-    display:block; margin:0 0 12px;
-    font-size:18px; font-weight:800; color:var(--text);
-  }
-  .field-label .req{color:var(--err); margin-right:6px}
+  .token-form label{display:block; margin:0 0 10px; font-size:16px; font-weight:800}
   .token-input{
-    width:100%; padding:18px 22px;
-    background:var(--card-soft); border:2.5px solid var(--border);
-    color:var(--text); border-radius:16px;
-    font-family:inherit; font-size:18px;
+    width:100%; padding:16px 20px; background:var(--card-soft);
+    border:2.5px solid var(--border); color:var(--text); border-radius:14px;
+    font-family:inherit; font-size:17px;
   }
-  .token-input:focus{
-    outline:none; border-color:var(--primary); background:#fff;
-    box-shadow:0 0 0 6px rgba(30,64,175,.15);
-  }
-  .save-token-row{
-    margin-top:16px; display:flex; align-items:center;
-    gap:14px; flex-wrap:wrap;
-  }
-  .token-msg{margin-top:14px; font-size:16px; font-weight:700}
-
-  /* ═══════════ انتخاب گروه‌ها ═══════════ */
   .groups-section{
-    background:var(--card-soft);
-    border:2px solid var(--border);
-    border-radius:18px;
-    padding:20px 22px;
-    margin:24px 0;
+    background:var(--card-soft); border:2px solid var(--border);
+    border-radius:18px; padding:20px 22px; margin:24px 0;
   }
   .groups-header{
     display:flex; justify-content:space-between; align-items:center;
-    flex-wrap:wrap; gap:12px;
-    padding-bottom:14px; border-bottom:2px dashed var(--border);
-    margin-bottom:16px;
+    flex-wrap:wrap; gap:12px; padding-bottom:14px;
+    border-bottom:2px dashed var(--border); margin-bottom:16px;
   }
-  .groups-header h3{
-    margin:0; font-size:19px; font-weight:900; color:var(--primary-deep);
-  }
-
-  /* نوار انتخاب سریع */
-  .quick-buttons{
-    display:flex; flex-wrap:wrap; gap:8px;
-    margin-bottom:16px;
-  }
+  .groups-header h3{margin:0; font-size:19px; font-weight:900; color:var(--primary-deep)}
+  .quick-buttons{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px}
   .quick-btn{
-    padding:10px 16px; border-radius:12px;
-    font-family:inherit; font-size:14px; font-weight:800;
-    background:#fff; color:var(--primary-deep);
-    border:2px solid var(--border);
-    cursor:pointer; transition:all .2s;
+    padding:10px 16px; border-radius:12px; font-family:inherit;
+    font-size:14px; font-weight:800; background:#fff; color:var(--primary-deep);
+    border:2px solid var(--border); cursor:pointer; transition:all .2s;
   }
-  .quick-btn:hover{
-    background:var(--primary); color:#fff; border-color:var(--primary);
-    transform:translateY(-1px);
-  }
+  .quick-btn:hover{background:var(--primary); color:#fff; border-color:var(--primary)}
   .quick-btn.primary{
-    background:linear-gradient(135deg,#1e40af,#3b82f6);
-    color:#fff; border-color:transparent;
-    box-shadow:0 4px 12px rgba(30,64,175,.3);
+    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
+    border-color:transparent; box-shadow:0 4px 12px rgba(30,64,175,.3);
   }
-  .quick-btn.primary:hover{transform:translateY(-2px); box-shadow:0 8px 18px rgba(30,64,175,.45)}
-  .quick-btn.clear{
-    color:var(--err); border-color:#fca5a5;
-  }
-  .quick-btn.clear:hover{background:var(--err); color:#fff; border-color:var(--err)}
-
-  /* دسته‌بندی کشویی */
+  .quick-btn.clear{color:var(--err); border-color:#fca5a5}
+  .quick-btn.clear:hover{background:var(--err); color:#fff}
   .category-box{
     background:#fff; border:1.5px solid var(--border);
-    border-radius:14px; margin-bottom:10px;
-    overflow:hidden;
+    border-radius:14px; margin-bottom:10px; overflow:hidden;
   }
   .category-header{
     display:flex; justify-content:space-between; align-items:center;
-    padding:14px 18px;
-    cursor:pointer;
+    padding:14px 18px; cursor:pointer;
     background:linear-gradient(135deg,#f0f7ff,#dbeafe);
-    transition:all .2s;
-    user-select:none;
   }
-  .category-header:hover{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
-  .category-title{
-    display:flex; align-items:center; gap:10px;
-    font-size:16px; font-weight:900; color:var(--primary-deep);
-  }
-  .category-title .count{
-    background:rgba(30,64,175,.15); color:var(--primary-deep);
-    padding:2px 10px; border-radius:999px;
-    font-size:12px; font-weight:800;
-  }
-  .category-title .selected-count{
-    background:linear-gradient(135deg,#16a34a,#15803d); color:#fff;
-    padding:2px 10px; border-radius:999px;
-    font-size:12px; font-weight:800;
-  }
-  .category-arrow{
-    font-size:16px; color:var(--primary-deep);
-    transition:transform .3s ease;
-  }
+  .category-title{display:flex; align-items:center; gap:10px; font-size:16px; font-weight:900; color:var(--primary-deep)}
+  .category-title .count{background:rgba(30,64,175,.15); color:var(--primary-deep); padding:2px 10px; border-radius:999px; font-size:12px; font-weight:800}
+  .category-title .selected-count{background:linear-gradient(135deg,#16a34a,#15803d); color:#fff; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:800}
+  .category-arrow{font-size:16px; color:var(--primary-deep); transition:transform .3s ease}
   .category-box.open .category-arrow{transform:rotate(90deg)}
-
-  .category-body{
-    display:none;
-    padding:14px 18px;
-    animation:slideDown .25s ease;
-  }
+  .category-body{display:none; padding:14px 18px}
   .category-box.open .category-body{display:block}
-  @keyframes slideDown{from{opacity:0; max-height:0} to{opacity:1; max-height:2000px}}
-
-  .checkboxes-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
-    gap:8px;
-  }
+  .checkboxes-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:8px}
   .checkbox-item{
-    display:flex; align-items:center; gap:8px;
-    padding:10px 12px;
-    background:var(--card-soft);
-    border:1.5px solid transparent;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:14px; font-weight:600;
-    transition:all .2s ease;
-    user-select:none;
+    display:flex; align-items:center; gap:8px; padding:10px 12px;
+    background:var(--card-soft); border:1.5px solid transparent;
+    border-radius:10px; cursor:pointer; font-size:14px; font-weight:600;
+    transition:all .2s ease; user-select:none;
   }
-  .checkbox-item:hover{background:#e0efff; border-color:var(--border-strong)}
   .checkbox-item input{display:none}
   .checkbox-item .check{
-    width:22px; height:22px;
-    border:2px solid var(--border-strong);
-    border-radius:6px;
-    display:flex; align-items:center; justify-content:center;
-    background:#fff; transition:all .2s; flex-shrink:0;
+    width:22px; height:22px; border:2px solid var(--border-strong);
+    border-radius:6px; display:flex; align-items:center; justify-content:center;
+    background:#fff; flex-shrink:0;
   }
-  .checkbox-item .check::after{
-    content:'✓'; color:#fff; font-weight:900; font-size:14px;
-    opacity:0; transition:opacity .2s;
-  }
-  .checkbox-item input:checked + .check{
-    background:linear-gradient(135deg,#1e40af,#3b82f6);
-    border-color:transparent;
-  }
+  .checkbox-item .check::after{content:'✓'; color:#fff; font-weight:900; font-size:14px; opacity:0}
+  .checkbox-item input:checked + .check{background:linear-gradient(135deg,#1e40af,#3b82f6); border-color:transparent}
   .checkbox-item input:checked + .check::after{opacity:1}
-  .checkbox-item:has(input:checked){
-    background:linear-gradient(135deg,#dbeafe,#bfdbfe);
-    border-color:var(--primary);
-  }
-  .checkbox-item:has(input:checked) .label{
-    color:var(--primary-deep); font-weight:800;
-  }
-
+  .checkbox-item:has(input:checked){background:linear-gradient(135deg,#dbeafe,#bfdbfe); border-color:var(--primary)}
+  .personal-item{background:linear-gradient(135deg,#faf5ff,#f3e8ff) !important; border-color:#d8b4fe !important}
+  .personal-item:has(input:checked){background:linear-gradient(135deg,#e9d5ff,#d8b4fe) !important; border-color:#8b5cf6 !important}
   .selection-summary{
     background:linear-gradient(135deg,#dbeafe,#bfdbfe);
-    border:2px solid var(--primary);
-    border-radius:12px;
+    border:2px solid var(--primary); border-radius:12px;
     padding:12px 18px; margin-top:14px;
-    font-size:15px; font-weight:800;
-    color:var(--primary-deep); text-align:center;
-    line-height:1.6;
+    font-size:15px; font-weight:800; color:var(--primary-deep); text-align:center;
   }
-  .selection-summary.empty{
-    background:linear-gradient(135deg,#fef2f2,#fee2e2);
-    border-color:#fca5a5; color:#b91c1c;
-  }
-
-  /* فرم */
+  .selection-summary.empty{background:linear-gradient(135deg,#fef2f2,#fee2e2); border-color:#fca5a5; color:#b91c1c}
   .field{margin-bottom:24px}
-  .field textarea,
-  .field input[type="file"]{
-    width:100%; padding:18px 22px;
-    background:var(--card-soft); border:2.5px solid var(--border);
-    color:var(--text); border-radius:16px;
+  .field-label{display:block; margin:0 0 12px; font-size:18px; font-weight:800; color:var(--text)}
+  .field textarea, .field input[type="file"]{
+    width:100%; padding:18px 22px; background:var(--card-soft);
+    border:2.5px solid var(--border); color:var(--text); border-radius:16px;
     font-family:inherit; font-size:18px;
-    transition:all .25s ease;
   }
   .field textarea{min-height:140px; line-height:1.8; resize:vertical}
-  .field textarea:focus{
-    outline:none; border-color:var(--primary); background:#fff;
-    box-shadow:0 0 0 6px rgba(30,64,175,.15);
-  }
-  .field input[type="file"]{padding:14px 18px; cursor:pointer}
-
-  .preview{
-    max-width:240px; border-radius:16px;
-    margin-top:16px; display:none;
-    box-shadow:0 8px 24px rgba(30,64,175,.2);
-  }
-
+  .preview{max-width:240px; border-radius:16px; margin-top:16px; display:none}
   .actions{display:flex; gap:12px; margin-top:24px; flex-wrap:wrap}
   .btn-main{
-    flex:1; min-width:160px;
-    padding:20px 28px;
-    background:linear-gradient(135deg,#1e40af,#3b82f6);
-    color:#fff; border:none; border-radius:16px;
-    cursor:pointer; font-family:inherit;
-    font-size:20px; font-weight:900;
+    flex:1; min-width:160px; padding:20px 28px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
+    border:none; border-radius:16px; cursor:pointer;
+    font-family:inherit; font-size:20px; font-weight:900;
     box-shadow:0 10px 26px rgba(30,64,175,.4);
-    transition:all .25s ease;
   }
-  .btn-main:hover:not(:disabled){transform:translateY(-3px)}
   .btn-main:disabled{opacity:.5; cursor:not-allowed}
-
   .btn-ghost{
-    padding:18px 26px;
-    background:transparent; color:var(--muted);
-    border:2.5px solid var(--border-strong);
-    border-radius:16px; cursor:pointer;
-    font-family:inherit; font-size:16px; font-weight:800;
-    transition:all .25s ease;
+    padding:18px 26px; background:transparent; color:var(--muted);
+    border:2.5px solid var(--border-strong); border-radius:16px;
+    cursor:pointer; font-family:inherit; font-size:16px; font-weight:800;
   }
-  .btn-ghost:hover{background:var(--card-soft); color:var(--text)}
-
   .btn-danger{
-    padding:18px 26px;
-    background:linear-gradient(135deg,#ef4444,#dc2626);
+    padding:18px 26px; background:linear-gradient(135deg,#ef4444,#dc2626);
     color:#fff; border:none; border-radius:16px;
-    cursor:pointer; font-family:inherit;
-    font-size:16px; font-weight:800;
+    cursor:pointer; font-family:inherit; font-size:16px; font-weight:800;
     box-shadow:0 6px 20px rgba(220,38,38,.35);
-    transition:all .25s ease;
   }
-  .btn-danger:hover{transform:translateY(-2px)}
-
-  .progress{
-    height:8px; background:#dbeafe; border-radius:6px;
-    overflow:hidden; margin-top:20px; display:none;
-  }
+  .progress{height:8px; background:#dbeafe; border-radius:6px; overflow:hidden; margin-top:20px; display:none}
   .progress > div{
-    height:100%;
-    background:linear-gradient(90deg,#1e40af,#3b82f6,#1e40af);
-    background-size:200% 100%; width:0;
-    transition:width .3s ease;
+    height:100%; background:linear-gradient(90deg,#1e40af,#3b82f6,#1e40af);
+    background-size:200% 100%; width:0; transition:width .3s ease;
     animation:shine 2s linear infinite;
   }
   @keyframes shine{to{background-position:-200% 0}}
-
-  #status{
-    margin-top:20px; font-size:17px; font-weight:800;
-    min-height:28px; text-align:center; line-height:1.6;
-  }
-  .ok{color:var(--ok)}
-  .err{color:var(--err)}
-
+  #status{margin-top:20px; font-size:17px; font-weight:800; min-height:28px; text-align:center}
+  .ok{color:var(--ok)} .err{color:var(--err)}
   .modal-backdrop{
     display:none; position:fixed; inset:0; z-index:100;
     background:rgba(12,30,62,.6); backdrop-filter:blur(6px);
     justify-content:center; align-items:center; padding:20px;
   }
   .modal-backdrop.show{display:flex}
-  .modal{
-    background:#fff; border-radius:24px;
-    padding:28px 26px; max-width:440px; width:100%;
-    box-shadow:0 24px 80px rgba(12,30,62,.4);
-  }
+  .modal{background:#fff; border-radius:24px; padding:28px 26px; max-width:440px; width:100%}
   .modal h3{font-size:22px; margin:0 0 10px; color:#b91c1c; font-weight:900}
-  .modal .warning-text{
-    color:#64748b; font-size:15px; margin-bottom:20px;
-    line-height:1.7; font-weight:600;
-  }
-  .modal label{
-    display:block; margin:14px 0 8px;
-    font-size:15px; font-weight:800;
-  }
+  .modal .warning-text{color:#64748b; font-size:15px; margin-bottom:20px; line-height:1.7; font-weight:600}
+  .modal label{display:block; margin:14px 0 8px; font-size:15px; font-weight:800}
   .modal input{
-    width:100%; padding:16px 20px;
-    background:#f0f7ff; border:2.5px solid #bfdbfe;
-    color:#0c1e3e; border-radius:14px;
+    width:100%; padding:16px 20px; background:#f0f7ff;
+    border:2.5px solid #bfdbfe; color:#0c1e3e; border-radius:14px;
     font-family:inherit; font-size:18px; font-weight:700;
     text-align:center; letter-spacing:8px;
   }
-  .modal input:focus{
-    outline:none; border-color:#dc2626;
-    box-shadow:0 0 0 5px rgba(220,38,38,.15);
-  }
-  .modal .error-msg{
-    color:#dc2626; font-size:14px; font-weight:700;
-    margin-top:10px; text-align:center; min-height:20px;
-  }
-  .modal .actions{
-    display:flex; gap:10px; margin-top:22px; justify-content:flex-end;
-  }
-  .modal .actions button{
-    padding:13px 24px; border-radius:12px;
-    font-family:inherit; font-size:15px; font-weight:800;
-    cursor:pointer; border:none;
-  }
-  .modal .actions .cancel{
-    background:transparent; color:#64748b;
-    border:2px solid #93c5fd;
-  }
-  .modal .actions .confirm{
-    background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff;
-  }
-  .modal .actions .confirm:disabled{opacity:.4; cursor:not-allowed}
-
+  .modal .error-msg{color:#dc2626; font-size:14px; font-weight:700; margin-top:10px; text-align:center; min-height:20px}
+  .modal .actions{display:flex; gap:10px; margin-top:22px; justify-content:flex-end}
+  .modal .actions button{padding:13px 24px; border-radius:12px; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer; border:none}
+  .modal .cancel{background:transparent; color:#64748b; border:2px solid #93c5fd}
+  .modal .confirm{background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff}
+  .modal .confirm:disabled{opacity:.4; cursor:not-allowed}
   .toast{
-    position:fixed; bottom:30px; left:50%;
-    transform:translateX(-50%) translateY(120%);
-    background:linear-gradient(135deg,#16a34a,#15803d);
-    color:#fff; padding:16px 28px; border-radius:16px;
-    font-size:16px; font-weight:800; z-index:200;
-    box-shadow:0 12px 36px rgba(22,163,74,.4);
-    transition:transform .3s ease;
+    position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120%);
+    background:linear-gradient(135deg,#16a34a,#15803d); color:#fff;
+    padding:16px 28px; border-radius:16px; font-size:16px; font-weight:800;
+    z-index:200; transition:transform .3s ease;
   }
   .toast.show{transform:translateX(-50%) translateY(0)}
   .toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
-
-  @media (max-width:480px){
+  @media(max-width:480px){
     body{padding:20px 14px 40px; font-size:16px}
     .header h1{font-size:24px}
-    .header .icon{width:68px; height:68px; font-size:34px}
     .card{padding:22px 18px}
     .nav-row{grid-template-columns:1fr}
-    .nav-btn{font-size:15px; padding:14px 16px}
-    .groups-section{padding:16px}
     .checkboxes-grid{grid-template-columns:1fr}
-    .checkbox-item{font-size:14px; padding:10px}
-    .field textarea,.field input[type="file"]{font-size:16px; padding:14px 16px}
-    .btn-main{font-size:18px; padding:18px 22px}
-    .btn-ghost,.btn-danger{font-size:15px; padding:16px 20px}
   }
 </style>
 </head>
@@ -459,30 +244,21 @@
       <a href="./index.html" class="nav-btn primary">🌐 نمایش پیام‌ها</a>
       <a href="./stats.html" class="nav-btn ghost">📊 صفحه آمار</a>
       <a href="./members.html" class="nav-btn ghost">👥 مدیریت اعضا</a>
-      <a href="./members.html" class="nav-btn ghost">👥 مدیریت اعضا</a>
-          </div>
+    </div>
 
     <div class="token-card" id="tokenSaved" hidden>
-      <div class="info">
-        <span class="icon">✅</span>
-        <span>توکن ذخیره شده — آماده ارسال</span>
-      </div>
+      <div class="info"><span>✅ توکن ذخیره شده — آماده ارسال</span></div>
       <button class="logout-btn" onclick="logout()">خروج از حساب</button>
     </div>
 
     <div class="token-form" id="tokenForm">
-      <label class="field-label">🔑 توکن گیت‌هاب <span class="req">*</span></label>
-      <input type="password" id="token" class="token-input"
-             placeholder="github_pat_..." autocomplete="off">
-      <div class="save-token-row">
-        <button class="btn-main" style="flex:0; padding:16px 26px; font-size:17px; min-width:auto"
-                onclick="saveToken()">💾 ذخیره توکن</button>
-        <a href="https://github.com/settings/tokens?type=beta" target="_blank"
-           style="color:#2563eb; font-size:15px; font-weight:700">
-          از این صفحه بساز ↗
-        </a>
+      <label>🔑 توکن گیت‌هاب</label>
+      <input type="password" id="token" class="token-input" placeholder="github_pat_...">
+      <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <button class="btn-main" style="flex:0; padding:16px 26px; font-size:17px; min-width:auto" onclick="saveToken()">💾 ذخیره توکن</button>
+        <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#2563eb; font-size:15px; font-weight:700">از این صفحه بساز ↗</a>
       </div>
-      <div id="tokenMsg" class="token-msg"></div>
+      <div id="tokenMsg" style="margin-top:14px; font-size:16px; font-weight:700"></div>
     </div>
 
     <div class="groups-section">
@@ -490,30 +266,28 @@
         <h3>📁 انتخاب مخاطبین</h3>
       </div>
 
-      <!-- دکمه‌های سریع -->
       <div class="quick-buttons">
-        <button class="quick-btn primary" onclick="selectAll()">✓ همه ۴۰ گروه</button>
+        <button class="quick-btn primary" onclick="selectAll()">✓ همه</button>
         <button class="quick-btn primary" onclick="selectOstanAndSpecial()">✓ همه استان‌ها + ویژه</button>
         <button class="quick-btn" onclick="selectOstanOnly()">✓ فقط استان‌ها</button>
         <button class="quick-btn" onclick="selectSpecialOnly()">✓ فقط ویژه</button>
         <button class="quick-btn" onclick="selectFamilyOnly()">✓ فقط خانواده</button>
+        <button class="quick-btn" onclick="selectPersonalOnly()">✓ فقط افراد</button>
         <button class="quick-btn clear" onclick="clearAll()">✗ پاک کردن همه</button>
       </div>
 
       <div id="groupsContainer"></div>
 
-      <div class="selection-summary empty" id="selectionSummary">
-        هیچ گروهی انتخاب نشده
-      </div>
+      <div class="selection-summary empty" id="selectionSummary">هیچ گروهی انتخاب نشده</div>
     </div>
 
     <div class="field">
-      <label class="field-label">✍️ متن پیام <span style="font-size:14px;color:var(--muted);font-weight:600">(اختیاری اگر عکس داری)</span></label>
+      <label class="field-label">✍️ متن پیام</label>
       <textarea id="msg" placeholder="سلام..."></textarea>
     </div>
 
     <div class="field">
-      <label class="field-label">🖼 عکس <span style="font-size:14px;color:var(--muted);font-weight:600">(اختیاری)</span></label>
+      <label class="field-label">🖼 عکس (اختیاری)</label>
       <input type="file" id="imgFile" accept="image/*">
       <img id="preview" class="preview">
     </div>
@@ -521,25 +295,24 @@
     <div class="actions">
       <button class="btn-main" onclick="send()">ارسال 🚀</button>
       <button class="btn-ghost" onclick="reload()">🔄</button>
-      <button class="btn-danger" onclick="openResetModal()">🗑 پاک کردن همه پیام‌ها</button>
+      <button class="btn-danger" onclick="openResetModal()">🗑 پاک کردن همه</button>
     </div>
 
     <div class="progress" id="prog"><div id="progBar"></div></div>
     <div id="status"></div>
 
   </div>
-
 </div>
 
 <div class="modal-backdrop" id="resetModal">
   <div class="modal">
     <h3>🗑 پاک کردن همه پیام‌ها</h3>
     <div class="warning-text">
-      این عمل <b>غیرقابل بازگشت</b> است.<br>
+      این عمل غیرقابل بازگشت است.<br>
       همه پیام‌ها، ری‌اکشن‌ها، پاسخ‌ها و بازدیدها پاک می‌شن.<br>
       <b style="color:#16a34a">اعضای ثبت‌نام‌شده دست‌نخورده می‌مونن.</b>
     </div>
-    <label>🔐 رمز امنیتی را وارد کنید</label>
+    <label>🔐 رمز امنیتی</label>
     <input type="password" id="resetPassword" placeholder="••••" maxlength="4" inputmode="numeric">
     <div class="error-msg" id="resetError"></div>
     <div class="actions">
@@ -558,54 +331,101 @@ const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents`;
 const MSG_PATH = 'messages.json';
 const TOKEN_KEY = 'gh_token';
 const RESET_PASSWORD = '5113';
+const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
 
 const tokenEl = document.getElementById('token');
+let allowedMembers = [];
 
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 
 // ═══════════════════════════════════════════════════════
-// 📁 ساخت گروه‌ها بر اساس دسته‌بندی
+// 👤 بارگیری افراد اختصاصی
+// ═══════════════════════════════════════════════════════
+async function loadAllowedMembers() {
+  try {
+    const res = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    allowedMembers = data.allowed || [];
+    renderGroups();
+  } catch(e) { console.warn(e); }
+}
+
+// ═══════════════════════════════════════════════════════
+// 📁 ساخت گروه‌ها
 // ═══════════════════════════════════════════════════════
 function renderGroups() {
   const container = document.getElementById('groupsContainer');
 
   const categories = {
-    'خانواده': { items: [], emoji: '🏡', open: true },
-    'ویژه': { items: [], emoji: '🕌', open: false },
-    'استان': { items: [], emoji: '🗺', open: false },
-    'سایر': { items: [], emoji: '👥', open: true }
+    family:  { name: 'خانواده', emoji: '🏡', open: true,  items: [] },
+    special: { name: 'ویژه',    emoji: '🕌', open: false, items: [] },
+    ostan:   { name: 'استان‌ها', emoji: '🗺', open: false, items: [] },
+    other:   { name: 'سایر',    emoji: '👥', open: true,  items: [] },
+    personal:{ name: 'افراد اختصاصی', emoji: '👤', open: false, items: [], isPersonal: true }
   };
 
+  const catMap = { 'خانواده': 'family', 'ویژه': 'special', 'استان': 'ostan', 'سایر': 'other' };
+
   Object.entries(C.groups).forEach(([key, g]) => {
-    const cat = g.category || 'سایر';
-    if (!categories[cat]) categories[cat] = { items: [], emoji: '📁', open: false };
-    categories[cat].items.push({ key, ...g });
+    const catName = g.category || 'سایر';
+    const catKey = catMap[catName] || 'other';
+    categories[catKey].items.push({ key, ...g });
+  });
+
+  allowedMembers.forEach((m, idx) => {
+    categories.personal.items.push({
+      key: '__personal__' + idx,
+      name: m.name,
+      personalTopic: m.personalTopic,
+      groups: m.groups || []
+    });
   });
 
   let html = '';
 
-  Object.entries(categories).forEach(([catName, cat]) => {
+  Object.entries(categories).forEach(([catKey, cat]) => {
     if (!cat.items.length) return;
 
     html += `
-      <div class="category-box ${cat.open ? 'open' : ''}" data-cat="${catName}">
-        <div class="category-header" onclick="toggleCategory('${catName}')">
+      <div class="category-box ${cat.open ? 'open' : ''}" data-cat="${catKey}">
+        <div class="category-header" onclick="toggleCategory('${catKey}')">
           <div class="category-title">
-            ${cat.emoji} ${catName}
+            ${cat.emoji} ${cat.name}
             <span class="count">${cat.items.length}</span>
-            <span class="selected-count" id="sel-${catName}" style="display:none">0</span>
+            <span class="selected-count" id="sel-${catKey}" style="display:none">0</span>
           </div>
           <span class="category-arrow">◀</span>
         </div>
         <div class="category-body">
           <div class="checkboxes-grid">
-            ${cat.items.map(g => `
-              <label class="checkbox-item">
-                <input type="checkbox" class="group-check" data-cat="${catName}" value="${g.key}">
-                <span class="check"></span>
-                <span class="label">${g.emoji} ${g.name}</span>
-              </label>
-            `).join('')}
+            ${cat.items.map(g => {
+              if (cat.isPersonal) {
+                const groupsText = g.groups.map(gk => {
+                  const gr = C.groups[gk];
+                  return gr ? gr.emoji + ' ' + gr.name : '';
+                }).filter(Boolean).join(' + ');
+                return `
+                  <label class="checkbox-item personal-item">
+                    <input type="checkbox" class="group-check personal-check" 
+                           data-cat="${catKey}" data-personal-topic="${g.personalTopic || ''}"
+                           data-personal-name="${g.name}" value="${g.key}">
+                    <span class="check"></span>
+                    <span class="label">
+                      👤 <b>${g.name}</b>
+                      <small style="display:block;color:#7c3aed;font-size:11px;font-weight:700">${groupsText || 'بدون گروه'}</small>
+                    </span>
+                  </label>
+                `;
+              }
+              return `
+                <label class="checkbox-item">
+                  <input type="checkbox" class="group-check" data-cat="${catKey}" value="${g.key}">
+                  <span class="check"></span>
+                  <span class="label">${g.emoji} ${g.name}</span>
+                </label>
+              `;
+            }).join('')}
           </div>
         </div>
       </div>
@@ -613,94 +433,101 @@ function renderGroups() {
   });
 
   container.innerHTML = html;
-
-  container.querySelectorAll('.group-check').forEach(cb => {
-    cb.addEventListener('change', updateSelectionSummary);
-  });
+  container.querySelectorAll('.group-check').forEach(cb => cb.addEventListener('change', updateSelectionSummary));
 }
 
-function toggleCategory(catName) {
-  const box = document.querySelector(`.category-box[data-cat="${catName}"]`);
+function toggleCategory(catKey) {
+  const box = document.querySelector(`.category-box[data-cat="${catKey}"]`);
   if (box) box.classList.toggle('open');
 }
 
 function getSelectedGroups() {
-  const checks = document.querySelectorAll('.group-check:checked');
-  return Array.from(checks).map(x => x.value);
+  return Array.from(document.querySelectorAll('.group-check:checked'))
+    .filter(x => !x.classList.contains('personal-check'))
+    .map(x => x.value);
+}
+
+function getSelectedPersonalMembers() {
+  return Array.from(document.querySelectorAll('.personal-check:checked')).map(x => ({
+    name: x.dataset.personalName,
+    topic: x.dataset.personalTopic
+  })).filter(m => m.topic);
 }
 
 function updateSelectionSummary() {
   const selected = getSelectedGroups();
-  const summary = document.getElementById('selectionSummary');
+  const personal = getSelectedPersonalMembers();
+  const totalCount = selected.length + personal.length;
 
-  // آپدیت شمارنده هر دسته
   const cats = {};
   selected.forEach(key => {
     const g = C.groups[key];
     if (g) {
-      const cat = g.category || 'سایر';
+      const cat = catMap[g.category] || 'other';
       cats[cat] = (cats[cat] || 0) + 1;
     }
   });
+  if (personal.length) cats.personal = personal.length;
 
-  ['خانواده', 'ویژه', 'استان', 'سایر'].forEach(cat => {
+  ['family', 'special', 'ostan', 'other', 'personal'].forEach(cat => {
     const el = document.getElementById('sel-' + cat);
     if (el) {
       if (cats[cat]) {
         el.textContent = '✓ ' + cats[cat];
         el.style.display = 'inline-block';
-      } else {
-        el.style.display = 'none';
-      }
+      } else el.style.display = 'none';
     }
   });
 
-  if (!selected.length) {
+  const summary = document.getElementById('selectionSummary');
+  if (!totalCount) {
     summary.textContent = 'هیچ گروهی انتخاب نشده';
     summary.className = 'selection-summary empty';
+  } else if (personal.length) {
+    summary.textContent = `✓ ${totalCount} انتخاب (${selected.length} گروه + ${personal.length} فرد)`;
+    summary.className = 'selection-summary';
   } else {
-    summary.textContent = `✓ ${selected.length} گروه انتخاب شده`;
+    summary.textContent = `✓ ${totalCount} گروه انتخاب شده`;
     summary.className = 'selection-summary';
   }
 }
+
+const catMap = { 'خانواده': 'family', 'ویژه': 'special', 'استان': 'ostan', 'سایر': 'other' };
 
 function selectAll() {
   document.querySelectorAll('.group-check').forEach(x => x.checked = true);
   updateSelectionSummary();
 }
-
 function selectOstanAndSpecial() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = (x.dataset.cat === 'استان' || x.dataset.cat === 'ویژه');
+    x.checked = !x.classList.contains('personal-check') && (x.dataset.cat === 'special' || x.dataset.cat === 'ostan');
   });
   updateSelectionSummary();
-  showToast('✓ همه استان‌ها + ویژه انتخاب شد');
 }
-
 function selectOstanOnly() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = (x.dataset.cat === 'استان');
+    x.checked = !x.classList.contains('personal-check') && x.dataset.cat === 'ostan';
   });
   updateSelectionSummary();
-  showToast('✓ فقط ۳۱ استان انتخاب شد');
 }
-
 function selectSpecialOnly() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = (x.dataset.cat === 'ویژه');
+    x.checked = !x.classList.contains('personal-check') && x.dataset.cat === 'special';
   });
   updateSelectionSummary();
-  showToast('✓ فقط ویژه انتخاب شد');
 }
-
 function selectFamilyOnly() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = (x.dataset.cat === 'خانواده');
+    x.checked = !x.classList.contains('personal-check') && x.dataset.cat === 'family';
   });
   updateSelectionSummary();
-  showToast('✓ فقط خانواده انتخاب شد');
 }
-
+function selectPersonalOnly() {
+  document.querySelectorAll('.group-check').forEach(x => {
+    x.checked = x.classList.contains('personal-check');
+  });
+  updateSelectionSummary();
+}
 function clearAll() {
   document.querySelectorAll('.group-check').forEach(x => x.checked = false);
   updateSelectionSummary();
@@ -717,11 +544,10 @@ function saveToken() {
     msgEl.innerHTML = '<span style="color:#dc2626">❌ فرمت اشتباه</span>'; return;
   }
   localStorage.setItem(TOKEN_KEY, t);
-  msgEl.innerHTML = '<span style="color:#16a34a">✅ توکن ذخیره شد!</span>';
+  msgEl.innerHTML = '<span style="color:#16a34a">✅ ذخیره شد!</span>';
   updateTokenUI();
   reload();
 }
-
 function logout() {
   if (!confirm('توکن پاک بشه؟')) return;
   localStorage.removeItem(TOKEN_KEY);
@@ -729,15 +555,11 @@ function logout() {
   updateTokenUI();
   setStatus('');
 }
-
 function updateTokenUI() {
   const t = getToken();
-  const saved = document.getElementById('tokenSaved');
-  const form = document.getElementById('tokenForm');
-  if (t) { saved.hidden = false; form.hidden = true; }
-  else   { saved.hidden = true;  form.hidden = false; }
+  document.getElementById('tokenSaved').hidden = !t;
+  document.getElementById('tokenForm').hidden = !!t;
 }
-
 const setStatus = (t, cls='') => {
   document.getElementById('status').innerHTML = `<span class="${cls}">${t}</span>`;
 };
@@ -760,7 +582,6 @@ const fileToBase64 = file => new Promise((res, rej) => {
   r.onerror = rej;
   r.readAsDataURL(file);
 });
-
 const imgFile = document.getElementById('imgFile');
 const preview = document.getElementById('preview');
 imgFile.onchange = () => {
@@ -771,19 +592,18 @@ imgFile.onchange = () => {
 };
 
 // ═══════════════════════════════════════════════════════
-// 🌐 GitHub API
+// 🌐 API
 // ═══════════════════════════════════════════════════════
 async function getFile(path) {
   const r = await fetch(`${API}/${path}?t=${Date.now()}`, {
     headers: { Authorization: `token ${getToken()}` }
   });
   if (r.status === 404) return { sha: null, data: null };
-  if (r.status === 401) throw new Error('401 — توکن منقضی یا اشتباهه');
+  if (r.status === 401) throw new Error('401 — توکن منقضی');
   if (!r.ok) throw new Error('خطا (' + r.status + ')');
   const j = await r.json();
   return { sha: j.sha, data: JSON.parse(b64decode(j.content)) };
 }
-
 async function putFile(path, base64Content, sha, commitMsg) {
   const body = { message: commitMsg, content: base64Content };
   if (sha) body.sha = sha;
@@ -795,7 +615,6 @@ async function putFile(path, base64Content, sha, commitMsg) {
   if (!r.ok) throw new Error('آپدیت نشد (' + r.status + ')');
   return r.json();
 }
-
 async function uploadImage(file) {
   const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
   const filename = `${crypto.randomUUID()}.${ext}`;
@@ -806,13 +625,14 @@ async function uploadImage(file) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 📤 ارسال پیام
+// 📤 ارسال
 // ═══════════════════════════════════════════════════════
 async function send() {
   if (!getToken()) return setStatus('اول توکن رو وارد کن', 'err');
 
   const selected = getSelectedGroups();
-  if (!selected.length) return setStatus('حداقل یه گروه انتخاب کن', 'err');
+  const personal = getSelectedPersonalMembers();
+  if (!selected.length && !personal.length) return setStatus('حداقل یه گروه یا فرد انتخاب کن', 'err');
 
   const text = document.getElementById('msg').value.trim();
   const file = imgFile.files[0];
@@ -841,7 +661,8 @@ async function send() {
       id: crypto.randomUUID(),
       text,
       groups: selected,
-      group: selected[0],
+      group: selected[0] || '__personal__',
+      personalRecipients: personal,
       time: new Date().toISOString(),
       ...(imageUrl ? { image: imageUrl } : {})
     });
@@ -851,7 +672,8 @@ async function send() {
 
     document.getElementById('msg').value = '';
     imgFile.value = ''; preview.style.display = 'none';
-    setStatus(`✅ ارسال شد به ${selected.length} گروه! اعلان تا چند لحظه دیگه میاد 📲`, 'ok');
+    const total = selected.length + personal.length;
+    setStatus(`✅ ارسال شد به ${total} مخاطب! اعلان تا چند لحظه دیگه میاد 📲`, 'ok');
   } catch (e) {
     setStatus('❌ ' + e.message, 'err');
   } finally {
@@ -864,7 +686,7 @@ async function reload() {
   try {
     const { data: db } = await getFile(MSG_PATH);
     if (!db) return setStatus('messages.json پیدا نشد', 'err');
-    setStatus(`📨 ${db.messages?.length||0} پیام، ${db.reactions?.length||0} ری‌اکشن، ${db.replies?.length||0} پاسخ`, 'ok');
+    setStatus(`📨 ${db.messages?.length||0} پیام`, 'ok');
   } catch (e) { setStatus('❌ ' + e.message, 'err'); }
 }
 
@@ -872,99 +694,63 @@ async function reload() {
 // 🗑 پاک کردن
 // ═══════════════════════════════════════════════════════
 function openResetModal() {
-  if (!getToken()) {
-    showToast('❌ اول توکن رو وارد کن', true);
-    return;
-  }
+  if (!getToken()) { showToast('❌ اول توکن رو وارد کن', true); return; }
   document.getElementById('resetPassword').value = '';
   document.getElementById('resetError').textContent = '';
   document.getElementById('confirmResetBtn').disabled = true;
   document.getElementById('resetModal').classList.add('show');
   setTimeout(() => document.getElementById('resetPassword').focus(), 100);
 }
-
-function closeResetModal() {
-  document.getElementById('resetModal').classList.remove('show');
-}
-
+function closeResetModal() { document.getElementById('resetModal').classList.remove('show'); }
 document.getElementById('resetPassword').addEventListener('input', e => {
   const val = e.target.value.trim();
   const btn = document.getElementById('confirmResetBtn');
   const err = document.getElementById('resetError');
   if (val.length === 0) { btn.disabled = true; err.textContent = ''; }
-  else if (val === RESET_PASSWORD) {
-    btn.disabled = false;
-    err.textContent = '✅ رمز صحیح است';
-    err.style.color = '#16a34a';
-  } else {
-    btn.disabled = true;
-    err.textContent = '❌ رمز اشتباه';
-    err.style.color = '#dc2626';
-  }
+  else if (val === RESET_PASSWORD) { btn.disabled = false; err.textContent = '✅ رمز صحیح'; err.style.color = '#16a34a'; }
+  else { btn.disabled = true; err.textContent = '❌ رمز اشتباه'; err.style.color = '#dc2626'; }
 });
-
 async function confirmReset() {
   const pass = document.getElementById('resetPassword').value.trim();
   if (pass !== RESET_PASSWORD) return;
-
   const btn = document.getElementById('confirmResetBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳...';
-
+  btn.disabled = true; btn.textContent = '⏳...';
   try {
     const token = getToken();
     const emptyDb = { messages: [], reactions: [], replies: [], seen: [] };
-
-    const r = await fetch(`${API}/${MSG_PATH}?t=${Date.now()}`, {
-      headers: { Authorization: `token ${token}` }
-    });
-    if (!r.ok) throw new Error('خطا در خواندن');
+    const r = await fetch(`${API}/${MSG_PATH}?t=${Date.now()}`, { headers: { Authorization: `token ${token}` } });
+    if (!r.ok) throw new Error('خطا');
     const j = await r.json();
-
-    const pr = await fetch(`${API}/${MSG_PATH}`, {
+    await fetch(`${API}/${MSG_PATH}`, {
       method: 'PUT',
       headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: 'reset all messages (admin)',
+        message: 'reset all messages',
         content: b64encodeStr(JSON.stringify(emptyDb, null, 2)),
         sha: j.sha
       })
     });
-    if (!pr.ok) throw new Error('پاک‌سازی نشد');
-
-    localStorage.removeItem('seenSent');
-    localStorage.removeItem('feedLimit');
-
-    closeResetModal();
-    showToast('✅ همه پیام‌ها پاک شد!');
+    localStorage.removeItem('seenSent'); localStorage.removeItem('feedLimit');
+    closeResetModal(); showToast('✅ پاک شد!');
     setTimeout(() => reload(), 800);
   } catch (e) {
     document.getElementById('resetError').textContent = '❌ ' + e.message;
-    btn.disabled = false;
-    btn.textContent = '🗑 پاک کن';
+    btn.disabled = false; btn.textContent = '🗑 پاک کن';
   }
 }
-
 function showToast(msg, isError) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.className = 'toast show' + (isError ? ' err' : '');
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResetModal(); });
+document.getElementById('resetModal').addEventListener('click', e => { if (e.target.id === 'resetModal') closeResetModal(); });
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeResetModal();
-});
-document.getElementById('resetModal').addEventListener('click', e => {
-  if (e.target.id === 'resetModal') closeResetModal();
-});
-
-// ═══════════════════════════════════════════════════════
 // 🚀 شروع
-// ═══════════════════════════════════════════════════════
-renderGroups();
 tokenEl.value = getToken() || '';
 updateTokenUI();
+loadAllowedMembers();
 if (getToken()) reload();
 </script>
 </body>
