@@ -1,0 +1,16 @@
+{
+  "allowed": [
+    {
+      "phone": "09120000000",
+      "name": "نمونه ۱",
+      "group": "hamsar",
+      "province": "تهران"
+    },
+    {
+      "phone": "09120000001",
+      "name": "نمونه ۲",
+      "group": "rabet_tehran",
+      "province": "تهران"
+    }
+  ]
+}
