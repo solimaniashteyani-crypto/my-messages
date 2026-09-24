@@ -72,7 +72,6 @@
     background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
   }
 
-  /* نوار دکمه‌ها */
   .nav-row{
     display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;
     margin-bottom:22px;
@@ -97,7 +96,6 @@
   }
   .nav-btn.ghost:hover{background:#fff; border-color:var(--primary)}
 
-  /* توکن */
   .token-card{
     background:linear-gradient(135deg,#ecfdf5,#d1fae5);
     border:2px solid #6ee7b7;
@@ -133,7 +131,6 @@
     box-shadow:0 0 0 5px rgba(30,64,175,.15);
   }
 
-  /* نوار بالا */
   .toolbar{
     display:flex; gap:10px; flex-wrap:wrap;
     align-items:center; margin-bottom:20px;
@@ -162,7 +159,6 @@
   }
   .btn-add:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(22,163,74,.5)}
 
-  /* آمار */
   .stats-bar{
     display:flex; gap:10px; flex-wrap:wrap;
     margin-bottom:20px;
@@ -173,7 +169,6 @@
     font-size:14px; font-weight:800; color:var(--primary-deep);
   }
 
-  /* کارت عضو */
   .member-card{
     background:#fff; border:2px solid var(--border);
     border-radius:16px; padding:18px 20px;
@@ -209,6 +204,11 @@
     cursor:pointer; font-size:16px;
     transition:all .2s;
   }
+  .icon-btn.invite{
+    background:linear-gradient(135deg,#8b5cf6,#7c3aed);
+    color:#fff;
+  }
+  .icon-btn.invite:hover{transform:scale(1.1)}
   .icon-btn.edit{
     background:linear-gradient(135deg,#f59e0b,#d97706);
     color:#fff;
@@ -245,7 +245,6 @@
     border:1px solid var(--border-strong);
   }
 
-  /* خالی */
   .empty{
     text-align:center; padding:60px 20px;
     color:var(--muted); font-size:17px; font-weight:600;
@@ -255,7 +254,7 @@
     font-size:70px; margin-bottom:14px; opacity:.4;
   }
 
-  /* مودال */
+  /* ───── مودال ───── */
   .modal-backdrop{
     display:none; position:fixed; inset:0; z-index:100;
     background:rgba(12,30,62,.6);
@@ -307,9 +306,7 @@
     overflow-y:auto;
     background:var(--card-soft);
   }
-  .group-cat{
-    margin-bottom:12px;
-  }
+  .group-cat{margin-bottom:12px}
   .group-cat-title{
     font-size:14px; font-weight:900;
     color:var(--primary-deep);
@@ -383,7 +380,85 @@
     min-height:20px;
   }
 
-  /* toast */
+  /* ───── مودال دعوت‌نامه ───── */
+  #inviteModal .modal{max-width:600px}
+  #inviteModal h3{
+    font-size:20px;
+    margin:0 0 16px;
+    color:var(--primary-deep);
+    font-weight:900;
+  }
+  .invite-topics-preview{
+    background:var(--card-soft);
+    border:2px solid var(--border);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:18px;
+  }
+  .invite-topics-preview .title{
+    font-size:14px;
+    font-weight:900;
+    color:var(--primary-deep);
+    margin-bottom:10px;
+  }
+  #inviteText{
+    width:100%;
+    min-height:280px;
+    padding:16px 18px;
+    background:var(--card-soft);
+    border:2.5px solid var(--border);
+    color:var(--text);
+    border-radius:14px;
+    font-family:'Courier New',monospace;
+    font-size:13px;
+    font-weight:600;
+    line-height:1.8;
+    resize:vertical;
+    direction:rtl;
+  }
+  #inviteText:focus{
+    outline:none;
+    border-color:var(--primary);
+    background:#fff;
+    box-shadow:0 0 0 5px rgba(30,64,175,.15);
+  }
+  .invite-actions{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:10px;
+    margin-top:16px;
+  }
+  .invite-actions button{
+    padding:14px 18px;
+    border-radius:12px;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:all .2s;
+  }
+  .invite-actions .copy-btn{
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff;
+  }
+  .invite-actions .eitaa-btn{
+    background:linear-gradient(135deg,#f97316,#ea580c);
+    color:#fff;
+  }
+  .invite-actions .sms-btn{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+    color:#fff;
+  }
+  .invite-actions button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+  }
+
   .toast{
     position:fixed; bottom:30px; left:50%;
     transform:translateX(-50%) translateY(120%);
@@ -503,6 +578,33 @@
   </div>
 </div>
 
+<!-- مودال دعوت‌نامه -->
+<div class="modal-backdrop" id="inviteModal">
+  <div class="modal">
+    <h3 id="inviteMemberName">📱 دعوت‌نامه</h3>
+
+    <div class="invite-topics-preview">
+      <div class="title">🎯 کدهای ntfy که کاربر باید Subscribe کنه:</div>
+      <div id="inviteTopics"></div>
+    </div>
+
+    <label style="display:block;font-size:14px;font-weight:900;color:var(--primary-deep);margin-bottom:8px">
+      📝 متن آماده (قابل ویرایش):
+    </label>
+    <textarea id="inviteText" readonly></textarea>
+
+    <div class="invite-actions">
+      <button class="copy-btn" onclick="copyInvite()">📋 کپی متن</button>
+      <button class="eitaa-btn" onclick="shareEitaa()">🟢 اشتراک در ایتا</button>
+      <button class="sms-btn" onclick="shareSMS()">💬 پیامک</button>
+    </div>
+
+    <div class="actions" style="margin-top:16px">
+      <button class="cancel" onclick="closeInviteModal()">بستن</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="config.js"></script>
@@ -519,9 +621,6 @@ let editingIndex = -1;
 
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 
-// ═══════════════════════════════════════════════════════
-// 📦 Base64
-// ═══════════════════════════════════════════════════════
 const b64decode = b64 => {
   const bin = atob(b64.replace(/\n/g,''));
   return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
@@ -531,25 +630,22 @@ const b64encodeStr = s => {
   let bin = ''; for (const b of bytes) bin += String.fromCharCode(b);
   return btoa(bin);
 };
-
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 // ═══════════════════════════════════════════════════════
-// 💾 بارگیری allowed.json
+// 💾 بارگیری
 // ═══════════════════════════════════════════════════════
 async function loadMembers() {
   const list = document.getElementById('membersList');
   list.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b">⏳ در حال بارگذاری...</div>';
 
   try {
-    // از RAW برای خوندن سریع
     const r = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json();
     members = data.allowed || [];
 
-    // گرفتن sha برای نوشتن (نیاز به توکن)
     if (getToken()) {
       try {
         const r2 = await fetch(`${API}/${ALLOWED_PATH}?t=${Date.now()}`, {
@@ -569,7 +665,7 @@ async function loadMembers() {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎨 نمایش اعضا
+// 🎨 نمایش
 // ═══════════════════════════════════════════════════════
 function renderMembers() {
   const list = document.getElementById('membersList');
@@ -583,7 +679,6 @@ function renderMembers() {
     );
   }
 
-  // آمار
   const statsBar = document.getElementById('statsBar');
   statsBar.innerHTML = `
     <div class="stat-pill">👥 کل: ${members.length} نفر</div>
@@ -600,7 +695,7 @@ function renderMembers() {
     return;
   }
 
-  list.innerHTML = filtered.map((m, i) => {
+  list.innerHTML = filtered.map(m => {
     const realIndex = members.indexOf(m);
     const initial = (m.name || '?')[0];
     const groups = (m.groups || []).map(g => {
@@ -616,6 +711,7 @@ function renderMembers() {
             <span>${esc(m.name || 'بدون نام')}</span>
           </div>
           <div class="member-actions">
+            <button class="icon-btn invite" onclick="openInviteModal(${realIndex})" title="دعوت‌نامه">📱</button>
             <button class="icon-btn edit" onclick="editMember(${realIndex})" title="ویرایش">✏</button>
             <button class="icon-btn delete" onclick="deleteMember(${realIndex})" title="حذف">🗑</button>
           </div>
@@ -631,7 +727,7 @@ function renderMembers() {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎯 ساخت انتخابگر گروه
+// 🎯 انتخابگر گروه
 // ═══════════════════════════════════════════════════════
 function renderGroupSelector(selected = []) {
   const sel = document.getElementById('groupSelector');
@@ -667,11 +763,7 @@ function renderGroupSelector(selected = []) {
   });
 
   sel.innerHTML = html;
-
-  // چک‌باکس‌ها → فعال‌سازی دکمه ذخیره
-  sel.querySelectorAll('input').forEach(cb => {
-    cb.addEventListener('change', updateSaveBtn);
-  });
+  sel.querySelectorAll('input').forEach(cb => cb.addEventListener('change', updateSaveBtn));
 }
 
 function getSelectedGroups() {
@@ -683,19 +775,15 @@ function updateSaveBtn() {
   const phone = document.getElementById('memberPhone').value.trim();
   const groups = getSelectedGroups();
   const btn = document.getElementById('modalSaveBtn');
-
   const ok = name.length >= 2 && /^09\d{9}$/.test(phone) && groups.length > 0;
   btn.disabled = !ok;
 }
 
 // ═══════════════════════════════════════════════════════
-// ➕ افزودن / ویرایش
+// ➕ افزودن/ویرایش
 // ═══════════════════════════════════════════════════════
 function openAddModal() {
-  if (!getToken()) {
-    showToast('❌ اول توکن رو وارد کن', true);
-    return;
-  }
+  if (!getToken()) { showToast('❌ اول توکن رو وارد کن', true); return; }
   editingIndex = -1;
   document.getElementById('modalTitle').textContent = '➕ افزودن عضو جدید';
   document.getElementById('memberName').value = '';
@@ -709,10 +797,7 @@ function openAddModal() {
 }
 
 function editMember(index) {
-  if (!getToken()) {
-    showToast('❌ اول توکن رو وارد کن', true);
-    return;
-  }
+  if (!getToken()) { showToast('❌ اول توکن رو وارد کن', true); return; }
   editingIndex = index;
   const m = members[index];
   document.getElementById('modalTitle').textContent = '✏ ویرایش: ' + m.name;
@@ -730,19 +815,16 @@ function closeModal() {
   editingIndex = -1;
 }
 
-// ───── ذخیره ─────
 async function saveMember() {
   const name = document.getElementById('memberName').value.trim();
   const phone = document.getElementById('memberPhone').value.trim();
   const province = document.getElementById('memberProvince').value.trim();
   const groups = getSelectedGroups();
 
-  // اعتبارسنجی
   if (name.length < 2) return document.getElementById('modalErr').textContent = '❌ نام باید حداقل ۲ حرف باشد';
   if (!/^09\d{9}$/.test(phone)) return document.getElementById('modalErr').textContent = '❌ شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود';
   if (!groups.length) return document.getElementById('modalErr').textContent = '❌ حداقل یک گروه انتخاب کن';
 
-  // چک تکراری (به جز خودمون در حالت ویرایش)
   const dup = members.findIndex((m, i) => m.phone === phone && i !== editingIndex);
   if (dup >= 0) return document.getElementById('modalErr').textContent = '❌ این شماره قبلاً ثبت شده';
 
@@ -753,7 +835,7 @@ async function saveMember() {
 
   const newMember = { phone, name, groups, province: province || undefined };
 
-  let oldMembers = [...members];
+  const oldMembers = [...members];
   if (editingIndex >= 0) {
     members[editingIndex] = newMember;
   } else {
@@ -766,22 +848,17 @@ async function saveMember() {
     showToast('✅ ذخیره شد!');
     renderMembers();
   } catch(e) {
-    members = oldMembers;  // بازگردانی
+    members = oldMembers;
     document.getElementById('modalErr').textContent = '❌ ' + e.message;
     btn.disabled = false;
     btn.textContent = '💾 ذخیره';
   }
 }
 
-// ───── حذف ─────
 async function deleteMember(index) {
   const m = members[index];
   if (!confirm(`حذف «${m.name}»؟\n\nاین عمل غیرقابل بازگشت است.`)) return;
-
-  if (!getToken()) {
-    showToast('❌ اول توکن رو وارد کن', true);
-    return;
-  }
+  if (!getToken()) { showToast('❌ اول توکن رو وارد کن', true); return; }
 
   const oldMembers = [...members];
   members.splice(index, 1);
@@ -797,12 +874,109 @@ async function deleteMember(index) {
 }
 
 // ═══════════════════════════════════════════════════════
+// 📱 دعوت‌نامه
+// ═══════════════════════════════════════════════════════
+function openInviteModal(index) {
+  const m = members[index];
+  if (!m) return;
+
+  const topics = (m.groups || []).map(g => {
+    const group = C.groups[g];
+    return group ? { name: group.name, emoji: group.emoji, topic: group.topic } : null;
+  }).filter(Boolean);
+
+  const pwaUrl = 'https://solimaniashteyani-crypto.github.io/my-messages/';
+
+  let topicsText = '';
+  if (topics.length === 1) {
+    topicsText = `   ${topics[0].topic}`;
+  } else {
+    topicsText = topics.map(t => `   ${t.emoji} ${t.name}: ${t.topic}`).join('\n');
+  }
+
+  const inviteText = `سلام ${m.name} جان 👋
+
+به سامانه پیام‌رسان سما دعوت شدی!
+
+📱 مراحل نصب:
+
+۱. اپ ntfy رو نصب کن:
+   - اندروید: https://play.google.com/store/apps/details?id=io.heckel.ntfy
+   - آیفون: https://apps.apple.com/app/ntfy/id1625396347
+
+۲. توی اپ ntfy، روی + (Plus) بزن و این کد رو وارد کن:
+${topicsText}
+
+۳. این لینک PWA رو توی Chrome باز کن:
+   ${pwaUrl}
+
+۴. از منوی Chrome، «Add to Home Screen» یا «نصب برنامه» بزن
+
+📲 هر وقت پیام جدید بیاد، اعلان می‌گیری.
+
+---
+سامانه پیام‌رسان سما 🕊️`;
+
+  window._currentInviteText = inviteText;
+  window._currentInvitePhone = m.phone || '';
+
+  document.getElementById('inviteMemberName').textContent = '📱 دعوت‌نامه — ' + m.name;
+  document.getElementById('inviteText').value = inviteText;
+
+  document.getElementById('inviteTopics').innerHTML = topics.map(t => `
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f0f7ff;border-radius:8px;margin-bottom:6px">
+      <span style="font-size:18px">${t.emoji}</span>
+      <span style="font-weight:800;color:#1e3a8a">${t.name}</span>
+      <code style="background:#fff;padding:4px 10px;border-radius:6px;font-family:monospace;font-size:13px;font-weight:700;color:#0f172a;margin-right:auto">${t.topic}</code>
+    </div>
+  `).join('') || '<div style="color:#dc2626;font-weight:700">⚠️ این عضو هیچ گروهی نداره</div>';
+
+  document.getElementById('inviteModal').classList.add('show');
+}
+
+function closeInviteModal() {
+  document.getElementById('inviteModal').classList.remove('show');
+}
+
+function copyInvite() {
+  const text = window._currentInviteText || '';
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('✅ متن کپی شد!');
+  }).catch(() => {
+    const ta = document.getElementById('inviteText');
+    ta.select();
+    document.execCommand('copy');
+    showToast('✅ متن کپی شد!');
+  });
+}
+
+function shareEitaa() {
+  const text = window._currentInviteText || '';
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('✅ متن کپی شد! حالا ایتا رو باز کن و پیست کن');
+    setTimeout(() => { window.open('https://eitaa.com/', '_blank'); }, 600);
+  }).catch(() => {
+    const ta = document.getElementById('inviteText');
+    ta.select();
+    document.execCommand('copy');
+    showToast('✅ متن کپی شد! حالا ایتا رو باز کن و پیست کن');
+    setTimeout(() => { window.open('https://eitaa.com/', '_blank'); }, 600);
+  });
+}
+
+function shareSMS() {
+  const text = window._currentInviteText || '';
+  const phone = window._currentInvitePhone || '';
+  const url = 'sms:' + phone + '?body=' + encodeURIComponent(text);
+  window.location.href = url;
+}
+
+// ═══════════════════════════════════════════════════════
 // 💾 ذخیره در گیت‌هاب
 // ═══════════════════════════════════════════════════════
 async function saveToGitHub(commitMsg) {
   if (!getToken()) throw new Error('توکن موجود نیست');
 
-  // گرفتن sha تازه
   const r = await fetch(`${API}/${ALLOWED_PATH}?t=${Date.now()}`, {
     headers: { Authorization: `token ${getToken()}` }
   });
@@ -824,10 +998,7 @@ async function saveToGitHub(commitMsg) {
     })
   });
 
-  if (!putR.ok) {
-    const t = await putR.text();
-    throw new Error('ذخیره نشد (' + putR.status + ')');
-  }
+  if (!putR.ok) throw new Error('ذخیره نشد (' + putR.status + ')');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -883,11 +1054,18 @@ document.getElementById('searchInput').addEventListener('input', renderMembers);
 });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    closeModal();
+    closeInviteModal();
+  }
 });
 
 document.getElementById('memberModal').addEventListener('click', e => {
   if (e.target.id === 'memberModal') closeModal();
+});
+
+document.getElementById('inviteModal').addEventListener('click', e => {
+  if (e.target.id === 'inviteModal') closeInviteModal();
 });
 
 // ═══════════════════════════════════════════════════════
