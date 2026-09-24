@@ -17,8 +17,7 @@ jobs:
           PWA_URL: https://solimaniashteyani-crypto.github.io/my-messages/
         run: |
           set -e
-          git show HEAD~1:messages.json > /tmp/old.json 2>/dev/null \
-            || echo '{"messages":[]}' > /tmp/old.json
+          git show HEAD~1:messages.json > /tmp/old.json 2>/dev/null || echo '{"messages":[]}' > /tmp/old.json
 
           jq -c --slurpfile old /tmp/old.json '
             .messages[]
@@ -36,31 +35,40 @@ jobs:
           while IFS= read -r line; do
             [ -z "$line" ] && continue
             ID=$(echo "$line"  | jq -r .id)
-            TXT=$(echo "$line" | jq -r .text)
-            GRP=$(echo "$line" | jq -r .group)
+            TXT=$(echo "$line" | jq -r '.text // ""')
             IMG=$(echo "$line" | jq -r '.image // empty')
-            TOPIC=$(echo "$TOPICS" | jq -r --arg g "$GRP" '.[$g].topic // empty')
-            NAME=$(echo "$TOPICS"  | jq -r --arg g "$GRP" '.[$g].name  // empty')
-            [ -z "$TOPIC" ] && continue
 
-            if [ -n "$IMG" ]; then
-              curl -s \
-                -H "Title: 🔔 پیام جدید برای $NAME" \
-                -H "Priority: max" \
-                -H "Tags: rotating_light,framed_picture" \
-                -H "Click: ${PWA_URL}" \
-                -H "Attach: $IMG" \
-                -H "Actions: view, 🚀 باز کردن پیام, ${PWA_URL}" \
-                -H "X-Message-Id: $ID" \
-                -d "$TXT" "$NTFY/$TOPIC" > /dev/null
-            else
-              curl -s \
-                -H "Title: 🔔 پیام جدید برای $NAME" \
-                -H "Priority: max" \
-                -H "Tags: rotating_light,speech_balloon" \
-                -H "Click: ${PWA_URL}" \
-                -H "Actions: view, 🚀 باز کردن پیام, ${PWA_URL}" \
-                -H "X-Message-Id: $ID" \
-                -d "$TXT" "$NTFY/$TOPIC" > /dev/null
-            fi
+            # گروه‌ها
+            echo "$line" | jq -r '(.groups // []) | .[]' | while IFS= read -r grp; do
+              [ -z "$grp" ] && continue
+              TOPIC=$(echo "$TOPICS" | jq -r --arg g "$grp" '.[$g].topic // empty')
+              NAME=$(echo "$TOPICS"  | jq -r --arg g "$grp" '.[$g].name  // empty')
+              [ -z "$TOPIC" ] && continue
+              if [ -n "$IMG" ]; then
+                curl -s -H "Title: 🔔 پیام جدید برای $NAME" -H "Priority: max" \
+                  -H "Tags: rotating_light,framed_picture" -H "Click: ${PWA_URL}" \
+                  -H "Attach: $IMG" -H "X-Message-Id: $ID" -d "$TXT" "$NTFY/$TOPIC" > /dev/null
+              else
+                curl -s -H "Title: 🔔 پیام جدید برای $NAME" -H "Priority: max" \
+                  -H "Tags: rotating_light,speech_balloon" -H "Click: ${PWA_URL}" \
+                  -H "X-Message-Id: $ID" -d "$TXT" "$NTFY/$TOPIC" > /dev/null
+              fi
+            done
+
+            # افراد اختصاصی
+            echo "$line" | jq -c '(.personalRecipients // []) | .[]' | while IFS= read -r p; do
+              [ -z "$p" ] && continue
+              P_TOPIC=$(echo "$p" | jq -r .topic)
+              P_NAME=$(echo "$p" | jq -r .name)
+              [ -z "$P_TOPIC" ] && continue
+              if [ -n "$IMG" ]; then
+                curl -s -H "Title: 🔔 پیام خصوصی برای $P_NAME" -H "Priority: max" \
+                  -H "Tags: lock,framed_picture" -H "Click: ${PWA_URL}" \
+                  -H "Attach: $IMG" -H "X-Message-Id: $ID" -d "$TXT" "$NTFY/$P_TOPIC" > /dev/null
+              else
+                curl -s -H "Title: 🔔 پیام خصوصی برای $P_NAME" -H "Priority: max" \
+                  -H "Tags: lock,speech_balloon" -H "Click: ${PWA_URL}" \
+                  -H "X-Message-Id: $ID" -d "$TXT" "$NTFY/$P_TOPIC" > /dev/null
+              fi
+            done
           done < /tmp/new.ndjson
