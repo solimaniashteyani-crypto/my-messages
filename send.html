@@ -70,9 +70,13 @@
     background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
   }
 
-  .nav-row{
-  display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;
+ .nav-row{
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;
   margin-bottom:22px;
+}
+@media(max-width:640px){
+  .nav-row{grid-template-columns:1fr}
+}
 }
 @media(max-width:640px){
   .nav-row{grid-template-columns:1fr}
@@ -454,6 +458,7 @@
     <div class="nav-row">
       <a href="./index.html" class="nav-btn primary">🌐 نمایش پیام‌ها</a>
       <a href="./stats.html" class="nav-btn ghost">📊 صفحه آمار</a>
+      <a href="./members.html" class="nav-btn ghost">👥 مدیریت اعضا</a>
       <a href="./members.html" class="nav-btn ghost">👥 مدیریت اعضا</a>
           </div>
 
