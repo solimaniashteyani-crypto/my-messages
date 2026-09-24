@@ -7,7 +7,7 @@ window.CONFIG = {
 
   // ═══════════════════════════════════════════════════════
   // 📁 گروه‌ها (۴۰ گروه)
-  // کدهای ntfy معنی‌دار + پسوند تصادفی
+  // کدهای ntfy: معنی‌دار + پسوند تصادفی ۸ کاراکتری
   // ═══════════════════════════════════════════════════════
 
   groups: {
@@ -15,169 +15,169 @@ window.CONFIG = {
     // ═══════════ 🏡 خانواده ═══════════
     hamsar: {
       name: 'همسر', emoji: '💑', category: 'خانواده',
-      topic: 'chal-v11-hamsar-4x8q2m'
+      topic: 'chal-v11-hamsar-M3nQ7pL2'
     },
     amirmohammad: {
       name: 'امیرمحمد', emoji: '👦', category: 'خانواده',
-      topic: 'chal-v11-amirmohammad-7k3n9p'
+      topic: 'chal-v11-amirmohammad-T8kR5wJ9'
     },
     amirali: {
       name: 'امیرعلی', emoji: '👦', category: 'خانواده',
-      topic: 'chal-v11-amirali-5r8t2v'
+      topic: 'chal-v11-amirali-V2yN6bF4'
     },
 
     // ═══════════ 🕌 رابطین ویژه ═══════════
     rabet_kashan: {
       name: 'رابط کاشان', emoji: '🕌', category: 'ویژه',
-      topic: 'chal-v11-kashan-3j7m9q'
+      topic: 'chal-v11-kashan-X7qH3mZ5'
     },
     rabet_bonab: {
       name: 'رابط بناب', emoji: '🕌', category: 'ویژه',
-      topic: 'chal-v11-bonab-6n2p8s'
+      topic: 'chal-v11-bonab-C9wP4nR2'
     },
     rabet_babel: {
       name: 'رابط بابل', emoji: '🕌', category: 'ویژه',
-      topic: 'chal-v11-babel-9k4v7x'
+      topic: 'chal-v11-babel-K5tY8jD6'
     },
     rabet_kahnoj: {
       name: 'رابط کهنوج', emoji: '🕌', category: 'ویژه',
-      topic: 'chal-v11-kahnoj-2m5r8t'
+      topic: 'chal-v11-kahnoj-W3zL7vB1'
     },
 
-    // ═══════════ 🕌 رابطین ۳۱ استان ═══════════
+    // ═══════════ 🗺 رابطین ۳۱ استان ═══════════
     rabet_az_sharghi: {
       name: 'رابط آذربایجان شرقی', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-az-sharghi-4p7s9v'
+      topic: 'chal-v11-az-sharghi-G4nJ9pS6'
     },
     rabet_az_gharbi: {
       name: 'رابط آذربایجان غربی', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-az-gharbi-6r2t8w'
+      topic: 'chal-v11-az-gharbi-P8kW2rF5'
     },
     rabet_ardebil: {
       name: 'رابط اردبیل', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-ardebil-8s4v2x'
+      topic: 'chal-v11-ardebil-M6vB3tH7'
     },
     rabet_esfahan: {
       name: 'رابط اصفهان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-esfahan-3t7w5y'
+      topic: 'chal-v11-esfahan-R2yD8nJ4'
     },
     rabet_alborz: {
       name: 'رابط البرز', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-alborz-5v9x3z'
+      topic: 'chal-v11-alborz-T9kQ5wF3'
     },
     rabet_ilam: {
       name: 'رابط ایلام', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-ilam-7w2y6a'
+      topic: 'chal-v11-ilam-B4pS7mH2'
     },
     rabet_bushehr: {
       name: 'رابط بوشهر', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-bushehr-9x4z8b'
+      topic: 'chal-v11-bushehr-N8xL3vR6'
     },
     rabet_tehran: {
       name: 'رابط تهران', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-tehran-2y6a9c'
+      topic: 'chal-v11-tehran-F7jW9qK4'
     },
     rabet_chaharmahal: {
       name: 'رابط چهارمحال و بختیاری', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-chaharmahal-4z8b2d'
+      topic: 'chal-v11-chaharmahal-Y3rM6pD8'
     },
     rabet_kh_jonoobi: {
       name: 'رابط خراسان جنوبی', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-kh-jonoobi-6a3c7e'
+      topic: 'chal-v11-kh-jonoobi-J5tK2nW7'
     },
     rabet_kh_razavi: {
       name: 'رابط خراسان رضوی', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-kh-razavi-8b5d9f'
+      topic: 'chal-v11-kh-razavi-P9vB4xL3'
     },
     rabet_kh_shomali: {
       name: 'رابط خراسان شمالی', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-kh-shomali-2c7e4g'
+      topic: 'chal-v11-kh-shomali-H2nR8jF6'
     },
     rabet_khozestan: {
       name: 'رابط خوزستان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-khozestan-5d9f6h'
+      topic: 'chal-v11-khozestan-W5mD7pS2'
     },
     rabet_zanjan: {
       name: 'رابط زنجان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-zanjan-7e2g8j'
+      topic: 'chal-v11-zanjan-K8xT3vN4'
     },
     rabet_semnan: {
       name: 'رابط سمنان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-semnan-9f4h2k'
+      topic: 'chal-v11-semnan-L4jP9wR7'
     },
     rabet_sistan: {
       name: 'رابط سیستان و بلوچستان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-sistan-2g6j4m'
+      topic: 'chal-v11-sistan-M7nB2xF5'
     },
     rabet_fars: {
       name: 'رابط فارس', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-fars-4h8k6n'
+      topic: 'chal-v11-fars-T3vK8pJ6'
     },
     rabet_qazvin: {
       name: 'رابط قزوین', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-qazvin-6j2m8p'
+      topic: 'chal-v11-qazvin-Q9wL4rD2'
     },
     rabet_qom: {
       name: 'رابط قم', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-qom-8k4n2r'
+      topic: 'chal-v11-qom-J6xN8mS3'
     },
     rabet_kordestan: {
       name: 'رابط کردستان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-kordestan-3m7p4t'
+      topic: 'chal-v11-kordestan-B2pW7vF9'
     },
     rabet_kerman: {
       name: 'رابط کرمان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-kerman-5n9r6v'
+      topic: 'chal-v11-kerman-F5jR3nK8'
     },
     rabet_kermanshah: {
       name: 'رابط کرمانشاه', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-kermanshah-7p2t8w'
+      topic: 'chal-v11-kermanshah-H9tV2pL4'
     },
     rabet_kohgiluye: {
       name: 'رابط کهگیلویه و بویراحمد', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-kohgiluye-9r4v2x'
+      topic: 'chal-v11-kohgiluye-N3mD7xW6'
     },
     rabet_golestan: {
       name: 'رابط گلستان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-golestan-2t6w8y'
+      topic: 'chal-v11-golestan-S8vK4jB2'
     },
     rabet_gilan: {
       name: 'رابط گیلان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-gilan-4v8y2z'
+      topic: 'chal-v11-gilan-P7nR5tF9'
     },
     rabet_lorestan: {
       name: 'رابط لرستان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-lorestan-6w3z5b'
+      topic: 'chal-v11-lorestan-V2xL8mH4'
     },
     rabet_mazandaran: {
       name: 'رابط مازندران', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-mazandaran-8y5b7d'
+      topic: 'chal-v11-mazandaran-W4pB9jD3'
     },
     rabet_markazi: {
       name: 'رابط مرکزی', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-markazi-2z7d4f'
+      topic: 'chal-v11-markazi-K7tF2nR6'
     },
     rabet_hormozgan: {
       name: 'رابط هرمزگان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-hormozgan-5b9f6h'
+      topic: 'chal-v11-hormozgan-L5vJ8pW3'
     },
     rabet_hamedan: {
       name: 'رابط همدان', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-hamedan-7d2h8j'
+      topic: 'chal-v11-hamedan-M9rD4xK7'
     },
     rabet_yazd: {
       name: 'رابط یزد', emoji: '🕌', category: 'استان',
-      topic: 'chal-v11-yazd-9f4j2k'
+      topic: 'chal-v11-yazd-N2wF6tB8'
     },
 
     // ═══════════ 👥 سایر ═══════════
     khayerin: {
       name: 'خیرین مسجد', emoji: '🕌', category: 'سایر',
-      topic: 'chal-v11-khayerin-3h7k5m'
+      topic: 'chal-v11-khayerin-F8nK3vP5'
     },
     friends: {
       name: 'دوستان', emoji: '👥', category: 'سایر',
-      topic: 'chal-v11-friends-5j9m7p'
+      topic: 'chal-v11-friends-R4tL9wJ2'
     }
   }
 };
