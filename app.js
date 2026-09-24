@@ -2,7 +2,8 @@
 const C = window.CONFIG;
 const DB = window.MsgDB;
 const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/messages.json?ref=${C.branch}`;
-
+const RAW_API = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/messages.json`;
+  
 // ═══════════════════════════════════════════════════════
 // 🔐 چک ثبت‌نام
 // ═══════════════════════════════════════════════════════
@@ -104,26 +105,48 @@ window.addEventListener('offline', updateOnlineBadge);
 // 📥 دریافت پیام‌ها
 // ═══════════════════════════════════════════════════════
 async function loadMessages(force = false) {
-  if (!navigator.onLine) { setStatus('آفلاین'); return; }
+  if (!navigator.onLine) {
+    setStatus('📴 آفلاین');
+    return;
+  }
+
   try {
-    const headers = {};
-    if (state.etag && !force) headers['If-None-Match'] = state.etag;
-    const res = await fetch(API + '&t=' + Date.now(), { headers, cache: 'no-store' });
-    if (res.status === 304) return;
+    // ✅ استفاده از raw.githubusercontent.com — بدون rate limit
+    const url = RAW_API + '?t=' + Date.now();
+    const res = await fetch(url, { cache: 'no-store' });
+
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    state.etag = res.headers.get('etag');
-    const data = await res.json();
-    const db = JSON.parse(b64decode(data.content));
+
+    // raw پاسخ مستقیم JSON هست (نه base64)
+    const db = await res.json();
+
     state.messages  = db.messages  || [];
     state.reactions = db.reactions || [];
     state.replies   = db.replies   || [];
     state.seen      = db.seen      || [];
+
     await saveLocal();
     render();
     setStatus('');
+
   } catch (e) {
+    // اگه نتونستیم از raw بخونیم، از IndexedDB استفاده کن
+    try {
+      const localMessages = await DB.get('messages');
+      if (localMessages && localMessages.length) {
+        state.messages  = localMessages;
+        state.reactions = (await DB.get('reactions')) || [];
+        state.replies   = (await DB.get('replies'))   || [];
+        state.seen      = (await DB.get('seen'))      || [];
+        render();
+        setStatus('📴 حالت آفلاین — نسخه ذخیره‌شده');
+        return;
+      }
+    } catch {}
+
     setStatus('خطا: ' + e.message, true);
   }
+}  }
 }
 
 // ═══════════════════════════════════════════════════════
