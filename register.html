@@ -357,7 +357,8 @@ form.onsubmit = async (e) => {
   // ✅ کاربر مجاز
   try {
     localStorage.setItem('myName', user.name);
-    localStorage.setItem('myGroup', user.group);
+    localStorage.setItem('myGroups', JSON.stringify(user.groups || [user.group || 'friends']));
+    localStorage.setItem('myGroup', (user.groups && user.groups[0]) || user.group || 'friends');
     localStorage.setItem('myPhone', user.phone);
     localStorage.setItem('myProvince', user.province || '');
     localStorage.setItem('registered', 'true');
