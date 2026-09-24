@@ -360,6 +360,7 @@ form.onsubmit = async (e) => {
     localStorage.setItem('myGroups', JSON.stringify(user.groups || [user.group || 'friends']));
     localStorage.setItem('myGroup', (user.groups && user.groups[0]) || user.group || 'friends');
     localStorage.setItem('myPhone', user.phone);
+        localStorage.setItem('myPersonalTopic', user.personalTopic || '');
     localStorage.setItem('myProvince', user.province || '');
     localStorage.setItem('registered', 'true');
 
