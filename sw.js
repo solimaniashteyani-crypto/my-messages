@@ -1,10 +1,8 @@
 // ═══════════════════════════════════════════════════════
-// Service Worker — غیرفعال
-// ═══════════════════════════════════════════════════════
-// ما از RAW_API (raw.githubusercontent.com) استفاده می‌کنیم
-// که خودش CDN داره و نیازی به کش نداره.
-//
-// این Service Worker فقط برای پاک کردن کش قدیمی.
+// Service Worker — غیرفعال کامل
+// ─────────────────────────────────────────────────────
+// این SW فقط برای پاک کردن خودش و همه کش‌هاست
+// هیچ کشی نمی‌کنه — همه چیز مستقیم از شبکه
 // ═══════════════════════════════════════════════════════
 
 self.addEventListener('install', () => {
@@ -15,12 +13,25 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(keys.map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-      .then(() => self.registration.unregister())  // ← خودش رو حذف کن
+      .then(() => self.registration.unregister())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then(clients => {
+        clients.forEach(client => {
+          try { client.navigate(client.url); } catch(e) {}
+        });
+      })
   );
 });
 
-// هیچ کش نکن — همه چیز از شبکه
 self.addEventListener('fetch', event => {
-  // بدون کش — همه چیز از شبکه
+  // هیچ کش نکن — همیشه از شبکه
+  event.respondWith(
+    fetch(event.request, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    })
+  );
 });
