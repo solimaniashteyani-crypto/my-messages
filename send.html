@@ -71,9 +71,12 @@
   }
 
   .nav-row{
-    display:grid; grid-template-columns:1fr 1fr; gap:12px;
-    margin-bottom:22px;
-  }
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;
+  margin-bottom:22px;
+}
+@media(max-width:640px){
+  .nav-row{grid-template-columns:1fr}
+}
   .nav-btn{
     display:flex; align-items:center; justify-content:center; gap:10px;
     padding:16px 20px; border-radius:14px;
@@ -451,7 +454,8 @@
     <div class="nav-row">
       <a href="./index.html" class="nav-btn primary">🌐 نمایش پیام‌ها</a>
       <a href="./stats.html" class="nav-btn ghost">📊 صفحه آمار</a>
-    </div>
+      <a href="./members.html" class="nav-btn ghost">👥 مدیریت اعضا</a>
+          </div>
 
     <div class="token-card" id="tokenSaved" hidden>
       <div class="info">
