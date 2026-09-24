@@ -1,13 +1,12 @@
 (() => {
 const C = window.CONFIG;
 const DB = window.MsgDB;
-const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents/messages.json?ref=${C.branch}`;
 const RAW_API = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/messages.json`;
 
 // ═══════════════════════════════════════════════════════
-// 🔐 چک ثبت‌نام
+// 🔐 چک ورود
 // ═══════════════════════════════════════════════════════
-const isRegistered = localStorage.getItem('registered') === 'true'; 
+const isRegistered = localStorage.getItem('registered') === 'true';
 const hasName      = !!localStorage.getItem('myName');
 
 if (!isRegistered || !hasName) {
@@ -16,7 +15,7 @@ if (!isRegistered || !hasName) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 👑 بررسی ادمین
+// 👑 ادمین
 // ═══════════════════════════════════════════════════════
 try {
   const hash = location.hash;
@@ -30,11 +29,32 @@ try {
   }
 } catch(e) {}
 
+const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+// ═══════════════════════════════════════════════════════
+// 📦 state
+// ═══════════════════════════════════════════════════════
+const myName = localStorage.getItem('myName') || '';
+let myGroups = [];
+try {
+  myGroups = JSON.parse(localStorage.getItem('myGroups') || '[]');
+  if (!myGroups.length) {
+    const g = localStorage.getItem('myGroup');
+    if (g) myGroups = [g];
+  }
+} catch(e) {
+  const g = localStorage.getItem('myGroup');
+  if (g) myGroups = [g];
+}
+
+// گروه‌های فعال برای تب‌ها
 const state = {
   messages: [], reactions: [], replies: [], seen: [],
-  myName: localStorage.getItem('myName') || '',
-  myGroup: localStorage.getItem('myGroup') || 'friends',
-  filter: 'all'
+  myName: myName,
+  myGroups: myGroups,
+  filter: 'all',  // 'all' یا کلید گروه یا 'ostan' یا 'special'
+  ostanFilter: null,  // برای dropdown استان‌ها
+  etag: null
 };
 
 const INITIAL_COUNT = 3;
@@ -43,11 +63,6 @@ const LOAD_STEP = 7;
 // ═══════════════════════════════════════════════════════
 // 📦 ابزارها
 // ═══════════════════════════════════════════════════════
-function b64decode(b64) {
-  const bin = atob(b64.replace(/\n/g, ''));
-  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
-}
-
 function fmtTime(iso) {
   const d = new Date(iso);
   const diff = (Date.now() - d) / 1000;
@@ -106,20 +121,34 @@ window.addEventListener('online',  () => { updateOnlineBadge(); loadMessages(tru
 window.addEventListener('offline', updateOnlineBadge);
 
 // ═══════════════════════════════════════════════════════
-// 📥 دریافت پیام‌ها از گیت‌هاب (با raw برای سرعت)
+// 📥 دریافت پیام‌ها
 // ═══════════════════════════════════════════════════════
 async function loadMessages(force) {
-  if (!navigator.onLine) { setStatus('📴 آفلاین'); return; }
+  if (!navigator.onLine) { setStatus('📴 آفلاین'); showEmptyIfNeeded(); return; }
 
   try {
     const url = RAW_API + '?t=' + Date.now();
     const res = await fetch(url, { cache: 'no-store' });
-
     if (!res.ok) throw new Error('HTTP ' + res.status);
 
     const db = await res.json();
+    const newMessages = db.messages || [];
 
-    state.messages  = db.messages  || [];
+    if (newMessages.length === 0) {
+      const localMessages = await DB.get('messages');
+      if (localMessages && localMessages.length > 0) {
+        await DB.set('messages',  []);
+        await DB.set('reactions', []);
+        await DB.set('replies',   []);
+        await DB.set('seen',      []);
+        try {
+          localStorage.removeItem('seenSent');
+          localStorage.removeItem('feedLimit');
+        } catch(e) {}
+      }
+    }
+
+    state.messages  = newMessages;
     state.reactions = db.reactions || [];
     state.replies   = db.replies   || [];
     state.seen      = db.seen      || [];
@@ -127,53 +156,147 @@ async function loadMessages(force) {
     await saveLocal();
     render();
     setStatus('');
+    showEmptyIfNeeded();
 
   } catch(e) {
-    try {
-      const localMessages = await DB.get('messages');
-      if (localMessages && localMessages.length) {
-        state.messages  = localMessages;
-        state.reactions = (await DB.get('reactions')) || [];
-        state.replies   = (await DB.get('replies'))   || [];
-        state.seen      = (await DB.get('seen'))      || [];
-        render();
-        setStatus('📴 حالت آفلاین — نسخه ذخیره‌شده');
-        return;
-      }
-    } catch(e2) {}
-
-    setStatus('خطا: ' + e.message, true);
+    console.error('loadMessages error:', e);
+    render();
+    showEmptyIfNeeded();
+    setStatus('⚠️ ' + e.message, true);
   }
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎨 نمایش صفحه
+// 🎯 چک کن کاربر عضو این گروه هست یا نه
+// ═══════════════════════════════════════════════════════
+function isUserInGroup(groupKey) {
+  if (isAdmin) return true;
+  return state.myGroups.includes(groupKey);
+}
+
+// ═══════════════════════════════════════════════════════
+// 🎨 تب‌ها — فقط گروه‌های عضو
+// ═══════════════════════════════════════════════════════
+function renderTabs() {
+  const tabs = document.getElementById('tabs');
+  if (!tabs) return;
+
+  // همه گروه‌های موجود
+  const allGroups = Object.entries(C.groups);
+
+  // دسته‌بندی
+  const cats = {
+    'خانواده': { emoji: '🏡', items: [], show: false },
+    'ویژه':    { emoji: '🕌', items: [], show: false },
+    'استان':   { emoji: '🗺', items: [], show: false },
+    'سایر':    { emoji: '👥', items: [], show: false }
+  };
+
+  allGroups.forEach(([k, g]) => {
+    if (!isUserInGroup(k)) return;
+    const cat = g.category || 'سایر';
+    if (cats[cat]) {
+      cats[cat].items.push({ key: k, ...g });
+      cats[cat].show = true;
+    }
+  });
+
+  let html = '';
+
+  // تب «همه»
+  html += `<button data-filter="all" class="${state.filter === 'all' ? 'active' : ''}">🌐 همه</button>`;
+
+  // تب‌های دسته‌ها
+  Object.entries(cats).forEach(([catName, cat]) => {
+    if (!cat.show || !cat.items.length) return;
+
+    if (catName === 'استان' && cat.items.length > 1) {
+      // برای استان‌ها، dropdown
+      html += `
+        <div class="tab-dropdown">
+          <button class="tab-drop-btn ${state.filter === 'ostan' ? 'active' : ''}"
+                  onclick="toggleOstanDropdown(event)">
+            ${cat.emoji} استان‌ها <span class="arrow">▼</span>
+          </button>
+          <div class="tab-dropdown-content" id="ostanDropdown">
+            ${cat.items.map(g => `
+              <button data-filter="group:${g.key}" class="${state.filter === 'group:' + g.key ? 'active' : ''}">
+                ${g.emoji} ${g.name}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else if (catName === 'استان' && cat.items.length === 1) {
+      // فقط یه استان → تب مستقیم
+      const g = cat.items[0];
+      html += `<button data-filter="group:${g.key}" class="${state.filter === 'group:' + g.key ? 'active' : ''}">${g.emoji} ${g.name}</button>`;
+    } else {
+      // بقیه دسته‌ها → تب مستقیم
+      cat.items.forEach(g => {
+        html += `<button data-filter="group:${g.key}" class="${state.filter === 'group:' + g.key ? 'active' : ''}">${g.emoji} ${g.name}</button>`;
+      });
+    }
+  });
+
+  tabs.innerHTML = html;
+
+  // اتصال رویدادها
+  tabs.querySelectorAll('button[data-filter]').forEach(b => {
+    b.onclick = () => {
+      state.filter = b.dataset.filter;
+      renderTabs();
+      render();
+    };
+  });
+}
+
+function toggleOstanDropdown(e) {
+  e.stopPropagation();
+  const dd = document.getElementById('ostanDropdown');
+  if (!dd) return;
+  dd.classList.toggle('show');
+}
+
+// بستن dropdown با کلیک بیرون
+document.addEventListener('click', () => {
+  const dd = document.getElementById('ostanDropdown');
+  if (dd) dd.classList.remove('show');
+});
+
+// ═══════════════════════════════════════════════════════
+// 🎨 رندر
 // ═══════════════════════════════════════════════════════
 function render() {
-  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const isAdminNow = localStorage.getItem('isAdmin') === 'true';
   const adminEntry = document.getElementById('adminEntry');
-  if (adminEntry) adminEntry.hidden = !isAdmin;
+  if (adminEntry) adminEntry.hidden = !isAdminNow;
 
-  const tabs = document.getElementById('tabs');
+  renderTabs();
+
   const feed = document.getElementById('feed');
-  if (!tabs || !feed) return;
+  if (!feed) return;
 
-  const groups = [['all', '🌐 همه']];
-  Object.entries(C.groups).forEach(([k, g]) => {
-    groups.push([k, g.emoji + ' ' + g.name]);
-  });
+  // فیلتر پیام‌ها
+  let list = state.messages.slice();
 
-  tabs.innerHTML = groups.map(([k, label]) =>
-    '<button data-g="' + k + '" class="' + (state.filter === k ? 'active' : '') + '">' + label + '</button>'
-  ).join('');
+  if (state.filter === 'all') {
+    // «همه» → پیام‌های همه گروه‌های کاربر
+    if (!isAdmin) {
+      list = list.filter(m => {
+        const groups = m.groups || (m.group ? [m.group] : []);
+        return groups.some(g => state.myGroups.includes(g));
+      });
+    }
+  } else if (state.filter.startsWith('group:')) {
+    const g = state.filter.substring(6);
+    list = list.filter(m => {
+      const groups = m.groups || (m.group ? [m.group] : []);
+      return groups.includes(g);
+    });
+  }
 
-  tabs.querySelectorAll('button').forEach(b => {
-    b.onclick = () => { state.filter = b.dataset.g; render(); };
-  });
-
-  const list = state.messages
-    .filter(m => state.filter === 'all' || m.group === state.filter)
-    .sort((a, b) => new Date(b.time) - new Date(a.time));
+  list.sort((a, b) => new Date(b.time) - new Date(a.time));
 
   if (!list.length) {
     feed.innerHTML = '<div class="empty">هنوز پیامی نیست 🌱</div>';
@@ -251,7 +374,14 @@ function renderMessageCard(m) {
   const seenBy = state.seen.filter(s => s.messageId === m.id);
   const seenHtml = seenBy.length ? '<span class="seen-badge">👁 ' + seenBy.length + '</span>' : '';
 
-  const g = C.groups[m.group];
+  // نمایش گروه‌ها
+  const msgGroups = m.groups || (m.group ? [m.group] : []);
+  const groupLabels = msgGroups
+    .map(g => C.groups[g])
+    .filter(g => g)
+    .map(g => g.emoji + ' ' + g.name)
+    .join('، ');
+
   const imgHtml = m.image
     ? '<img class="img" src="' + esc(m.image) + '" loading="lazy" alt="" data-full="' + esc(m.image) + '">'
     : '';
@@ -260,7 +390,7 @@ function renderMessageCard(m) {
     '<article class="card" data-mid="' + m.id + '">' +
       (m.text ? '<div class="text">' + esc(m.text) + '</div>' : '') +
       imgHtml +
-      '<div class="meta"><span>' + (g ? g.emoji + ' ' + g.name : '') + '</span><span>' + fmtTime(m.time) + '</span></div>' +
+      '<div class="meta"><span>' + (groupLabels || '—') + '</span><span>' + fmtTime(m.time) + '</span></div>' +
       '<div class="reactions">' + chips + palette + seenHtml +
         '<button class="reply-btn" data-mid="' + m.id + '">💬 پاسخ</button>' +
       '</div>' +
@@ -273,7 +403,7 @@ function renderMessageCard(m) {
 // ❤️ ری‌اکشن
 // ═══════════════════════════════════════════════════════
 async function sendReaction(messageId, emoji) {
-  if (!state.myName) return setStatus('اول از ⚙️ نامت رو وارد کن', true);
+  if (!state.myName) return setStatus('اول وارد شو', true);
   try {
     await fetch(C.ntfyBase + '/' + C.interactionsTopic, {
       method: 'POST',
@@ -294,7 +424,7 @@ async function sendReaction(messageId, emoji) {
 let replyTargetId = null;
 
 function openReply(mid) {
-  if (!state.myName) return setStatus('اول از ⚙️ نامت رو وارد کن', true);
+  if (!state.myName) return setStatus('اول وارد شو', true);
   replyTargetId = mid;
   const m = state.messages.find(x => x.id === mid);
   const q = document.getElementById('replyQuote');
@@ -370,20 +500,6 @@ function sendSeen(messageId) {
 // ═══════════════════════════════════════════════════════
 function subscribeSSE() {
   try {
-    const myTopic = C.groups[state.myGroup] && C.groups[state.myGroup].topic;
-    if (myTopic) {
-      const es = new EventSource(C.ntfyBase + '/' + myTopic + '/sse');
-      es.onmessage = ev => {
-        try {
-          const d = JSON.parse(ev.data);
-          if (d.event === 'message' && d.message) {
-            setTimeout(() => loadMessages(true), 500);
-          }
-        } catch(e) {}
-      };
-      es.onerror = () => {};
-    }
-
     const esIx = new EventSource(C.ntfyBase + '/' + C.interactionsTopic + '/sse');
     esIx.onmessage = ev => {
       try {
@@ -428,38 +544,35 @@ function subscribeSSE() {
 }
 
 // ═══════════════════════════════════════════════════════
-// ⚙️ تنظیمات
+// ⚙️ تنظیمات (فقط نمایش اطلاعات کاربر)
 // ═══════════════════════════════════════════════════════
 function setupSettings() {
   const dlg = document.getElementById('settingsDlg');
-  const sel = document.getElementById('myGroup');
   const nameInput = document.getElementById('myName');
-  if (!dlg || !sel || !nameInput) return;
-
-  sel.innerHTML = Object.entries(C.groups).map(([k, g]) =>
-    '<option value="' + k + '">' + g.emoji + ' ' + g.name + '</option>'
-  ).join('');
+  if (!dlg || !nameInput) return;
 
   nameInput.value = state.myName;
-  sel.value = state.myGroup;
+  nameInput.disabled = true;  // غیرفعال چون از allowed.json میاد
 
   const btn = document.getElementById('settingsBtn');
   if (btn) btn.onclick = () => dlg.showModal();
-
-  dlg.addEventListener('close', () => {
-    const n = nameInput.value.trim();
-    if (n) state.myName = n;
-    state.myGroup = sel.value;
-    localStorage.setItem('myName', state.myName);
-    localStorage.setItem('myGroup', state.myGroup);
-    observeSeen();
-  });
 
   const refreshBtn = document.getElementById('refreshBtn');
   if (refreshBtn) refreshBtn.onclick = () => loadMessages(true);
 
   const replyBtn = document.getElementById('replySendBtn');
   if (replyBtn) replyBtn.onclick = submitReply;
+}
+
+function showEmptyIfNeeded() {
+  const tabs = document.getElementById('tabs');
+  const feed = document.getElementById('feed');
+  if (!tabs || !feed) return;
+
+  if (!feed.innerHTML.trim()) {
+    renderTabs();
+    feed.innerHTML = '<div class="empty">هنوز پیامی نیست 🌱</div>';
+  }
 }
 
 // ═══════════════════════════════════════════════════════
