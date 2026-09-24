@@ -1,21 +1,20 @@
 {
   "allowed": [
     {
-      "phone": "09120000000",
-      "name": "احمد رضایی",
-      "groups": ["rabet_tehran", "hamsar"],
-      "province": "تهران"
-    },
-    {
       "phone": "09120000001",
       "name": "علی محمدی",
-      "groups": ["rabet_kerman", "friends"],
+      "groups": [
+        "rabet_kerman",
+        "friends"
+      ],
       "province": "کرمان"
     },
     {
       "phone": "09120000002",
       "name": "سارا احمدی",
-      "groups": ["amirmohammad"],
+      "groups": [
+        "amirmohammad"
+      ],
       "province": "تهران"
     }
   ]
