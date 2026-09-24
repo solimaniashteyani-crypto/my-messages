@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>سامانه پیام‌رسان سما — مدیریت اعضا</title>
+<meta name="description" content="مدیریت اعضای سامانه سما">
+<link rel="manifest" href="admin-manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="مدیریت اعضا سما">
+<meta name="theme-color" content="#1e40af">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+  :root{
+    --primary:#1e40af;
+    --primary-2:#3b82f6;
+    --primary-deep:#1e3a8a;
+    --text:#0c1e3e;
+    --muted:#64748b;
+    --border:#bfdbfe;
+    --border-strong:#93c5fd;
+    --ok:#16a34a;
+    --err:#dc2626;
+    --warn:#d97706;
+    --card:#fff;
+    --card-soft:#f0f7ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    font-family:Vazirmatn,system-ui,sans-serif;
+    font-size:17px;
+    background:
+      radial-gradient(1200px 600px at 100% -10%, #93c5fd 0%, transparent 55%),
+      radial-gradient(900px 500px at -10% 110%, #bfdbfe 0%, transparent 55%),
+      linear-gradient(160deg,#dbeafe 0%, #eff6ff 45%, #fff 100%);
+    background-attachment:fixed;
+    color:var(--text);
+    padding:28px 20px 60px;
+    line-height:1.75;
+    min-height:100vh;
+  }
+
+  .wrap{max-width:900px; margin:0 auto}
+
+  .header{text-align:center; margin-bottom:24px}
+  .header .icon{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:80px; height:80px; border-radius:24px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; font-size:38px;
+    box-shadow:0 16px 40px rgba(30,64,175,.35);
+    margin-bottom:14px;
+  }
+  .header h1{
+    font-size:28px; margin:0 0 6px; font-weight:900;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .header .subtitle{color:var(--muted); font-size:15px; font-weight:600}
+
+  .card{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:24px; padding:28px 24px;
+    box-shadow:0 12px 40px rgba(30,64,175,.15), 0 4px 14px rgba(12,30,62,.06);
+    position:relative; overflow:hidden;
+  }
+  .card::before{
+    content:''; position:absolute; top:0; right:0; left:0; height:5px;
+    background:linear-gradient(90deg,#1e40af,#3b82f6,#60a5fa);
+  }
+
+  /* نوار دکمه‌ها */
+  .nav-row{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;
+    margin-bottom:22px;
+  }
+  @media(max-width:640px){
+    .nav-row{grid-template-columns:1fr}
+  }
+  .nav-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:14px 16px; border-radius:14px;
+    font-family:inherit; font-size:15px; font-weight:800;
+    text-decoration:none; cursor:pointer; border:none;
+    transition:all .25s ease; text-align:center;
+  }
+  .nav-btn.primary{
+    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
+    box-shadow:0 6px 18px rgba(30,64,175,.35);
+  }
+  .nav-btn.ghost{
+    background:var(--card-soft); color:var(--primary-deep);
+    border:2px solid var(--border);
+  }
+  .nav-btn.ghost:hover{background:#fff; border-color:var(--primary)}
+
+  /* توکن */
+  .token-card{
+    background:linear-gradient(135deg,#ecfdf5,#d1fae5);
+    border:2px solid #6ee7b7;
+    border-radius:16px; padding:16px 20px;
+    display:flex; justify-content:space-between; align-items:center;
+    gap:14px; flex-wrap:wrap; margin-bottom:22px;
+  }
+  .token-card[hidden]{display:none}
+  .token-card .info{
+    display:flex; align-items:center; gap:10px;
+    font-weight:800; color:#047857; font-size:16px;
+  }
+  .token-card .logout-btn{
+    background:transparent; color:#047857;
+    border:2px solid #047857; padding:8px 18px;
+    font-size:14px; font-weight:800; border-radius:10px;
+    font-family:inherit; cursor:pointer;
+  }
+
+  .token-form[hidden]{display:none}
+  .token-form label{
+    display:block; margin:0 0 10px;
+    font-size:16px; font-weight:800;
+  }
+  .token-input{
+    width:100%; padding:16px 20px;
+    background:var(--card-soft); border:2.5px solid var(--border);
+    color:var(--text); border-radius:14px;
+    font-family:inherit; font-size:17px;
+  }
+  .token-input:focus{
+    outline:none; border-color:var(--primary); background:#fff;
+    box-shadow:0 0 0 5px rgba(30,64,175,.15);
+  }
+
+  /* نوار بالا */
+  .toolbar{
+    display:flex; gap:10px; flex-wrap:wrap;
+    align-items:center; margin-bottom:20px;
+  }
+  .search-input{
+    flex:1; min-width:200px;
+    padding:14px 18px;
+    background:var(--card-soft);
+    border:2px solid var(--border);
+    border-radius:14px;
+    font-family:inherit; font-size:16px; font-weight:600;
+  }
+  .search-input:focus{
+    outline:none; border-color:var(--primary); background:#fff;
+    box-shadow:0 0 0 5px rgba(30,64,175,.15);
+  }
+
+  .btn-add{
+    padding:14px 24px; border-radius:14px;
+    background:linear-gradient(135deg,#16a34a,#15803d);
+    color:#fff; border:none;
+    font-family:inherit; font-size:16px; font-weight:800;
+    cursor:pointer; white-space:nowrap;
+    box-shadow:0 6px 18px rgba(22,163,74,.35);
+    transition:all .2s;
+  }
+  .btn-add:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(22,163,74,.5)}
+
+  /* آمار */
+  .stats-bar{
+    display:flex; gap:10px; flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+  .stat-pill{
+    background:var(--card-soft); border:1.5px solid var(--border);
+    padding:10px 18px; border-radius:12px;
+    font-size:14px; font-weight:800; color:var(--primary-deep);
+  }
+
+  /* کارت عضو */
+  .member-card{
+    background:#fff; border:2px solid var(--border);
+    border-radius:16px; padding:18px 20px;
+    margin-bottom:12px;
+    transition:all .2s ease;
+  }
+  .member-card:hover{
+    border-color:var(--primary);
+    box-shadow:0 8px 22px rgba(30,64,175,.12);
+    transform:translateY(-1px);
+  }
+  .member-header{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap; margin-bottom:10px;
+  }
+  .member-name{
+    display:flex; align-items:center; gap:10px;
+    font-size:18px; font-weight:900; color:var(--primary-deep);
+  }
+  .member-name .avatar{
+    width:44px; height:44px; border-radius:50%;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:20px; font-weight:900;
+  }
+  .member-actions{
+    display:flex; gap:8px;
+  }
+  .icon-btn{
+    width:38px; height:38px;
+    border-radius:10px; border:none;
+    display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:16px;
+    transition:all .2s;
+  }
+  .icon-btn.edit{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+    color:#fff;
+  }
+  .icon-btn.edit:hover{transform:scale(1.1)}
+  .icon-btn.delete{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+  }
+  .icon-btn.delete:hover{transform:scale(1.1)}
+
+  .member-info{
+    display:flex; gap:16px; flex-wrap:wrap;
+    font-size:14px; color:var(--muted); font-weight:600;
+    margin-bottom:10px;
+  }
+  .member-info .item{
+    display:flex; align-items:center; gap:5px;
+  }
+  .member-info .phone{
+    color:var(--primary);
+    font-family:'Courier New',monospace;
+    letter-spacing:2px;
+    font-weight:800;
+  }
+  .member-groups{
+    display:flex; gap:6px; flex-wrap:wrap;
+  }
+  .group-tag{
+    background:linear-gradient(135deg,#dbeafe,#bfdbfe);
+    color:var(--primary-deep);
+    padding:4px 12px; border-radius:999px;
+    font-size:13px; font-weight:800;
+    border:1px solid var(--border-strong);
+  }
+
+  /* خالی */
+  .empty{
+    text-align:center; padding:60px 20px;
+    color:var(--muted); font-size:17px; font-weight:600;
+  }
+  .empty::before{
+    content:'👥'; display:block;
+    font-size:70px; margin-bottom:14px; opacity:.4;
+  }
+
+  /* مودال */
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(12,30,62,.6);
+    backdrop-filter:blur(6px);
+    justify-content:center; align-items:center;
+    padding:20px; overflow-y:auto;
+  }
+  .modal-backdrop.show{display:flex}
+  .modal{
+    background:#fff; border-radius:24px;
+    padding:28px 26px;
+    max-width:600px; width:100%;
+    max-height:90vh; overflow-y:auto;
+    box-shadow:0 24px 80px rgba(12,30,62,.4);
+  }
+  .modal h3{
+    font-size:22px; margin:0 0 20px;
+    color:var(--primary-deep); font-weight:900;
+  }
+  .modal .field{margin-bottom:18px}
+  .modal label{
+    display:block; margin-bottom:8px;
+    font-size:15px; font-weight:800;
+    color:var(--text);
+  }
+  .modal input{
+    width:100%; padding:14px 18px;
+    background:var(--card-soft);
+    border:2.5px solid var(--border);
+    color:var(--text); border-radius:12px;
+    font-family:inherit; font-size:16px; font-weight:600;
+  }
+  .modal input:focus{
+    outline:none; border-color:var(--primary); background:#fff;
+    box-shadow:0 0 0 5px rgba(30,64,175,.15);
+  }
+  .modal .phone-input{
+    font-family:'Courier New',monospace;
+    letter-spacing:3px;
+    text-align:center;
+    font-weight:800; font-size:18px;
+  }
+
+  .group-selector{
+    border:2px solid var(--border);
+    border-radius:14px;
+    padding:12px;
+    max-height:320px;
+    overflow-y:auto;
+    background:var(--card-soft);
+  }
+  .group-cat{
+    margin-bottom:12px;
+  }
+  .group-cat-title{
+    font-size:14px; font-weight:900;
+    color:var(--primary-deep);
+    padding:6px 10px;
+    background:#fff;
+    border-radius:8px;
+    margin-bottom:8px;
+  }
+  .group-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+    gap:6px;
+  }
+  .group-item{
+    display:flex; align-items:center; gap:8px;
+    padding:8px 10px;
+    background:#fff;
+    border:1.5px solid transparent;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:13px; font-weight:600;
+    transition:all .15s;
+    user-select:none;
+  }
+  .group-item:hover{background:#e0efff}
+  .group-item input{display:none}
+  .group-item .check{
+    width:20px; height:20px;
+    border:2px solid var(--border-strong);
+    border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    background:#fff;
+    flex-shrink:0;
+  }
+  .group-item .check::after{
+    content:'✓'; color:#fff; font-weight:900; font-size:13px;
+    opacity:0;
+  }
+  .group-item input:checked + .check{
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    border-color:transparent;
+  }
+  .group-item input:checked + .check::after{opacity:1}
+  .group-item:has(input:checked){
+    background:linear-gradient(135deg,#dbeafe,#bfdbfe);
+    border-color:var(--primary);
+  }
+
+  .modal .actions{
+    display:flex; gap:10px; margin-top:20px;
+    justify-content:flex-end;
+  }
+  .modal .actions button{
+    padding:14px 24px; border-radius:12px;
+    font-family:inherit; font-size:15px; font-weight:800;
+    cursor:pointer; border:none;
+  }
+  .modal .cancel{
+    background:transparent; color:var(--muted);
+    border:2px solid var(--border-strong);
+  }
+  .modal .save{
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff;
+    box-shadow:0 6px 18px rgba(30,64,175,.35);
+  }
+  .modal .save:disabled{opacity:.5; cursor:not-allowed}
+  .modal .err-msg{
+    color:#dc2626; font-size:14px; font-weight:700;
+    margin-top:10px; text-align:center;
+    min-height:20px;
+  }
+
+  /* toast */
+  .toast{
+    position:fixed; bottom:30px; left:50%;
+    transform:translateX(-50%) translateY(120%);
+    background:linear-gradient(135deg,#16a34a,#15803d);
+    color:#fff; padding:16px 28px; border-radius:16px;
+    font-size:16px; font-weight:800;
+    box-shadow:0 12px 36px rgba(22,163,74,.4);
+    transition:transform .3s ease;
+    z-index:200;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
+
+  @media(max-width:480px){
+    body{padding:20px 14px 40px; font-size:16px}
+    .header h1{font-size:22px}
+    .header .icon{width:68px; height:68px; font-size:32px}
+    .card{padding:22px 18px}
+    .nav-row{grid-template-columns:1fr}
+    .member-card{padding:14px 16px}
+    .member-name{font-size:16px}
+    .member-name .avatar{width:38px; height:38px; font-size:17px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="icon">👥</div>
+    <h1>مدیریت اعضا</h1>
+    <div class="subtitle">سامانه پیام‌رسان سما — نسخه ۵/۱۱</div>
+  </div>
+
+  <div class="card">
+
+    <!-- ناوبری -->
+    <div class="nav-row">
+      <a href="./send.html" class="nav-btn primary">⚙️ پنل ادمین</a>
+      <a href="./stats.html" class="nav-btn ghost">📊 صفحه آمار</a>
+      <a href="./index.html" class="nav-btn ghost">🌐 نمایش پیام‌ها</a>
+    </div>
+
+    <!-- توکن -->
+    <div class="token-card" id="tokenSaved" hidden>
+      <div class="info">
+        <span>✅ توکن ذخیره شده — آماده مدیریت</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">خروج</button>
+    </div>
+
+    <div class="token-form" id="tokenForm">
+      <label>🔑 توکن گیت‌هاب (یک بار وارد کن)</label>
+      <input type="password" id="token" class="token-input"
+             placeholder="github_pat_..." autocomplete="off">
+      <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <button class="btn-add" onclick="saveToken()">💾 ذخیره توکن</button>
+        <a href="https://github.com/settings/tokens?type=beta" target="_blank"
+           style="color:#2563eb; font-size:14px; font-weight:700">
+          ساخت توکن ↗
+        </a>
+      </div>
+      <div id="tokenMsg" style="margin-top:10px; font-weight:700"></div>
+    </div>
+
+    <!-- نوار ابزار -->
+    <div class="toolbar" id="toolbar" hidden>
+      <input type="text" id="searchInput" class="search-input"
+             placeholder="🔍 جستجو (نام یا شماره)...">
+      <button class="btn-add" onclick="openAddModal()">➕ افزودن عضو</button>
+    </div>
+
+    <!-- آمار -->
+    <div class="stats-bar" id="statsBar" hidden></div>
+
+    <!-- لیست اعضا -->
+    <div id="membersList"></div>
+
+  </div>
+
+</div>
+
+<!-- مودال افزودن/ویرایش -->
+<div class="modal-backdrop" id="memberModal">
+  <div class="modal">
+    <h3 id="modalTitle">➕ افزودن عضو جدید</h3>
+
+    <div class="field">
+      <label>👤 نام و نام خانوادگی *</label>
+      <input type="text" id="memberName" placeholder="مثلاً: احمد رضایی">
+    </div>
+
+    <div class="field">
+      <label>📞 شماره موبایل * (۱۱ رقم)</label>
+      <input type="tel" id="memberPhone" class="phone-input"
+             placeholder="09123456789" maxlength="11" inputmode="numeric">
+    </div>
+
+    <div class="field">
+      <label>📍 استان (اختیاری)</label>
+      <input type="text" id="memberProvince" placeholder="مثلاً: تهران">
+    </div>
+
+    <div class="field">
+      <label>📁 گروه‌ها * (حداقل یکی)</label>
+      <div class="group-selector" id="groupSelector"></div>
+    </div>
+
+    <div class="err-msg" id="modalErr"></div>
+
+    <div class="actions">
+      <button class="cancel" onclick="closeModal()">لغو</button>
+      <button class="save" id="modalSaveBtn" onclick="saveMember()" disabled>
+        💾 ذخیره
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+const C = window.CONFIG;
+const TOKEN_KEY = 'gh_token';
+const ALLOWED_PATH = 'allowed.json';
+const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
+const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents`;
+
+let members = [];
+let allowedSha = null;
+let editingIndex = -1;
+
+function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+
+// ═══════════════════════════════════════════════════════
+// 📦 Base64
+// ═══════════════════════════════════════════════════════
+const b64decode = b64 => {
+  const bin = atob(b64.replace(/\n/g,''));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+};
+const b64encodeStr = s => {
+  const bytes = new TextEncoder().encode(s);
+  let bin = ''; for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin);
+};
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ═══════════════════════════════════════════════════════
+// 💾 بارگیری allowed.json
+// ═══════════════════════════════════════════════════════
+async function loadMembers() {
+  const list = document.getElementById('membersList');
+  list.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b">⏳ در حال بارگذاری...</div>';
+
+  try {
+    // از RAW برای خوندن سریع
+    const r = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    members = data.allowed || [];
+
+    // گرفتن sha برای نوشتن (نیاز به توکن)
+    if (getToken()) {
+      try {
+        const r2 = await fetch(`${API}/${ALLOWED_PATH}?t=${Date.now()}`, {
+          headers: { Authorization: `token ${getToken()}` }
+        });
+        if (r2.ok) {
+          const j2 = await r2.json();
+          allowedSha = j2.sha;
+        }
+      } catch(e) {}
+    }
+
+    renderMembers();
+  } catch(e) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:#dc2626;font-weight:700">❌ خطا: ${esc(e.message)}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 🎨 نمایش اعضا
+// ═══════════════════════════════════════════════════════
+function renderMembers() {
+  const list = document.getElementById('membersList');
+  const search = (document.getElementById('searchInput')?.value || '').trim();
+
+  let filtered = members;
+  if (search) {
+    filtered = members.filter(m =>
+      (m.name || '').includes(search) ||
+      (m.phone || '').includes(search)
+    );
+  }
+
+  // آمار
+  const statsBar = document.getElementById('statsBar');
+  statsBar.innerHTML = `
+    <div class="stat-pill">👥 کل: ${members.length} نفر</div>
+    <div class="stat-pill">🔍 نمایش: ${filtered.length} نفر</div>
+    <div class="stat-pill">📞 ${members.filter(m=>m.phone).length} شماره</div>
+  `;
+
+  if (!filtered.length) {
+    if (search) {
+      list.innerHTML = '<div class="empty">نتیجه‌ای یافت نشد</div>';
+    } else {
+      list.innerHTML = '<div class="empty">هنوز عضوی اضافه نشده<br><small style="color:#64748b;font-size:14px">دکمه «➕ افزودن عضو» رو بزن</small></div>';
+    }
+    return;
+  }
+
+  list.innerHTML = filtered.map((m, i) => {
+    const realIndex = members.indexOf(m);
+    const initial = (m.name || '?')[0];
+    const groups = (m.groups || []).map(g => {
+      const group = C.groups[g];
+      return group ? `<span class="group-tag">${group.emoji} ${group.name}</span>` : '';
+    }).join('');
+
+    return `
+      <div class="member-card">
+        <div class="member-header">
+          <div class="member-name">
+            <div class="avatar">${esc(initial)}</div>
+            <span>${esc(m.name || 'بدون نام')}</span>
+          </div>
+          <div class="member-actions">
+            <button class="icon-btn edit" onclick="editMember(${realIndex})" title="ویرایش">✏</button>
+            <button class="icon-btn delete" onclick="deleteMember(${realIndex})" title="حذف">🗑</button>
+          </div>
+        </div>
+        <div class="member-info">
+          ${m.phone ? `<div class="item">📞 <span class="phone">${esc(m.phone)}</span></div>` : ''}
+          ${m.province ? `<div class="item">📍 ${esc(m.province)}</div>` : ''}
+        </div>
+        <div class="member-groups">${groups || '<span style="color:#94a3b8;font-size:13px">بدون گروه</span>'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// 🎯 ساخت انتخابگر گروه
+// ═══════════════════════════════════════════════════════
+function renderGroupSelector(selected = []) {
+  const sel = document.getElementById('groupSelector');
+  const cats = {
+    'خانواده': { emoji: '🏡', items: [] },
+    'ویژه': { emoji: '🕌', items: [] },
+    'استان': { emoji: '🗺', items: [] },
+    'سایر': { emoji: '👥', items: [] }
+  };
+
+  Object.entries(C.groups).forEach(([k, g]) => {
+    const cat = g.category || 'سایر';
+    if (cats[cat]) cats[cat].items.push({ key: k, ...g });
+  });
+
+  let html = '';
+  Object.entries(cats).forEach(([catName, cat]) => {
+    if (!cat.items.length) return;
+    html += `<div class="group-cat">`;
+    html += `<div class="group-cat-title">${cat.emoji} ${catName} (${cat.items.length})</div>`;
+    html += `<div class="group-grid">`;
+    cat.items.forEach(g => {
+      const checked = selected.includes(g.key) ? 'checked' : '';
+      html += `
+        <label class="group-item">
+          <input type="checkbox" class="group-check" value="${g.key}" ${checked}>
+          <span class="check"></span>
+          <span>${g.emoji} ${g.name}</span>
+        </label>
+      `;
+    });
+    html += `</div></div>`;
+  });
+
+  sel.innerHTML = html;
+
+  // چک‌باکس‌ها → فعال‌سازی دکمه ذخیره
+  sel.querySelectorAll('input').forEach(cb => {
+    cb.addEventListener('change', updateSaveBtn);
+  });
+}
+
+function getSelectedGroups() {
+  return Array.from(document.querySelectorAll('.group-check:checked')).map(x => x.value);
+}
+
+function updateSaveBtn() {
+  const name = document.getElementById('memberName').value.trim();
+  const phone = document.getElementById('memberPhone').value.trim();
+  const groups = getSelectedGroups();
+  const btn = document.getElementById('modalSaveBtn');
+
+  const ok = name.length >= 2 && /^09\d{9}$/.test(phone) && groups.length > 0;
+  btn.disabled = !ok;
+}
+
+// ═══════════════════════════════════════════════════════
+// ➕ افزودن / ویرایش
+// ═══════════════════════════════════════════════════════
+function openAddModal() {
+  if (!getToken()) {
+    showToast('❌ اول توکن رو وارد کن', true);
+    return;
+  }
+  editingIndex = -1;
+  document.getElementById('modalTitle').textContent = '➕ افزودن عضو جدید';
+  document.getElementById('memberName').value = '';
+  document.getElementById('memberPhone').value = '';
+  document.getElementById('memberProvince').value = '';
+  document.getElementById('modalErr').textContent = '';
+  renderGroupSelector([]);
+  updateSaveBtn();
+  document.getElementById('memberModal').classList.add('show');
+  setTimeout(() => document.getElementById('memberName').focus(), 100);
+}
+
+function editMember(index) {
+  if (!getToken()) {
+    showToast('❌ اول توکن رو وارد کن', true);
+    return;
+  }
+  editingIndex = index;
+  const m = members[index];
+  document.getElementById('modalTitle').textContent = '✏ ویرایش: ' + m.name;
+  document.getElementById('memberName').value = m.name || '';
+  document.getElementById('memberPhone').value = m.phone || '';
+  document.getElementById('memberProvince').value = m.province || '';
+  document.getElementById('modalErr').textContent = '';
+  renderGroupSelector(m.groups || []);
+  updateSaveBtn();
+  document.getElementById('memberModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('memberModal').classList.remove('show');
+  editingIndex = -1;
+}
+
+// ───── ذخیره ─────
+async function saveMember() {
+  const name = document.getElementById('memberName').value.trim();
+  const phone = document.getElementById('memberPhone').value.trim();
+  const province = document.getElementById('memberProvince').value.trim();
+  const groups = getSelectedGroups();
+
+  // اعتبارسنجی
+  if (name.length < 2) return document.getElementById('modalErr').textContent = '❌ نام باید حداقل ۲ حرف باشد';
+  if (!/^09\d{9}$/.test(phone)) return document.getElementById('modalErr').textContent = '❌ شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود';
+  if (!groups.length) return document.getElementById('modalErr').textContent = '❌ حداقل یک گروه انتخاب کن';
+
+  // چک تکراری (به جز خودمون در حالت ویرایش)
+  const dup = members.findIndex((m, i) => m.phone === phone && i !== editingIndex);
+  if (dup >= 0) return document.getElementById('modalErr').textContent = '❌ این شماره قبلاً ثبت شده';
+
+  document.getElementById('modalErr').textContent = '';
+  const btn = document.getElementById('modalSaveBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ ذخیره...';
+
+  const newMember = { phone, name, groups, province: province || undefined };
+
+  let oldMembers = [...members];
+  if (editingIndex >= 0) {
+    members[editingIndex] = newMember;
+  } else {
+    members.push(newMember);
+  }
+
+  try {
+    await saveToGitHub('افزودن/ویرایش عضو: ' + name);
+    closeModal();
+    showToast('✅ ذخیره شد!');
+    renderMembers();
+  } catch(e) {
+    members = oldMembers;  // بازگردانی
+    document.getElementById('modalErr').textContent = '❌ ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '💾 ذخیره';
+  }
+}
+
+// ───── حذف ─────
+async function deleteMember(index) {
+  const m = members[index];
+  if (!confirm(`حذف «${m.name}»؟\n\nاین عمل غیرقابل بازگشت است.`)) return;
+
+  if (!getToken()) {
+    showToast('❌ اول توکن رو وارد کن', true);
+    return;
+  }
+
+  const oldMembers = [...members];
+  members.splice(index, 1);
+
+  try {
+    await saveToGitHub('حذف عضو: ' + m.name);
+    showToast('🗑 حذف شد');
+    renderMembers();
+  } catch(e) {
+    members = oldMembers;
+    showToast('❌ ' + e.message, true);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 💾 ذخیره در گیت‌هاب
+// ═══════════════════════════════════════════════════════
+async function saveToGitHub(commitMsg) {
+  if (!getToken()) throw new Error('توکن موجود نیست');
+
+  // گرفتن sha تازه
+  const r = await fetch(`${API}/${ALLOWED_PATH}?t=${Date.now()}`, {
+    headers: { Authorization: `token ${getToken()}` }
+  });
+  if (!r.ok) throw new Error('خطا در خواندن فایل (' + r.status + ')');
+  const j = await r.json();
+
+  const newContent = { allowed: members };
+
+  const putR = await fetch(`${API}/${ALLOWED_PATH}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `token ${getToken()}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: commitMsg,
+      content: b64encodeStr(JSON.stringify(newContent, null, 2)),
+      sha: j.sha
+    })
+  });
+
+  if (!putR.ok) {
+    const t = await putR.text();
+    throw new Error('ذخیره نشد (' + putR.status + ')');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 🔑 توکن
+// ═══════════════════════════════════════════════════════
+function saveToken() {
+  const t = document.getElementById('token').value.trim();
+  const msgEl = document.getElementById('tokenMsg');
+  if (!t) { msgEl.innerHTML = '<span style="color:#dc2626">❌ توکن رو وارد کن</span>'; return; }
+  if (!t.startsWith('github_pat_') && !t.startsWith('ghp_')) {
+    msgEl.innerHTML = '<span style="color:#dc2626">❌ فرمت اشتباه</span>'; return;
+  }
+  localStorage.setItem(TOKEN_KEY, t);
+  msgEl.innerHTML = '<span style="color:#16a34a">✅ ذخیره شد!</span>';
+  updateTokenUI();
+  loadMembers();
+}
+
+function logout() {
+  if (!confirm('توکن پاک بشه؟')) return;
+  localStorage.removeItem(TOKEN_KEY);
+  document.getElementById('token').value = '';
+  updateTokenUI();
+}
+
+function updateTokenUI() {
+  const t = getToken();
+  document.getElementById('tokenSaved').hidden = !t;
+  document.getElementById('tokenForm').hidden = !!t;
+  document.getElementById('toolbar').hidden = !t;
+  document.getElementById('statsBar').hidden = !t;
+  document.getElementById('token').value = t;
+}
+
+// ═══════════════════════════════════════════════════════
+// 🍞 Toast
+// ═══════════════════════════════════════════════════════
+function showToast(msg, isError) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show' + (isError ? ' err' : '');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════════════════
+// 🎯 رویدادها
+// ═══════════════════════════════════════════════════════
+document.getElementById('searchInput').addEventListener('input', renderMembers);
+
+['memberName', 'memberPhone', 'memberProvince'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateSaveBtn);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+document.getElementById('memberModal').addEventListener('click', e => {
+  if (e.target.id === 'memberModal') closeModal();
+});
+
+// ═══════════════════════════════════════════════════════
+// 🚀 شروع
+// ═══════════════════════════════════════════════════════
+updateTokenUI();
+loadMembers();
+</script>
+</body>
+</html>
