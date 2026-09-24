@@ -7,7 +7,7 @@ const RAW_API = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.bran
 // ═══════════════════════════════════════════════════════
 // 🔐 چک ثبت‌نام
 // ═══════════════════════════════════════════════════════
-const isRegistered = localStorage.getItem('registered') === 'true';
+const isRegistered = localStorage.getItem('registered') === 'true'; 
 const hasName      = !!localStorage.getItem('myName');
 
 if (!isRegistered || !hasName) {
