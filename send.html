@@ -296,6 +296,7 @@
       <button class="btn-main" onclick="send()">ارسال 🚀</button>
       <button class="btn-ghost" onclick="reload()">🔄</button>
       <button class="btn-danger" onclick="openResetModal()">🗑 پاک کردن همه</button>
+      <button class="btn-danger" onclick="openFullResetModal()" style="background:linear-gradient(135deg,#7c2d12,#991b1b);">⚠️ ریست کامل</button>
     </div>
 
     <div class="progress" id="prog"><div id="progBar"></div></div>
@@ -303,7 +304,31 @@
 
   </div>
 </div>
-
+<!-- مودال ریست کامل -->
+<div class="modal-backdrop" id="fullResetModal">
+  <div class="modal">
+    <h3 style="color:#7c2d12">⚠️ ریست کامل سامانه</h3>
+    <div class="warning-text">
+      <b style="color:#dc2626;font-size:16px">این عمل غیرقابل بازگشت است!</b><br><br>
+      <b>پاک می‌کنه:</b><br>
+      • 📨 همه پیام‌ها<br>
+      • ❤️ همه ری‌اکشن‌ها<br>
+      • 💬 همه پاسخ‌ها<br>
+      • 👁 همه بازدیدها<br>
+      • 👥 همه اعضا (allowed.json)<br><br>
+      <b style="color:#16a34a">نمی‌پاکه:</b><br>
+      • 📁 گروه‌ها (config.js)<br>
+      • ⚙️ تنظیمات سامانه
+    </div>
+    <label>🔐 رمز امنیتی رو وارد کن</label>
+    <input type="password" id="fullResetPassword" placeholder="••••" maxlength="4" inputmode="numeric">
+    <div class="error-msg" id="fullResetError"></div>
+    <div class="actions">
+      <button class="cancel" onclick="closeFullResetModal()">لغو</button>
+      <button class="confirm" id="confirmFullResetBtn" onclick="confirmFullReset()" disabled style="background:linear-gradient(135deg,#7c2d12,#991b1b);">🗑 ریست کامل</button>
+    </div>
+  </div>
+</div>
 <div class="modal-backdrop" id="resetModal">
   <div class="modal">
     <h3>🗑 پاک کردن همه پیام‌ها</h3>
@@ -702,6 +727,105 @@ function openResetModal() {
   setTimeout(() => document.getElementById('resetPassword').focus(), 100);
 }
 function closeResetModal() { document.getElementById('resetModal').classList.remove('show'); }
+  // ═══════════════════════════════════════════════════════
+// ⚠️ ریست کامل
+// ═══════════════════════════════════════════════════════
+function openFullResetModal() {
+  if (!getToken()) { showToast('❌ اول توکن رو وارد کن', true); return; }
+  document.getElementById('fullResetPassword').value = '';
+  document.getElementById('fullResetError').textContent = '';
+  document.getElementById('confirmFullResetBtn').disabled = true;
+  document.getElementById('fullResetModal').classList.add('show');
+  setTimeout(() => document.getElementById('fullResetPassword').focus(), 100);
+}
+
+function closeFullResetModal() {
+  document.getElementById('fullResetModal').classList.remove('show');
+}
+
+document.getElementById('fullResetPassword').addEventListener('input', e => {
+  const val = e.target.value.trim();
+  const btn = document.getElementById('confirmFullResetBtn');
+  const err = document.getElementById('fullResetError');
+  if (val.length === 0) { btn.disabled = true; err.textContent = ''; }
+  else if (val === RESET_PASSWORD) {
+    btn.disabled = false;
+    err.textContent = '✅ رمز صحیح — آماده برای ریست';
+    err.style.color = '#16a34a';
+  } else {
+    btn.disabled = true;
+    err.textContent = '❌ رمز اشتباه';
+    err.style.color = '#dc2626';
+  }
+});
+
+async function confirmFullReset() {
+  const pass = document.getElementById('fullResetPassword').value.trim();
+  if (pass !== RESET_PASSWORD) return;
+
+  const btn = document.getElementById('confirmFullResetBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ در حال ریست...';
+
+  try {
+    const token = getToken();
+    if (!token) throw new Error('توکن موجود نیست');
+
+    // 1. پاک کردن messages.json
+    const emptyMessages = { messages: [], reactions: [], replies: [], seen: [] };
+
+    const r1 = await fetch(`${API}/${MSG_PATH}?t=${Date.now()}`, {
+      headers: { Authorization: `token ${token}` }
+    });
+    if (!r1.ok) throw new Error('خطا در خواندن messages.json');
+    const j1 = await r1.json();
+
+    const putR1 = await fetch(`${API}/${MSG_PATH}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'FULL RESET: clear all messages',
+        content: b64encodeStr(JSON.stringify(emptyMessages, null, 2)),
+        sha: j1.sha
+      })
+    });
+    if (!putR1.ok) throw new Error('پاک‌سازی پیام‌ها نشد');
+
+    // 2. پاک کردن allowed.json (اعضا)
+    const emptyAllowed = { allowed: [] };
+
+    const r2 = await fetch(`${API}/allowed.json?t=${Date.now()}`, {
+      headers: { Authorization: `token ${token}` }
+    });
+    if (!r2.ok) throw new Error('خطا در خواندن allowed.json');
+    const j2 = await r2.json();
+
+    const putR2 = await fetch(`${API}/allowed.json`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'FULL RESET: clear all members',
+        content: b64encodeStr(JSON.stringify(emptyAllowed, null, 2)),
+        sha: j2.sha
+      })
+    });
+    if (!putR2.ok) throw new Error('پاک‌سازی اعضا نشد');
+
+    // 3. پاک کردن localStorage ادمین
+    localStorage.removeItem('seenSent');
+    localStorage.removeItem('feedLimit');
+
+    closeFullResetModal();
+    showToast('✅ سامانه کاملاً ریست شد!');
+    setTimeout(() => reload(), 1000);
+
+  } catch (e) {
+    document.getElementById('fullResetError').textContent = '❌ ' + e.message;
+    btn.disabled = false;
+    btn.textContent = '🗑 ریست کامل';
+  }
+}
+
 document.getElementById('resetPassword').addEventListener('input', e => {
   const val = e.target.value.trim();
   const btn = document.getElementById('confirmResetBtn');
