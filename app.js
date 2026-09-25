@@ -2,12 +2,47 @@
 const C = window.CONFIG;
 const DB = window.MsgDB;
 const RAW_API = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/messages.json`;
+const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
 
 // ═══════════════════════════════════════════════════════
-// 🔐 چک ورود
+// 📥 بارگیری اطلاعات کاربر از allowed.json
+// ═══════════════════════════════════════════════════════
+async function loadUserInfo() {
+  const myPhone = localStorage.getItem('myPhone');
+  if (!myPhone) return false;
+
+  try {
+    const res = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const user = (data.allowed || []).find(u => u.phone === myPhone);
+
+    if (!user) {
+      // کاربر از لیست حذف شده
+      localStorage.clear();
+      location.href = './register.html';
+      return false;
+    }
+
+    // ✅ آپدیت localStorage با اطلاعات تازه
+    localStorage.setItem('myName', user.name || 'کاربر');
+    localStorage.setItem('myGroups', JSON.stringify(user.groups || []));
+    localStorage.setItem('myGroup', (user.groups && user.groups[0]) || 'friends');
+    localStorage.setItem('myPersonalTopic', user.personalTopic || '');
+    localStorage.setItem('myProvince', user.province || '');
+
+    return true;
+  } catch(e) {
+    console.error('loadUserInfo error:', e);
+    return false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 🔐 چک ثبت‌نام
 // ═══════════════════════════════════════════════════════
 const isRegistered = localStorage.getItem('registered') === 'true';
-const hasName      = !!localStorage.getItem('myName');
+const hasName = !!localStorage.getItem('myName');
 
 if (!isRegistered || !hasName) {
   location.href = './register.html';
@@ -34,30 +69,26 @@ const isAdmin = localStorage.getItem('isAdmin') === 'true';
 // ═══════════════════════════════════════════════════════
 // 📦 state
 // ═══════════════════════════════════════════════════════
-const myName = localStorage.getItem('myName') || '';
-  const myPersonalTopic = localStorage.getItem('myPersonalTopic') || '';
-let myGroups = [];
+const state = {
+  messages: [], reactions: [], replies: [], seen: [],
+  myName: localStorage.getItem('myName') || '',
+  myGroups: [],
+  myPersonalTopic: localStorage.getItem('myPersonalTopic') || '',
+  filter: 'all',
+  etag: null
+};
+
+// بارگیری اولیه myGroups
 try {
-  myGroups = JSON.parse(localStorage.getItem('myGroups') || '[]');
-  if (!myGroups.length) {
+  state.myGroups = JSON.parse(localStorage.getItem('myGroups') || '[]');
+  if (!state.myGroups.length) {
     const g = localStorage.getItem('myGroup');
-    if (g) myGroups = [g];
+    if (g) state.myGroups = [g];
   }
 } catch(e) {
   const g = localStorage.getItem('myGroup');
-  if (g) myGroups = [g];
+  if (g) state.myGroups = [g];
 }
-
-// گروه‌های فعال برای تب‌ها
-const state = {
-  messages: [], reactions: [], replies: [], seen: [],
-  myName: myName,
-  myGroups: myGroups,
-  myPersonalTopic: myPersonalTopic,
-  filter: 'all',  // 'all' یا کلید گروه یا 'ostan' یا 'special'
-  ostanFilter: null,  // برای dropdown استان‌ها
-  etag: null
-};
 
 const INITIAL_COUNT = 3;
 const LOAD_STEP = 7;
@@ -169,7 +200,7 @@ async function loadMessages(force) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎯 چک کن کاربر عضو این گروه هست یا نه
+// 🎯 چک کن کاربر عضو این گروه هست
 // ═══════════════════════════════════════════════════════
 function isUserInGroup(groupKey) {
   if (isAdmin) return true;
@@ -177,73 +208,36 @@ function isUserInGroup(groupKey) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎨 تب‌ها — فقط گروه‌های عضو
+// 🎨 تب‌ها — فقط گروه‌های کاربر
 // ═══════════════════════════════════════════════════════
 function renderTabs() {
   const tabs = document.getElementById('tabs');
   if (!tabs) return;
 
-  // همه گروه‌های موجود
-  const allGroups = Object.entries(C.groups);
-
-  // دسته‌بندی
   const cats = {
-    'خانواده': { emoji: '🏡', items: [], show: false },
-    'ویژه':    { emoji: '🕌', items: [], show: false },
-    'استان':   { emoji: '🗺', items: [], show: false },
-    'سایر':    { emoji: '👥', items: [], show: false }
+    'خانواده': { emoji: '🏡', items: [] },
+    'ویژه':    { emoji: '🕌', items: [] },
+    'استان':   { emoji: '🗺', items: [] },
+    'سایر':    { emoji: '👥', items: [] }
   };
 
-  allGroups.forEach(([k, g]) => {
+  Object.entries(C.groups).forEach(([k, g]) => {
     if (!isUserInGroup(k)) return;
     const cat = g.category || 'سایر';
-    if (cats[cat]) {
-      cats[cat].items.push({ key: k, ...g });
-      cats[cat].show = true;
-    }
+    if (cats[cat]) cats[cat].items.push({ key: k, ...g });
   });
 
   let html = '';
-
-  // تب «همه»
   html += `<button data-filter="all" class="${state.filter === 'all' ? 'active' : ''}">🌐 همه</button>`;
 
-  // تب‌های دسته‌ها
   Object.entries(cats).forEach(([catName, cat]) => {
-    if (!cat.show || !cat.items.length) return;
-
-    if (catName === 'استان' && cat.items.length > 1) {
-      // برای استان‌ها، dropdown
-      html += `
-        <div class="tab-dropdown">
-          <button class="tab-drop-btn ${state.filter === 'ostan' ? 'active' : ''}"
-                  onclick="toggleOstanDropdown(event)">
-            ${cat.emoji} استان‌ها <span class="arrow">▼</span>
-          </button>
-          <div class="tab-dropdown-content" id="ostanDropdown">
-            ${cat.items.map(g => `
-              <button data-filter="group:${g.key}" class="${state.filter === 'group:' + g.key ? 'active' : ''}">
-                ${g.emoji} ${g.name}
-              </button>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    } else if (catName === 'استان' && cat.items.length === 1) {
-      // فقط یه استان → تب مستقیم
-      const g = cat.items[0];
+    cat.items.forEach(g => {
       html += `<button data-filter="group:${g.key}" class="${state.filter === 'group:' + g.key ? 'active' : ''}">${g.emoji} ${g.name}</button>`;
-    } else {
-      // بقیه دسته‌ها → تب مستقیم
-      cat.items.forEach(g => {
-        html += `<button data-filter="group:${g.key}" class="${state.filter === 'group:' + g.key ? 'active' : ''}">${g.emoji} ${g.name}</button>`;
-      });
-    }
+    });
   });
 
   tabs.innerHTML = html;
 
-  // اتصال رویدادها
   tabs.querySelectorAll('button[data-filter]').forEach(b => {
     b.onclick = () => {
       state.filter = b.dataset.filter;
@@ -252,19 +246,6 @@ function renderTabs() {
     };
   });
 }
-
-function toggleOstanDropdown(e) {
-  e.stopPropagation();
-  const dd = document.getElementById('ostanDropdown');
-  if (!dd) return;
-  dd.classList.toggle('show');
-}
-
-// بستن dropdown با کلیک بیرون
-document.addEventListener('click', () => {
-  const dd = document.getElementById('ostanDropdown');
-  if (dd) dd.classList.remove('show');
-});
 
 // ═══════════════════════════════════════════════════════
 // 🎨 رندر
@@ -279,11 +260,9 @@ function render() {
   const feed = document.getElementById('feed');
   if (!feed) return;
 
-  // فیلتر پیام‌ها
   let list = state.messages.slice();
 
   if (state.filter === 'all') {
-    // «همه» → پیام‌های همه گروه‌های کاربر
     if (!isAdmin) {
       list = list.filter(m => {
         const groups = m.groups || (m.group ? [m.group] : []);
@@ -376,7 +355,6 @@ function renderMessageCard(m) {
   const seenBy = state.seen.filter(s => s.messageId === m.id);
   const seenHtml = seenBy.length ? '<span class="seen-badge">👁 ' + seenBy.length + '</span>' : '';
 
-  // نمایش گروه‌ها
   const msgGroups = m.groups || (m.group ? [m.group] : []);
   const groupLabels = msgGroups
     .map(g => C.groups[g])
@@ -409,11 +387,10 @@ async function sendReaction(messageId, emoji) {
   try {
     await fetch(C.ntfyBase + '/' + C.interactionsTopic, {
       method: 'POST',
-      body: JSON.stringify({ type: 'reaction', messageId: messageId, emoji: emoji, from: state.myName })
+      body: JSON.stringify({ type: 'reaction', messageId, emoji, from: state.myName })
     });
     state.reactions.push({
-      id: 'local-' + uid(),
-      messageId: messageId, emoji: emoji, from: state.myName,
+      id: 'local-' + uid(), messageId, emoji, from: state.myName,
       time: new Date().toISOString()
     });
     render();
@@ -447,11 +424,10 @@ async function submitReply() {
   try {
     await fetch(C.ntfyBase + '/' + C.interactionsTopic, {
       method: 'POST',
-      body: JSON.stringify({ type: 'reply', messageId: replyTargetId, text: text, from: state.myName })
+      body: JSON.stringify({ type: 'reply', messageId: replyTargetId, text, from: state.myName })
     });
     state.replies.push({
-      id: 'local-' + uid(),
-      messageId: replyTargetId, text: text,
+      id: 'local-' + uid(), messageId: replyTargetId, text,
       from: state.myName, time: new Date().toISOString()
     });
     const dlg = document.getElementById('replyDlg');
@@ -465,9 +441,7 @@ async function submitReply() {
 // 👁 seen
 // ═══════════════════════════════════════════════════════
 let seenSent = new Set();
-try {
-  seenSent = new Set(JSON.parse(localStorage.getItem('seenSent') || '[]'));
-} catch(e) {}
+try { seenSent = new Set(JSON.parse(localStorage.getItem('seenSent') || '[]')); } catch(e) {}
 
 let seenObserver = null;
 
@@ -488,12 +462,10 @@ function observeSeen() {
 function sendSeen(messageId) {
   if (!state.myName || seenSent.has(messageId)) return;
   seenSent.add(messageId);
-  try {
-    localStorage.setItem('seenSent', JSON.stringify(Array.from(seenSent).slice(-1000)));
-  } catch(e) {}
+  try { localStorage.setItem('seenSent', JSON.stringify(Array.from(seenSent).slice(-1000))); } catch(e) {}
   fetch(C.ntfyBase + '/' + C.interactionsTopic, {
     method: 'POST',
-    body: JSON.stringify({ type: 'seen', messageId: messageId, from: state.myName })
+    body: JSON.stringify({ type: 'seen', messageId, from: state.myName })
   }).catch(() => {});
 }
 
@@ -504,7 +476,6 @@ function subscribeSSE() {
   try {
     const subscribed = new Set();
 
-    // Subscribe به گروه‌های کاربر
     state.myGroups.forEach(groupKey => {
       const group = C.groups[groupKey];
       if (group && group.topic && !subscribed.has(group.topic)) {
@@ -520,7 +491,6 @@ function subscribeSSE() {
       }
     });
 
-    // Subscribe به کد اختصاصی
     const personalTopic = localStorage.getItem('myPersonalTopic');
     if (personalTopic && !subscribed.has(personalTopic)) {
       subscribed.add(personalTopic);
@@ -534,7 +504,6 @@ function subscribeSSE() {
       esP.onerror = () => {};
     }
 
-    // کانال تعاملات
     const esIx = new EventSource(C.ntfyBase + '/' + C.interactionsTopic + '/sse');
     esIx.onmessage = ev => {
       try {
@@ -562,18 +531,30 @@ function subscribeSSE() {
 }
 
 // ═══════════════════════════════════════════════════════
-// ⚙️ تنظیمات (فقط نمایش اطلاعات کاربر)
+// ⚙️ تنظیمات
 // ═══════════════════════════════════════════════════════
 function setupSettings() {
   const dlg = document.getElementById('settingsDlg');
+  const sel = document.getElementById('myGroup');
   const nameInput = document.getElementById('myName');
-  if (!dlg || !nameInput) return;
+  if (!dlg || !sel || !nameInput) return;
 
+  sel.innerHTML = Object.entries(C.groups)
+    .map(([k,g]) => `<option value="${k}">${g.emoji} ${g.name}</option>`).join('');
   nameInput.value = state.myName;
-  nameInput.disabled = true;  // غیرفعال چون از allowed.json میاد
+  sel.value = state.myGroup || (state.myGroups[0] || 'friends');
 
   const btn = document.getElementById('settingsBtn');
   if (btn) btn.onclick = () => dlg.showModal();
+
+  dlg.addEventListener('close', () => {
+    const n = nameInput.value.trim();
+    if (n) state.myName = n;
+    state.myGroup = sel.value;
+    localStorage.setItem('myName', state.myName);
+    localStorage.setItem('myGroup', state.myGroup);
+    observeSeen();
+  });
 
   const refreshBtn = document.getElementById('refreshBtn');
   if (refreshBtn) refreshBtn.onclick = () => loadMessages(true);
@@ -586,7 +567,6 @@ function showEmptyIfNeeded() {
   const tabs = document.getElementById('tabs');
   const feed = document.getElementById('feed');
   if (!tabs || !feed) return;
-
   if (!feed.innerHTML.trim()) {
     renderTabs();
     feed.innerHTML = '<div class="empty">هنوز پیامی نیست 🌱</div>';
@@ -603,6 +583,20 @@ async function init() {
     }
     updateOnlineBadge();
     setupSettings();
+
+    // ✅ بارگیری اطلاعات تازه کاربر از allowed.json
+    await loadUserInfo();
+    // آپدیت state بعد از بارگیری
+    state.myName = localStorage.getItem('myName') || '';
+    state.myPersonalTopic = localStorage.getItem('myPersonalTopic') || '';
+    try {
+      state.myGroups = JSON.parse(localStorage.getItem('myGroups') || '[]');
+      if (!state.myGroups.length) {
+        const g = localStorage.getItem('myGroup');
+        if (g) state.myGroups = [g];
+      }
+    } catch(e) {}
+
     await loadLocal();
     await loadMessages(true);
     subscribeSSE();
