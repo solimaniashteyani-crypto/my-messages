@@ -85,6 +85,14 @@
     border:2.5px solid var(--border); color:var(--text); border-radius:14px;
     font-family:inherit; font-size:17px;
   }
+  .btn-save-token{
+    padding:16px 26px; border-radius:14px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; border:none; font-family:inherit;
+    font-size:17px; font-weight:800; cursor:pointer;
+    box-shadow:0 6px 18px rgba(30,64,175,.35);
+    white-space:nowrap;
+  }
   .groups-section{
     background:var(--card-soft); border:2px solid var(--border);
     border-radius:18px; padding:20px 22px; margin:24px 0;
@@ -101,10 +109,8 @@
     font-size:14px; font-weight:800; background:#fff; color:var(--primary-deep);
     border:2px solid var(--border); cursor:pointer; transition:all .2s;
   }
-  .quick-btn:hover{background:var(--primary); color:#fff; border-color:var(--primary)}
-  .quick-btn.primary{background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff; border-color:transparent; box-shadow:0 4px 12px rgba(30,64,175,.3)}
+  .quick-btn.primary{background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff; border-color:transparent}
   .quick-btn.clear{color:var(--err); border-color:#fca5a5}
-  .quick-btn.clear:hover{background:var(--err); color:#fff}
   .category-box{
     background:#fff; border:1.5px solid var(--border);
     border-radius:14px; margin-bottom:10px; overflow:hidden;
@@ -115,16 +121,13 @@
     padding:14px 18px; cursor:pointer;
     background:linear-gradient(135deg,#f0f7ff,#dbeafe);
   }
-  .category-box.custom .category-header{
-    background:linear-gradient(135deg,#faf5ff,#f3e8ff);
-  }
+  .category-box.custom .category-header{background:linear-gradient(135deg,#faf5ff,#f3e8ff)}
   .category-title{display:flex; align-items:center; gap:10px; font-size:16px; font-weight:900; color:var(--primary-deep)}
   .category-box.custom .category-title{color:var(--purple)}
   .category-title .count{background:rgba(30,64,175,.15); color:var(--primary-deep); padding:2px 10px; border-radius:999px; font-size:12px; font-weight:800}
   .category-box.custom .category-title .count{background:rgba(124,58,237,.15); color:var(--purple)}
-  .category-title .selected-count{background:linear-gradient(135deg,#16a34a,#15803d); color:#fff; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:800}
+  .category-title .selected-count{background:linear-gradient(135deg,#16a34a,#15803d); color:#fff; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:800; display:none}
   .category-arrow{font-size:16px; color:var(--primary-deep); transition:transform .3s ease}
-  .category-box.custom .category-arrow{color:var(--purple)}
   .category-box.open .category-arrow{transform:rotate(90deg)}
   .category-body{display:none; padding:14px 18px}
   .category-box.open .category-body{display:block}
@@ -183,10 +186,7 @@
     cursor:pointer; font-family:inherit; font-size:16px; font-weight:800;
   }
   .progress{height:8px; background:#dbeafe; border-radius:6px; overflow:hidden; margin-top:20px; display:none}
-  .progress > div{
-    height:100%; background:linear-gradient(90deg,#1e40af,#3b82f6,#1e40af);
-    background-size:200% 100%; width:0; transition:width .3s ease;
-  }
+  .progress > div{height:100%; background:linear-gradient(90deg,#1e40af,#3b82f6,#1e40af); background-size:200% 100%; width:0; transition:width .3s ease}
   #status{margin-top:20px; font-size:17px; font-weight:800; min-height:28px; text-align:center}
   .ok{color:var(--ok)} .err{color:var(--err)}
   .modal-backdrop{
@@ -199,24 +199,14 @@
   .modal h3{font-size:22px; margin:0 0 10px; color:#b91c1c; font-weight:900}
   .modal .warning-text{color:#64748b; font-size:15px; margin-bottom:20px; line-height:1.7; font-weight:600}
   .modal label{display:block; margin:14px 0 8px; font-size:15px; font-weight:800}
-  .modal input{
-    width:100%; padding:16px 20px; background:#f0f7ff;
-    border:2.5px solid #bfdbfe; color:#0c1e3e; border-radius:14px;
-    font-family:inherit; font-size:18px; font-weight:700;
-    text-align:center; letter-spacing:8px;
-  }
+  .modal input{width:100%; padding:16px 20px; background:#f0f7ff; border:2.5px solid #bfdbfe; color:#0c1e3e; border-radius:14px; font-family:inherit; font-size:18px; font-weight:700; text-align:center; letter-spacing:8px}
   .modal .error-msg{color:#dc2626; font-size:14px; font-weight:700; margin-top:10px; text-align:center; min-height:20px}
   .modal .actions{display:flex; gap:10px; margin-top:22px; justify-content:flex-end}
   .modal .actions button{padding:13px 24px; border-radius:12px; font-family:inherit; font-size:15px; font-weight:800; cursor:pointer; border:none}
   .modal .cancel{background:transparent; color:#64748b; border:2px solid #93c5fd}
   .modal .confirm{background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff}
   .modal .confirm:disabled{opacity:.4; cursor:not-allowed}
-  .toast{
-    position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120%);
-    background:linear-gradient(135deg,#16a34a,#15803d); color:#fff;
-    padding:16px 28px; border-radius:16px; font-size:16px; font-weight:800;
-    z-index:200; transition:transform .3s ease;
-  }
+  .toast{position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120%); background:linear-gradient(135deg,#16a34a,#15803d); color:#fff; padding:16px 28px; border-radius:16px; font-size:16px; font-weight:800; z-index:200; transition:transform .3s ease}
   .toast.show{transform:translateX(-50%) translateY(0)}
   .toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
   @media(max-width:480px){
@@ -254,7 +244,7 @@
       <label>🔑 توکن گیت‌هاب</label>
       <input type="password" id="token" class="token-input" placeholder="github_pat_...">
       <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
-        <button class="btn-main" style="flex:0; padding:16px 26px; font-size:17px; min-width:auto" onclick="saveToken()">💾 ذخیره توکن</button>
+        <button class="btn-save-token" id="saveTokenBtn">💾 ذخیره توکن</button>
         <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#2563eb; font-size:15px; font-weight:700">از این صفحه بساز ↗</a>
       </div>
       <div id="tokenMsg" style="margin-top:14px; font-size:16px; font-weight:700"></div>
@@ -266,14 +256,14 @@
       </div>
 
       <div class="quick-buttons">
-        <button class="quick-btn primary" onclick="selectAll()">✓ همه</button>
-        <button class="quick-btn primary" onclick="selectOstanAndSpecial()">✓ همه استان‌ها + ویژه</button>
-        <button class="quick-btn" onclick="selectOstanOnly()">✓ فقط استان‌ها</button>
-        <button class="quick-btn" onclick="selectSpecialOnly()">✓ فقط ویژه</button>
-        <button class="quick-btn" onclick="selectFamilyOnly()">✓ فقط خانواده</button>
-        <button class="quick-btn" onclick="selectPersonalOnly()">✓ فقط افراد</button>
-        <button class="quick-btn" onclick="selectCustomOnly()">✓ فقط دسته‌های سفارشی</button>
-        <button class="quick-btn clear" onclick="clearAll()">✗ پاک کردن همه</button>
+        <button class="quick-btn primary" id="btnSelectAll">✓ همه</button>
+        <button class="quick-btn primary" id="btnSelectOstanSpecial">✓ همه استان‌ها + ویژه</button>
+        <button class="quick-btn" id="btnSelectOstanOnly">✓ فقط استان‌ها</button>
+        <button class="quick-btn" id="btnSelectSpecialOnly">✓ فقط ویژه</button>
+        <button class="quick-btn" id="btnSelectFamilyOnly">✓ فقط خانواده</button>
+        <button class="quick-btn" id="btnSelectPersonalOnly">✓ فقط افراد</button>
+        <button class="quick-btn" id="btnSelectCustomOnly">✓ فقط دسته‌های سفارشی</button>
+        <button class="quick-btn clear" id="btnClearAll">✗ پاک کردن همه</button>
       </div>
 
       <div id="groupsContainer"></div>
@@ -293,9 +283,9 @@
     </div>
 
     <div class="actions">
-      <button class="btn-main" onclick="send()">ارسال 🚀</button>
-      <button class="btn-ghost" onclick="reload()">🔄</button>
-      <button class="btn-danger" onclick="openResetModal()">🗑 پاک کردن همه</button>
+      <button class="btn-main" id="btnSend">ارسال 🚀</button>
+      <button class="btn-ghost" id="btnReload">🔄</button>
+      <button class="btn-danger" id="btnReset">🗑 پاک کردن همه</button>
     </div>
 
     <div class="progress" id="prog"><div id="progBar"></div></div>
@@ -316,7 +306,7 @@
     <div class="error-msg" id="resetError"></div>
     <div class="actions">
       <button class="cancel" onclick="closeResetModal()">لغو</button>
-      <button class="confirm" id="confirmResetBtn" onclick="confirmReset()" disabled>🗑 پاک کن</button>
+      <button class="confirm" id="confirmResetBtn" disabled>🗑 پاک کن</button>
     </div>
   </div>
 </div>
@@ -325,70 +315,100 @@
 
 <script src="config.js"></script>
 <script>
-const C = window.CONFIG;
-const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents`;
-const MSG_PATH = 'messages.json';
-const CATS_PATH = 'categories.json';
-const TOKEN_KEY = 'gh_token';
-const RESET_PASSWORD = '5113';
-const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
-const RAW_CATS = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/categories.json`;
+(function() {
+'use strict';
 
-const tokenEl = document.getElementById('token');
-let allowedMembers = [];
-let customCategories = [];
+var C = window.CONFIG;
+var API = 'https://api.github.com/repos/' + C.owner + '/' + C.repo + '/contents';
+var MSG_PATH = 'messages.json';
+var TOKEN_KEY = 'gh_token';
+var RESET_PASSWORD = '5113';
+var RAW_ALLOWED = 'https://raw.githubusercontent.com/' + C.owner + '/' + C.repo + '/' + C.branch + '/allowed.json';
+var RAW_CATS = 'https://raw.githubusercontent.com/' + C.owner + '/' + C.repo + '/' + C.branch + '/categories.json';
+
+var tokenEl = document.getElementById('token');
+var allowedMembers = [];
+var customCategories = [];
 
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 
-// ═══════════════════════════════════════════════════════
-// 📥 بارگیری داده‌ها
-// ═══════════════════════════════════════════════════════
+// ───── توکن ─────
+function saveToken() {
+  var t = tokenEl.value.trim();
+  var msgEl = document.getElementById('tokenMsg');
+  if (!t) { msgEl.innerHTML = '<span style="color:#dc2626">❌ توکن رو وارد کن</span>'; return; }
+  if (t.indexOf('github_pat_') !== 0 && t.indexOf('ghp_') !== 0) {
+    msgEl.innerHTML = '<span style="color:#dc2626">❌ فرمت اشتباه</span>'; return;
+  }
+  localStorage.setItem(TOKEN_KEY, t);
+  msgEl.innerHTML = '<span style="color:#16a34a">✅ ذخیره شد!</span>';
+  updateTokenUI();
+  reload();
+}
+
+function logout() {
+  if (!confirm('توکن پاک بشه؟')) return;
+  localStorage.removeItem(TOKEN_KEY);
+  tokenEl.value = '';
+  updateTokenUI();
+  setStatus('');
+}
+
+function updateTokenUI() {
+  var t = getToken();
+  document.getElementById('tokenSaved').hidden = !t;
+  document.getElementById('tokenForm').hidden = !!t;
+}
+
+var setStatus = function(t, cls) {
+  document.getElementById('status').innerHTML = '<span class="' + (cls || '') + '">' + (t || '') + '</span>';
+};
+
+// ───── بارگیری ─────
 async function loadAllowedMembers() {
   try {
-    const res = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
+    var res = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) return;
-    const data = await res.json();
+    var data = await res.json();
     allowedMembers = data.allowed || [];
   } catch(e) { console.warn(e); }
 }
 
 async function loadCustomCategories() {
   try {
-    const res = await fetch(RAW_CATS + '?t=' + Date.now(), { cache: 'no-store' });
+    var res = await fetch(RAW_CATS + '?t=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) return;
-    const data = await res.json();
+    var data = await res.json();
     customCategories = data.categories || [];
   } catch(e) { console.warn(e); }
 }
 
 async function loadAll() {
-  await Promise.all([loadAllowedMembers(), loadCustomCategories()]);
+  await loadAllowedMembers();
+  await loadCustomCategories();
   renderGroups();
 }
 
-// ═══════════════════════════════════════════════════════
-// 📁 ساخت گروه‌ها
-// ═══════════════════════════════════════════════════════
+// ───── رندر گروه‌ها ─────
 function renderGroups() {
-  const container = document.getElementById('groupsContainer');
-
-  const categories = {
+  var container = document.getElementById('groupsContainer');
+  var categories = {
     family:  { name: 'خانواده', emoji: '🏡', open: true,  items: [] },
     special: { name: 'ویژه',    emoji: '🕌', open: false, items: [] },
     ostan:   { name: 'استان‌ها', emoji: '🗺', open: false, items: [] },
     other:   { name: 'سایر',    emoji: '👥', open: true,  items: [] },
     personal:{ name: 'افراد اختصاصی', emoji: '👤', open: false, items: [], isPersonal: true }
   };
+  var catMap = { 'خانواده': 'family', 'ویژه': 'special', 'استان': 'ostan', 'سایر': 'other' };
 
-  const catMap = { 'خانواده': 'family', 'ویژه': 'special', 'استان': 'ostan', 'سایر': 'other' };
-
-  Object.entries(C.groups).forEach(([key, g]) => {
-    const catName = g.category || 'سایر';
-    const catKey = catMap[catName] || 'other';
-    categories[catKey].items.push({ key, ...g });
+  Object.keys(C.groups).forEach(function(key) {
+    var g = C.groups[key];
+    var catName = g.category || 'سایر';
+    var catKey = catMap[catName] || 'other';
+    categories[catKey].items.push(Object.assign({ key: key }, g));
   });
 
-  allowedMembers.forEach((m, idx) => {
+  allowedMembers.forEach(function(m, idx) {
     categories.personal.items.push({
       key: '__personal__' + idx,
       name: m.name,
@@ -397,360 +417,259 @@ function renderGroups() {
     });
   });
 
-  let html = '';
+  var html = '';
 
-  // ═══════ دسته‌های ثابت ═══════
-  Object.entries(categories).forEach(([catKey, cat]) => {
+  Object.keys(categories).forEach(function(catKey) {
+    var cat = categories[catKey];
     if (!cat.items.length) return;
 
-    html += `
-      <div class="category-box ${cat.open ? 'open' : ''}" data-cat="${catKey}">
-        <div class="category-header" onclick="toggleCategory('${catKey}')">
-          <div class="category-title">
-            ${cat.emoji} ${cat.name}
-            <span class="count">${cat.items.length}</span>
-            <span class="selected-count" id="sel-${catKey}" style="display:none">0</span>
-          </div>
-          <span class="category-arrow">◀</span>
-        </div>
-        <div class="category-body">
-          <div class="checkboxes-grid">
-            ${cat.items.map(g => {
-              if (cat.isPersonal) {
-                const groupsText = g.groups.map(gk => {
-                  const gr = C.groups[gk];
-                  return gr ? gr.emoji + ' ' + gr.name : '';
-                }).filter(Boolean).join(' + ');
-                return `
-                  <label class="checkbox-item personal-item">
-                    <input type="checkbox" class="group-check personal-check"
-                           data-cat="${catKey}" data-personal-topic="${g.personalTopic || ''}"
-                           data-personal-name="${g.name}" value="${g.key}">
-                    <span class="check"></span>
-                    <span class="label">
-                      👤 <b>${g.name}</b>
-                      <small style="display:block;color:#7c3aed;font-size:11px;font-weight:700">${groupsText || 'بدون گروه'}</small>
-                    </span>
-                  </label>
-                `;
-              }
-              return `
-                <label class="checkbox-item">
-                  <input type="checkbox" class="group-check" data-cat="${catKey}" value="${g.key}">
-                  <span class="check"></span>
-                  <span class="label">${g.emoji} ${g.name}</span>
-                </label>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      </div>
-    `;
+    html += '<div class="category-box ' + (cat.open ? 'open' : '') + '" data-cat="' + catKey + '">';
+    html += '<div class="category-header" data-toggle="' + catKey + '">';
+    html += '<div class="category-title">' + cat.emoji + ' ' + cat.name;
+    html += ' <span class="count">' + cat.items.length + '</span>';
+    html += ' <span class="selected-count" id="sel-' + catKey + '">0</span>';
+    html += '</div><span class="category-arrow">◀</span></div>';
+    html += '<div class="category-body"><div class="checkboxes-grid">';
+
+    cat.items.forEach(function(g) {
+      if (cat.isPersonal) {
+        var groupsText = (g.groups || []).map(function(gk) {
+          var gr = C.groups[gk];
+          return gr ? gr.emoji + ' ' + gr.name : '';
+        }).filter(Boolean).join(' + ');
+        html += '<label class="checkbox-item personal-item">';
+        html += '<input type="checkbox" class="group-check personal-check" data-cat="' + catKey + '" data-personal-topic="' + (g.personalTopic || '') + '" data-personal-name="' + g.name + '" value="' + g.key + '">';
+        html += '<span class="check"></span>';
+        html += '<span class="label">👤 <b>' + g.name + '</b><small style="display:block;color:#7c3aed;font-size:11px;font-weight:700">' + (groupsText || 'بدون گروه') + '</small></span>';
+        html += '</label>';
+      } else {
+        html += '<label class="checkbox-item">';
+        html += '<input type="checkbox" class="group-check" data-cat="' + catKey + '" value="' + g.key + '">';
+        html += '<span class="check"></span>';
+        html += '<span class="label">' + g.emoji + ' ' + g.name + '</span>';
+        html += '</label>';
+      }
+    });
+
+    html += '</div></div></div>';
   });
 
-  // ═══════ دسته‌های سفارشی (categories.json) ═══════
+  // دسته‌های سفارشی
   if (customCategories.length) {
-    html += `<div style="margin:20px 0 8px; padding-top:16px; border-top:2px dashed var(--purple)">
-      <h4 style="color:var(--purple); font-weight:900; font-size:16px; margin:0 0 12px">🏢 دسته‌های سفارشی</h4>
-    </div>`;
+    html += '<div style="margin:20px 0 8px; padding-top:16px; border-top:2px dashed var(--purple)"><h4 style="color:var(--purple); font-weight:900; font-size:16px; margin:0 0 12px">🏢 دسته‌های سفارشی</h4></div>';
 
-    customCategories.forEach((cat, i) => {
-      html += `
-        <div class="category-box custom" data-cat="custom-${cat.id}">
-          <div class="category-header" onclick="toggleCategory('custom-${cat.id}')">
-            <div class="category-title">
-              ${cat.emoji || '📁'} ${cat.name}
-              <span class="count">${(cat.subcategories || []).length}</span>
-              <span class="selected-count" id="sel-custom-${cat.id}" style="display:none">0</span>
-            </div>
-            <span class="category-arrow">◀</span>
-          </div>
-          <div class="category-body">
-            <label class="checkbox-item custom" style="margin-bottom:10px; background:rgba(124,58,237,.08)">
-              <input type="checkbox" class="group-check custom-cat-check"
-                     data-cat="custom-${cat.id}"
-                     data-custom-cat="${cat.id}"
-                     data-custom-topic="${cat.topic || ''}"
-                     value="__cat__${cat.id}">
-              <span class="check"></span>
-              <span class="label">📢 کل ${cat.name}</span>
-            </label>
-            <div class="checkboxes-grid">
-              ${(cat.subcategories || []).map(sub => `
-                <label class="checkbox-item custom">
-                  <input type="checkbox" class="group-check custom-sub-check"
-                         data-cat="custom-${cat.id}"
-                         data-custom-cat="${cat.id}"
-                         data-custom-topic="${sub.topic || ''}"
-                         value="${sub.id}">
-                  <span class="check"></span>
-                  <span class="label">${sub.emoji || '👤'} ${sub.name}</span>
-                </label>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-      `;
+    customCategories.forEach(function(cat) {
+      html += '<div class="category-box custom" data-cat="custom-' + cat.id + '">';
+      html += '<div class="category-header" data-toggle="custom-' + cat.id + '">';
+      html += '<div class="category-title">' + (cat.emoji || '📁') + ' ' + cat.name;
+      html += ' <span class="count">' + ((cat.subcategories || []).length) + '</span>';
+      html += ' <span class="selected-count" id="sel-custom-' + cat.id + '">0</span>';
+      html += '</div><span class="category-arrow">◀</span></div>';
+      html += '<div class="category-body">';
+      html += '<label class="checkbox-item custom" style="margin-bottom:10px; background:rgba(124,58,237,.08)">';
+      html += '<input type="checkbox" class="group-check custom-cat-check" data-cat="custom-' + cat.id + '" data-custom-cat="' + cat.id + '" data-custom-topic="' + (cat.topic || '') + '" value="__cat__' + cat.id + '">';
+      html += '<span class="check"></span>';
+      html += '<span class="label">📢 کل ' + cat.name + '</span></label>';
+      html += '<div class="checkboxes-grid">';
+      (cat.subcategories || []).forEach(function(sub) {
+        html += '<label class="checkbox-item custom">';
+        html += '<input type="checkbox" class="group-check custom-sub-check" data-cat="custom-' + cat.id + '" data-custom-cat="' + cat.id + '" data-custom-topic="' + (sub.topic || '') + '" value="' + sub.id + '">';
+        html += '<span class="check"></span>';
+        html += '<span class="label">' + (sub.emoji || '👤') + ' ' + sub.name + '</span>';
+        html += '</label>';
+      });
+      html += '</div></div></div>';
     });
   }
 
   container.innerHTML = html;
-  container.querySelectorAll('.group-check').forEach(cb => {
-    cb.addEventListener('change', () => {
-      // اگه چک‌باکس «کل دسته سفارشی» بود
+
+  // ───── رویدادها ─────
+  container.querySelectorAll('[data-toggle]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var box = el.closest('.category-box');
+      if (box) box.classList.toggle('open');
+    });
+  });
+
+  container.querySelectorAll('.group-check').forEach(function(cb) {
+    cb.addEventListener('change', function() {
       if (cb.classList.contains('custom-cat-check')) {
-        handleCustomCatClick(cb);
-      }
-      // اگه چک‌باکس زیرمجموعه دسته سفارشی بود
-      else if (cb.classList.contains('custom-sub-check')) {
-        handleCustomSubClick(cb);
+        // اگه چک‌باکس «کل دسته» زده شد
+        var catId = cb.dataset.customCat;
+        var subs = document.querySelectorAll('.custom-sub-check[data-custom-cat="' + catId + '"]');
+        subs.forEach(function(s) { s.checked = cb.checked; });
+      } else if (cb.classList.contains('custom-sub-check')) {
+        // اگه زیرمجموعه زده شد
+        var catId2 = cb.dataset.customCat;
+        var allSubs = document.querySelectorAll('.custom-sub-check[data-custom-cat="' + catId2 + '"]');
+        var allChecked = Array.from(allSubs).every(function(s) { return s.checked; });
+        var catCb = document.querySelector('.custom-cat-check[data-custom-cat="' + catId2 + '"]');
+        if (catCb) catCb.checked = allChecked;
       }
       updateSelectionSummary();
     });
   });
 }
 
-function toggleCategory(catKey) {
-  const box = document.querySelector(`.category-box[data-cat="${catKey}"]`);
-  if (box) box.classList.toggle('open');
-}
-
 function getSelectedGroups() {
   return Array.from(document.querySelectorAll('.group-check:checked'))
-    .filter(x => !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check'))
-    .map(x => x.value);
+    .filter(function(x) { return !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check'); })
+    .map(function(x) { return x.value; });
 }
 
 function getSelectedPersonalMembers() {
-  return Array.from(document.querySelectorAll('.personal-check:checked')).map(x => ({
-    name: x.dataset.personalName,
-    topic: x.dataset.personalTopic
-  })).filter(m => m.topic);
+  return Array.from(document.querySelectorAll('.personal-check:checked')).map(function(x) {
+    return { name: x.dataset.personalName, topic: x.dataset.personalTopic };
+  }).filter(function(m) { return m.topic; });
 }
 
 function getSelectedCustomTopics() {
-  return Array.from(document.querySelectorAll('.custom-cat-check:checked, .custom-sub-check:checked')).map(x => ({
-    name: x.closest('.checkbox-item').querySelector('.label').textContent.trim(),
-    topic: x.dataset.customTopic
-  })).filter(c => c.topic);
+  return Array.from(document.querySelectorAll('.custom-cat-check:checked, .custom-sub-check:checked')).map(function(x) {
+    var label = x.closest('.checkbox-item').querySelector('.label');
+    return { name: label ? label.textContent.trim() : 'سفارشی', topic: x.dataset.customTopic };
+  }).filter(function(c) { return c.topic; });
 }
 
-function updateSelect// ═══════════════════════════════════════════════════════
-// 🏢 مدیریت دسته سفارشی
-// ═══════════════════════════════════════════════════════
-function handleCustomCatClick(catCheckbox) {
-  const catId = catCheckbox.dataset.customCat;
-  const isChecked = catCheckbox.checked;
+function updateSelectionSummary() {
+  var selected = getSelectedGroups();
+  var personal = getSelectedPersonalMembers();
+  var custom = getSelectedCustomTopics();
+  var total = selected.length + personal.length + custom.length;
+  var summary = document.getElementById('selectionSummary');
 
-  // همه زیرمجموعه‌های این دسته
-  const subChecks = document.querySelectorAll(
-    `.custom-sub-check[data-custom-cat="${catId}"]`
-  );
-
-  // اگه کل اداره تیک خورد → همه زیرمجموعه‌ها تیک بخورن
-  // اگه کل اداره برداشته شد → همه زیرمجموعه‌ها برداشته بشن
-  subChecks.forEach(sub => { sub.checked = isChecked; });
-}
-
-function handleCustomSubClick(subCheckbox) {
-  const catId = subCheckbox.dataset.customCat;
-
-  // چک کن همه زیرمجموعه‌ها تیک خوردن؟
-  const allSubs = document.querySelectorAll(
-    `.custom-sub-check[data-custom-cat="${catId}"]`
-  );
-  const allChecked = Array.from(allSubs).every(s => s.checked);
-
-  // آپدیت چک‌باکس «کل اداره»
-  const catCheckbox = document.querySelector(
-    `.custom-cat-check[data-custom-cat="${catId}"]`
-  );
-  if (catCheckbox) catCheckbox.checked = allChecked;
-}
-ionSummary() {
-  const selected = getSelectedGroups();
-  const personal = getSelectedPersonalMembers();
-  const custom = getSelectedCustomTopics();
-  const totalCount = selected.length + personal.length + custom.length;
-
-  const summary = document.getElementById('selectionSummary');
-  if (!totalCount) {
+  if (!total) {
     summary.textContent = 'هیچ گروهی انتخاب نشده';
     summary.className = 'selection-summary empty';
   } else {
-    let text = `✓ ${totalCount} انتخاب`;
-    const parts = [];
-    if (selected.length) parts.push(`${selected.length} گروه`);
-    if (personal.length) parts.push(`${personal.length} فرد`);
-    if (custom.length) parts.push(`${custom.length} سفارشی`);
-    if (parts.length) text += ` (${parts.join(' + ')})`;
-    summary.textContent = text;
+    var parts = [];
+    if (selected.length) parts.push(selected.length + ' گروه');
+    if (personal.length) parts.push(personal.length + ' فرد');
+    if (custom.length) parts.push(custom.length + ' سفارشی');
+    summary.textContent = '✓ ' + total + ' انتخاب (' + parts.join(' + ') + ')';
     summary.className = 'selection-summary';
   }
 }
 
-const catMap = { 'خانواده': 'family', 'ویژه': 'special', 'استان': 'ostan', 'سایر': 'other' };
+function checkByClass(cls, val, cats) {
+  document.querySelectorAll('.group-check').forEach(function(x) {
+    if (x.classList.contains('personal-check')) return;
+    if (x.classList.contains('custom-cat-check')) return;
+    if (x.classList.contains('custom-sub-check')) return;
+    if (cats) x.checked = cats.indexOf(x.dataset.cat) !== -1;
+    else if (cls === 'all') x.checked = true;
+  });
+}
 
 function selectAll() {
-  document.querySelectorAll('.group-check').forEach(x => x.checked = true);
+  document.querySelectorAll('.group-check').forEach(function(x) { x.checked = true; });
   updateSelectionSummary();
 }
 function selectOstanAndSpecial() {
-  document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && (x.dataset.cat === 'special' || x.dataset.cat === 'ostan');
+  document.querySelectorAll('.group-check').forEach(function(x) {
+    if (x.classList.contains('personal-check') || x.classList.contains('custom-cat-check') || x.classList.contains('custom-sub-check')) return;
+    x.checked = (x.dataset.cat === 'special' || x.dataset.cat === 'ostan');
   });
   updateSelectionSummary();
 }
-function selectOstanOnly() {
-  document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && x.dataset.cat === 'ostan';
-  });
-  updateSelectionSummary();
-}
-function selectSpecialOnly() {
-  document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && x.dataset.cat === 'special';
-  });
-  updateSelectionSummary();
-}
-function selectFamilyOnly() {
-  document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && x.dataset.cat === 'family';
-  });
-  updateSelectionSummary();
-}
+function selectOstanOnly() { checkByClass('cat', null, ['ostan']); updateSelectionSummary(); }
+function selectSpecialOnly() { checkByClass('cat', null, ['special']); updateSelectionSummary(); }
+function selectFamilyOnly() { checkByClass('cat', null, ['family']); updateSelectionSummary(); }
 function selectPersonalOnly() {
-  document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = x.classList.contains('personal-check');
-  });
+  document.querySelectorAll('.group-check').forEach(function(x) { x.checked = x.classList.contains('personal-check'); });
   updateSelectionSummary();
 }
 function selectCustomOnly() {
-  document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = x.classList.contains('custom-cat-check') || x.classList.contains('custom-sub-check');
-  });
+  document.querySelectorAll('.group-check').forEach(function(x) { x.checked = x.classList.contains('custom-cat-check') || x.classList.contains('custom-sub-check'); });
   updateSelectionSummary();
 }
 function clearAll() {
-  document.querySelectorAll('.group-check').forEach(x => x.checked = false);
+  document.querySelectorAll('.group-check').forEach(function(x) { x.checked = false; });
   updateSelectionSummary();
 }
 
-// ═══════════════════════════════════════════════════════
-// 🔑 توکن
-// ═══════════════════════════════════════════════════════
-function saveToken() {
-  const t = tokenEl.value.trim();
-  const msgEl = document.getElementById('tokenMsg');
-  if (!t) { msgEl.innerHTML = '<span style="color:#dc2626">❌ توکن رو وارد کن</span>'; return; }
-  if (!t.startsWith('github_pat_') && !t.startsWith('ghp_')) {
-    msgEl.innerHTML = '<span style="color:#dc2626">❌ فرمت اشتباه</span>'; return;
-  }
-  localStorage.setItem(TOKEN_KEY, t);
-  msgEl.innerHTML = '<span style="color:#16a34a">✅ ذخیره شد!</span>';
-  updateTokenUI();
-  reload();
+// ───── Base64 + File ─────
+function b64decode(b64) {
+  var bin = atob(b64.replace(/\n/g, ''));
+  return new TextDecoder().decode(Uint8Array.from(bin, function(c) { return c.charCodeAt(0); }));
 }
-function logout() {
-  if (!confirm('توکن پاک بشه؟')) return;
-  localStorage.removeItem(TOKEN_KEY);
-  tokenEl.value = '';
-  updateTokenUI();
-  setStatus('');
-}
-function updateTokenUI() {
-  const t = getToken();
-  document.getElementById('tokenSaved').hidden = !t;
-  document.getElementById('tokenForm').hidden = !!t;
-}
-const setStatus = (t, cls='') => {
-  document.getElementById('status').innerHTML = `<span class="${cls}">${t}</span>`;
-};
-
-// ═══════════════════════════════════════════════════════
-// 📷 عکس
-// ═══════════════════════════════════════════════════════
-const b64decode = b64 => {
-  const bin = atob(b64.replace(/\n/g,''));
-  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
-};
-const b64encodeStr = s => {
-  const bytes = new TextEncoder().encode(s);
-  let bin = ''; for (const b of bytes) bin += String.fromCharCode(b);
+function b64encodeStr(s) {
+  var bytes = new TextEncoder().encode(s);
+  var bin = '';
+  for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
   return btoa(bin);
-};
-const fileToBase64 = file => new Promise((res, rej) => {
-  const r = new FileReader();
-  r.onload = () => res(r.result.split(',')[1]);
-  r.onerror = rej;
-  r.readAsDataURL(file);
-});
-const imgFile = document.getElementById('imgFile');
-const preview = document.getElementById('preview');
-imgFile.onchange = () => {
-  const f = imgFile.files[0];
+}
+function fileToBase64(file) {
+  return new Promise(function(res, rej) {
+    var r = new FileReader();
+    r.onload = function() { res(r.result.split(',')[1]); };
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+var imgFile = document.getElementById('imgFile');
+var preview = document.getElementById('preview');
+imgFile.onchange = function() {
+  var f = imgFile.files[0];
   if (!f) { preview.style.display = 'none'; return; }
   preview.src = URL.createObjectURL(f);
   preview.style.display = 'block';
 };
 
-// ═══════════════════════════════════════════════════════
-// 🌐 API
-// ═══════════════════════════════════════════════════════
+// ───── API ─────
 async function getFile(path) {
-  const r = await fetch(`${API}/${path}?t=${Date.now()}`, {
-    headers: { Authorization: `token ${getToken()}` }
+  var r = await fetch(API + '/' + path + '?t=' + Date.now(), {
+    headers: { Authorization: 'token ' + getToken() }
   });
   if (r.status === 404) return { sha: null, data: null };
   if (r.status === 401) throw new Error('401 — توکن منقضی');
   if (!r.ok) throw new Error('خطا (' + r.status + ')');
-  const j = await r.json();
+  var j = await r.json();
   return { sha: j.sha, data: JSON.parse(b64decode(j.content)) };
 }
 async function putFile(path, base64Content, sha, commitMsg) {
-  const body = { message: commitMsg, content: base64Content };
+  var body = { message: commitMsg, content: base64Content };
   if (sha) body.sha = sha;
-  const r = await fetch(`${API}/${path}`, {
+  var r = await fetch(API + '/' + path, {
     method: 'PUT',
-    headers: { Authorization: `token ${getToken()}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: 'token ' + getToken(), 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   });
   if (!r.ok) throw new Error('آپدیت نشد (' + r.status + ')');
   return r.json();
 }
 async function uploadImage(file) {
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-  const filename = `${crypto.randomUUID()}.${ext}`;
-  const path = `images/${filename}`;
-  const b64 = await fileToBase64(file);
+  var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  var filename = crypto.randomUUID() + '.' + ext;
+  var path = 'images/' + filename;
+  var b64 = await fileToBase64(file);
   await putFile(path, b64, null, 'upload image');
-  return `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/${path}`;
+  return 'https://raw.githubusercontent.com/' + C.owner + '/' + C.repo + '/' + C.branch + '/' + path;
 }
 
-// ═══════════════════════════════════════════════════════
-// 📤 ارسال
-// ═══════════════════════════════════════════════════════
+// ───── ارسال ─────
 async function send() {
   if (!getToken()) return setStatus('اول توکن رو وارد کن', 'err');
 
-  const selected = getSelectedGroups();
-  const personal = getSelectedPersonalMembers();
-  const custom = getSelectedCustomTopics();
+  var selected = getSelectedGroups();
+  var personal = getSelectedPersonalMembers();
+  var custom = getSelectedCustomTopics();
   if (!selected.length && !personal.length && !custom.length) {
     return setStatus('حداقل یه مخاطب انتخاب کن', 'err');
   }
 
-  const text = document.getElementById('msg').value.trim();
-  const file = imgFile.files[0];
+  var text = document.getElementById('msg').value.trim();
+  var file = imgFile.files[0];
   if (!text && !file) return setStatus('متن یا عکس لازمه', 'err');
 
-  const prog = document.getElementById('prog');
-  const bar = document.getElementById('progBar');
+  var prog = document.getElementById('prog');
+  var bar = document.getElementById('progBar');
   prog.style.display = 'block';
   bar.style.width = '10%';
 
   try {
-    let imageUrl = null;
+    var imageUrl = null;
     if (file) {
       setStatus('در حال آپلود عکس...');
       bar.style.width = '40%';
@@ -759,19 +678,20 @@ async function send() {
     }
 
     setStatus('در حال ثبت پیام...');
-    const { sha, data } = await getFile(MSG_PATH);
-    const db = data || { messages: [], reactions: [], replies: [], seen: [] };
-    db.messages ||= []; db.reactions ||= []; db.replies ||= []; db.seen ||= [];
+    var res = await getFile(MSG_PATH);
+    var sha = res.sha;
+    var db = res.data || { messages: [], reactions: [], replies: [], seen: [] };
+    db.messages = db.messages || []; db.reactions = db.reactions || []; db.replies = db.replies || []; db.seen = db.seen || [];
 
     db.messages.push({
       id: crypto.randomUUID(),
-      text,
+      text: text,
       groups: selected,
       group: selected[0] || '__personal__',
       personalRecipients: personal,
       customRecipients: custom,
       time: new Date().toISOString(),
-      ...(imageUrl ? { image: imageUrl } : {})
+      image: imageUrl || undefined
     });
 
     await putFile(MSG_PATH, b64encodeStr(JSON.stringify(db, null, 2)), sha, 'new message');
@@ -779,58 +699,50 @@ async function send() {
 
     document.getElementById('msg').value = '';
     imgFile.value = ''; preview.style.display = 'none';
-    const total = selected.length + personal.length + custom.length;
-    setStatus(`✅ ارسال شد به ${total} مخاطب! اعلان تا چند لحظه دیگه میاد 📲`, 'ok');
+    var total = selected.length + personal.length + custom.length;
+    setStatus('✅ ارسال شد به ' + total + ' مخاطب! اعلان تا چند لحظه دیگه میاد 📲', 'ok');
   } catch (e) {
     setStatus('❌ ' + e.message, 'err');
   } finally {
-    setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0'; }, 600);
+    setTimeout(function() { prog.style.display = 'none'; bar.style.width = '0'; }, 600);
   }
 }
 
 async function reload() {
   if (!getToken()) return;
   try {
-    const { data: db } = await getFile(MSG_PATH);
+    var res = await getFile(MSG_PATH);
+    var db = res.data;
     if (!db) return setStatus('messages.json پیدا نشد', 'err');
-    setStatus(`📨 ${db.messages?.length||0} پیام`, 'ok');
+    setStatus('📨 ' + (db.messages ? db.messages.length : 0) + ' پیام', 'ok');
   } catch (e) { setStatus('❌ ' + e.message, 'err'); }
 }
 
-// ═══════════════════════════════════════════════════════
-// 🗑 پاک کردن
-// ═══════════════════════════════════════════════════════
+// ───── Reset ─────
 function openResetModal() {
   if (!getToken()) { showToast('❌ اول توکن رو وارد کن', true); return; }
   document.getElementById('resetPassword').value = '';
   document.getElementById('resetError').textContent = '';
   document.getElementById('confirmResetBtn').disabled = true;
   document.getElementById('resetModal').classList.add('show');
-  setTimeout(() => document.getElementById('resetPassword').focus(), 100);
+  setTimeout(function() { document.getElementById('resetPassword').focus(); }, 100);
 }
 function closeResetModal() { document.getElementById('resetModal').classList.remove('show'); }
-document.getElementById('resetPassword').addEventListener('input', e => {
-  const val = e.target.value.trim();
-  const btn = document.getElementById('confirmResetBtn');
-  const err = document.getElementById('resetError');
-  if (val.length === 0) { btn.disabled = true; err.textContent = ''; }
-  else if (val === RESET_PASSWORD) { btn.disabled = false; err.textContent = '✅ رمز صحیح'; err.style.color = '#16a34a'; }
-  else { btn.disabled = true; err.textContent = '❌ رمز اشتباه'; err.style.color = '#dc2626'; }
-});
+
 async function confirmReset() {
-  const pass = document.getElementById('resetPassword').value.trim();
+  var pass = document.getElementById('resetPassword').value.trim();
   if (pass !== RESET_PASSWORD) return;
-  const btn = document.getElementById('confirmResetBtn');
+  var btn = document.getElementById('confirmResetBtn');
   btn.disabled = true; btn.textContent = '⏳...';
   try {
-    const token = getToken();
-    const emptyDb = { messages: [], reactions: [], replies: [], seen: [] };
-    const r = await fetch(`${API}/${MSG_PATH}?t=${Date.now()}`, { headers: { Authorization: `token ${token}` } });
+    var token = getToken();
+    var emptyDb = { messages: [], reactions: [], replies: [], seen: [] };
+    var r = await fetch(API + '/' + MSG_PATH + '?t=' + Date.now(), { headers: { Authorization: 'token ' + token } });
     if (!r.ok) throw new Error('خطا');
-    const j = await r.json();
-    await fetch(`${API}/${MSG_PATH}`, {
+    var j = await r.json();
+    await fetch(API + '/' + MSG_PATH, {
       method: 'PUT',
-      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: 'reset all messages',
         content: b64encodeStr(JSON.stringify(emptyDb, null, 2)),
@@ -839,26 +751,59 @@ async function confirmReset() {
     });
     localStorage.removeItem('seenSent'); localStorage.removeItem('feedLimit');
     closeResetModal(); showToast('✅ پاک شد!');
-    setTimeout(() => reload(), 800);
+    setTimeout(function() { reload(); }, 800);
   } catch (e) {
     document.getElementById('resetError').textContent = '❌ ' + e.message;
     btn.disabled = false; btn.textContent = '🗑 پاک کن';
   }
 }
+
 function showToast(msg, isError) {
-  const toast = document.getElementById('toast');
+  var toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.className = 'toast show' + (isError ? ' err' : '');
-  setTimeout(() => toast.classList.remove('show'), 3000);
+  setTimeout(function() { toast.classList.remove('show'); }, 3000);
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeResetModal(); });
-document.getElementById('resetModal').addEventListener('click', e => { if (e.target.id === 'resetModal') closeResetModal(); });
 
-// 🚀 شروع
+// ───── اتصال رویدادها ─────
+document.getElementById('saveTokenBtn').addEventListener('click', saveToken);
+document.getElementById('btnSelectAll').addEventListener('click', selectAll);
+document.getElementById('btnSelectOstanSpecial').addEventListener('click', selectOstanAndSpecial);
+document.getElementById('btnSelectOstanOnly').addEventListener('click', selectOstanOnly);
+document.getElementById('btnSelectSpecialOnly').addEventListener('click', selectSpecialOnly);
+document.getElementById('btnSelectFamilyOnly').addEventListener('click', selectFamilyOnly);
+document.getElementById('btnSelectPersonalOnly').addEventListener('click', selectPersonalOnly);
+document.getElementById('btnSelectCustomOnly').addEventListener('click', selectCustomOnly);
+document.getElementById('btnClearAll').addEventListener('click', clearAll);
+document.getElementById('btnSend').addEventListener('click', send);
+document.getElementById('btnReload').addEventListener('click', reload);
+document.getElementById('btnReset').addEventListener('click', openResetModal);
+
+document.getElementById('resetPassword').addEventListener('input', function(e) {
+  var val = e.target.value.trim();
+  var btn = document.getElementById('confirmResetBtn');
+  var err = document.getElementById('resetError');
+  if (val.length === 0) { btn.disabled = true; err.textContent = ''; }
+  else if (val === RESET_PASSWORD) { btn.disabled = false; err.textContent = '✅ رمز صحیح'; err.style.color = '#16a34a'; }
+  else { btn.disabled = true; err.textContent = '❌ رمز اشتباه'; err.style.color = '#dc2626'; }
+});
+
+document.getElementById('confirmResetBtn').addEventListener('click', confirmReset);
+document.getElementById('resetModal').addEventListener('click', function(e) {
+  if (e.target.id === 'resetModal') closeResetModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeResetModal();
+});
+
+// ───── شروع ─────
 tokenEl.value = getToken() || '';
 updateTokenUI();
 loadAll();
 if (getToken()) reload();
+
+})();
 </script>
 </body>
 </html>
