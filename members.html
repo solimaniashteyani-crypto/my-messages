@@ -2,24 +2,24 @@
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>سامانه پیام‌رسان سما — مدیریت اعضا</title>
-<meta name="description" content="مدیریت اعضای سامانه سما">
+<meta name="description" content="مدیریت اعضای سامانه سما — نسخه ۶/۱۱">
 <link rel="manifest" href="admin-manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="مدیریت اعضا سما">
 <meta name="theme-color" content="#1e40af">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
   :root{
     --primary:#1e40af; --primary-2:#3b82f6; --primary-deep:#1e3a8a;
     --text:#0c1e3e; --muted:#64748b; --border:#bfdbfe; --border-strong:#93c5fd;
     --ok:#16a34a; --err:#dc2626; --card:#fff; --card-soft:#f0f7ff;
+    --purple:#7c3aed;
   }
   *{box-sizing:border-box}
   html,body{margin:0;min-height:100%}
@@ -158,6 +158,11 @@
     font-size:13px; font-weight:800;
     border:1px solid var(--border-strong);
   }
+  .group-tag.custom{
+    background:linear-gradient(135deg,#f3e8ff,#e9d5ff);
+    color:var(--purple);
+    border-color:#d8b4fe;
+  }
   .topic-box{
     margin-bottom:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
   }
@@ -174,7 +179,7 @@
     font-size:12px; font-weight:800; font-family:inherit;
     transition:all .2s;
   }
-  .copy-btn:hover{transform:translateY(-1px); box-shadow:0 4px 12px rgba(139,92,246,.4)}
+  .copy-btn:hover{transform:translateY(-1px)}
   .empty{
     text-align:center; padding:60px 20px;
     color:var(--muted); font-size:17px; font-weight:600;
@@ -210,12 +215,12 @@
   }
   .group-selector{
     border:2px solid var(--border); border-radius:14px;
-    padding:12px; max-height:320px; overflow-y:auto; background:var(--card-soft);
+    padding:12px; max-height:400px; overflow-y:auto; background:var(--card-soft);
   }
-  .group-cat{margin-bottom:12px}
+  .group-cat{margin-bottom:14px}
   .group-cat-title{
     font-size:14px; font-weight:900; color:var(--primary-deep);
-    padding:6px 10px; background:#fff; border-radius:8px; margin-bottom:8px;
+    padding:8px 12px; background:#fff; border-radius:8px; margin-bottom:8px;
   }
   .group-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:6px}
   .group-item{
@@ -300,7 +305,7 @@
   <div class="header">
     <div class="icon">👥</div>
     <h1>مدیریت اعضا</h1>
-    <div class="subtitle">سامانه پیام‌رسان سما — نسخه ۵/۱۱</div>
+    <div class="subtitle">سامانه پیام‌رسان سما — نسخه ۶/۱۱</div>
   </div>
 
   <div class="card">
@@ -415,9 +420,11 @@ const C = window.CONFIG;
 const TOKEN_KEY = 'gh_token';
 const ALLOWED_PATH = 'allowed.json';
 const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
+const RAW_CATS = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/categories.json`;
 const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents`;
 
 let members = [];
+let customCategories = [];
 let editingIndex = -1;
 
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
@@ -508,11 +515,21 @@ function generateTopic() {
 // ═══════════════════════════════════════════════════════
 // 💾 بارگیری
 // ═══════════════════════════════════════════════════════
+async function loadCustomCategories() {
+  try {
+    const res = await fetch(RAW_CATS + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    customCategories = data.categories || [];
+  } catch(e) { console.warn(e); }
+}
+
 async function loadMembers() {
   const list = document.getElementById('membersList');
   list.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b">⏳ در حال بارگذاری...</div>';
 
   try {
+    await loadCustomCategories();
     const r = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json();
@@ -553,9 +570,26 @@ function renderMembers() {
   list.innerHTML = filtered.map(m => {
     const realIndex = members.indexOf(m);
     const initial = (m.name || '?')[0];
+
+    // نمایش گروه‌ها (عادی + سفارشی)
     const groups = (m.groups || []).map(g => {
-      const group = C.groups[g];
-      return group ? `<span class="group-tag">${group.emoji} ${group.name}</span>` : '';
+      // چک کن گروه عادیه
+      if (C.groups[g]) {
+        const gr = C.groups[g];
+        return `<span class="group-tag">${gr.emoji} ${gr.name}</span>`;
+      }
+      // چک کن دسته سفارشی (کل دسته) - با فرمت __cat__id
+      if (g.startsWith && g.startsWith('__cat__')) {
+        const catId = g.substring(7);
+        const cat = customCategories.find(c => c.id === catId);
+        if (cat) return `<span class="group-tag custom">📢 کل ${cat.name}</span>`;
+      }
+      // چک کن زیرمجموعه دسته سفارشی
+      for (const cat of customCategories) {
+        const sub = (cat.subcategories || []).find(s => s.id === g);
+        if (sub) return `<span class="group-tag custom">${sub.emoji || '👤'} ${sub.name}</span>`;
+      }
+      return `<span class="group-tag">${g}</span>`;
     }).join('');
 
     return `
@@ -579,7 +613,7 @@ function renderMembers() {
           <div class="topic-box">
             <span class="topic-label">📱 کد اختصاصی:</span>
             <code class="topic-code">${esc(m.personalTopic)}</code>
-            <button class="copy-btn" onclick="copyText('${esc(m.personalTopic)}')" title="کپی کد اختصاصی">📋 کپی</button>
+            <button class="copy-btn" onclick="copyText('${esc(m.personalTopic)}')" title="کپی">📋 کپی</button>
           </div>
         ` : ''}
         <div class="member-groups">${groups || '<span style="color:#94a3b8;font-size:13px">بدون گروه</span>'}</div>
@@ -589,10 +623,11 @@ function renderMembers() {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎯 انتخابگر گروه
+// 🎯 انتخابگر گروه (شامل دسته‌های سفارشی)
 // ═══════════════════════════════════════════════════════
 function renderGroupSelector(selected = []) {
   const sel = document.getElementById('groupSelector');
+
   const cats = {
     'خانواده': { emoji: '🏡', items: [] },
     'ویژه': { emoji: '🕌', items: [] },
@@ -606,6 +641,8 @@ function renderGroupSelector(selected = []) {
   });
 
   let html = '';
+
+  // گروه‌های عادی
   Object.entries(cats).forEach(([catName, cat]) => {
     if (!cat.items.length) return;
     html += `<div class="group-cat">`;
@@ -623,6 +660,46 @@ function renderGroupSelector(selected = []) {
     });
     html += `</div></div>`;
   });
+
+  // ═══════════ دسته‌های سفارشی ═══════════
+  if (customCategories.length) {
+    html += `<div style="margin:16px 0 8px; padding-top:12px; border-top:2px dashed #7c3aed">
+      <h4 style="color:#7c3aed; font-weight:900; font-size:14px; margin:0 0 10px">🏢 دسته‌های سفارشی</h4>
+    </div>`;
+
+    customCategories.forEach(cat => {
+      html += `<div class="group-cat">`;
+      html += `<div class="group-cat-title" style="color:#7c3aed; background:#faf5ff">
+        ${cat.emoji || '📁'} ${cat.name} (${(cat.subcategories || []).length})
+      </div>`;
+      html += `<div class="group-grid">`;
+
+      // خود دسته (کل اداره)
+      const catKey = '__cat__' + cat.id;
+      const catChecked = selected.includes(catKey) ? 'checked' : '';
+      html += `
+        <label class="group-item" style="background:rgba(124,58,237,.08)">
+          <input type="checkbox" class="group-check" value="${catKey}" ${catChecked}>
+          <span class="check"></span>
+          <span>📢 کل ${cat.name}</span>
+        </label>
+      `;
+
+      // زیرمجموعه‌ها
+      (cat.subcategories || []).forEach(sub => {
+        const checked = selected.includes(sub.id) ? 'checked' : '';
+        html += `
+          <label class="group-item">
+            <input type="checkbox" class="group-check" value="${sub.id}" ${checked}>
+            <span class="check"></span>
+            <span>${sub.emoji || '👤'} ${sub.name}</span>
+          </label>
+        `;
+      });
+
+      html += `</div></div>`;
+    });
+  }
 
   sel.innerHTML = html;
   sel.querySelectorAll('input').forEach(cb => cb.addEventListener('change', updateSaveBtn));
@@ -748,9 +825,31 @@ function openInviteModal(index) {
   if (m.personalTopic) {
     topics.push({ name: 'شخصی', emoji: '👤', topic: m.personalTopic, personal: true });
   }
+
   (m.groups || []).forEach(g => {
-    const group = C.groups[g];
-    if (group) topics.push({ name: group.name, emoji: group.emoji, topic: group.topic, personal: false });
+    // گروه عادی
+    if (C.groups[g]) {
+      const gr = C.groups[g];
+      topics.push({ name: gr.name, emoji: gr.emoji, topic: gr.topic, personal: false });
+    }
+    // دسته سفارشی (کل)
+    else if (g.startsWith && g.startsWith('__cat__')) {
+      const catId = g.substring(7);
+      const cat = customCategories.find(c => c.id === catId);
+      if (cat && cat.topic) {
+        topics.push({ name: 'کل ' + cat.name, emoji: cat.emoji || '📁', topic: cat.topic, personal: false });
+      }
+    }
+    // زیرمجموعه سفارشی
+    else {
+      for (const cat of customCategories) {
+        const sub = (cat.subcategories || []).find(s => s.id === g);
+        if (sub && sub.topic) {
+          topics.push({ name: sub.name, emoji: sub.emoji || '👤', topic: sub.topic, personal: false });
+          break;
+        }
+      }
+    }
   });
 
   const pwaUrl = 'https://solimaniashteyani-crypto.github.io/my-messages/';
@@ -779,7 +878,7 @@ ${topicsText}
 📲 هر وقت پیام جدید بیاد، اعلان می‌گیری.
 
 ---
-سامانه پیام‌رسان سما 🕊️`;
+سامانه پیام‌رسان سما — نسخه ۶/۱۱ 🕊️`;
 
   window._currentInviteText = inviteText;
   window._currentInvitePhone = m.phone || '';
@@ -792,7 +891,7 @@ ${topicsText}
       <span style="font-size:18px">${t.emoji}</span>
       <span class="invite-topic-name" style="color:${t.personal ? '#6d28d9' : '#1e3a8a'}">${t.name}</span>
       <code class="invite-topic-code">${t.topic}</code>
-      <button class="copy-btn" onclick="copyText('${t.topic}')" title="کپی کد">📋</button>
+      <button class="copy-btn" onclick="copyText('${t.topic}')" title="کپی">📋</button>
     </div>
   `).join('');
 
