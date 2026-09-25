@@ -1,0 +1,82 @@
+name: Sync admin messages
+
+on:
+  schedule: [{ cron: '*/2 * * * *' }]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch admin messages from ntfy
+        run: |
+          TOPIC=$(node -e "
+            const fs=require('fs');
+            const s={}; new Function('window',fs.readFileSync('config.js','utf8'))(s);
+            console.log(s.CONFIG.adminTopic);
+          ")
+          curl -s "https://ntfy.sh/$TOPIC/json?poll=1&since=all" > /tmp/raw.ndjson
+          jq -c 'try {id: .id, time: .time, data: (.message | fromjson)} catch empty' \
+            /tmp/raw.ndjson > /tmp/admin.ndjson || true
+          echo "تعداد پیام‌های مدیر: $(wc -l < /tmp/admin.ndjson)"
+
+      - name: Merge into messages.json
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const db = JSON.parse(fs.readFileSync('messages.json','utf8'));
+          db.messages ||= [];
+
+          // آی‌دی پیام‌های ادمین که قبلاً ذخیره شدن
+          const existingIds = new Set(
+            db.messages
+              .filter(m => m.isAdminMessage)
+              .map(m => m.ntfyId)
+              .filter(Boolean)
+          );
+
+          const lines = fs.existsSync('/tmp/admin.ndjson')
+            ? fs.readFileSync('/tmp/admin.ndjson','utf8').trim().split('\n').filter(Boolean)
+            : [];
+
+          let added = 0;
+          for (const line of lines) {
+            try {
+              const { id, time, data } = JSON.parse(line);
+              if (!id || !data || data.type !== 'admin-message') continue;
+              if (existingIds.has(id)) continue;
+
+              db.messages.push({
+                id: 'admin-' + id,
+                ntfyId: id,
+                isAdminMessage: true,
+                text: data.text || '',
+                image: data.image || '',
+                from: data.from || 'ناشناس',
+                phone: data.phone || '',
+                userGroup: data.group || '',
+                groups: ['__toAdmin__'],   // فقط ادمین می‌بینه
+                group: '__toAdmin__',
+                time: data.time || new Date((time||Date.now()/1000)*1000).toISOString()
+              });
+              existingIds.add(id);
+              added++;
+            } catch(e) {}
+          }
+
+          fs.writeFileSync('messages.json', JSON.stringify(db, null, 2));
+          console.log(`پیام‌های جدید ادمین: ${added}`);
+          EOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add messages.json
+          git diff --cached --quiet || git commit -m "sync admin messages"
+          git push
