@@ -1,16 +1,11 @@
 {
   "allowed": [
     {
-      "phone": "09121234567",
-      "name": "احمد رضایی",
-      "groups": ["rabet_tehran", "hamsar"],
-      "personalTopic": "chal-v11-ahmad-rezaei-x7k3",
-      "province": "تهران"
-    },
-    {
       "phone": "09123456789",
       "name": "سارا محمدی",
-      "groups": ["rabet_kerman"],
+      "groups": [
+        "rabet_kerman"
+      ],
       "personalTopic": "chal-v11-sara-mohammadi-4p8n",
       "province": "کرمان"
     }
