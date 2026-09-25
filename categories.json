@@ -1,0 +1,19 @@
+{
+  "categories": [
+    {
+      "id": "edare",
+      "name": "اداره",
+      "emoji": "🏢",
+      "topic": "chal-v11-edare-h1i2j3",
+      "subcategories": [
+        { "id": "edare_hessein", "name": "حسین عرفانی", "emoji": "👤", "topic": "chal-v11-hossein-erfani-a1b2" },
+        { "id": "edare_mahdi_a", "name": "مهدی آشتیانی", "emoji": "👤", "topic": "chal-v11-mahdi-ashtiani-c3d4" },
+        { "id": "edare_kazem",   "name": "کاظم مرادی",   "emoji": "👤", "topic": "chal-v11-kazem-moradi-e5f6" },
+        { "id": "edare_abbas",   "name": "سید عباس",     "emoji": "👤", "topic": "chal-v11-seyyed-abbas-g7h8" },
+        { "id": "edare_ali",     "name": "علی کلاته",    "emoji": "👤", "topic": "chal-v11-ali-kalate-i9j0" },
+        { "id": "edare_mahdi_m", "name": "مهدی مختارپور","emoji": "👤", "topic": "chal-v11-mahdi-mokhtarpour-k1l2" },
+        { "id": "edare_javad",   "name": "جواد اسماعیلی","emoji": "👤", "topic": "chal-v11-javad-esmaili-m3n4" }
+      ]
+    }
+  ]
+}
