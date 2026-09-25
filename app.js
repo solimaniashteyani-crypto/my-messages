@@ -1200,7 +1200,6 @@ async function init() {
     addAdminMsgButton();
   
     await loadCustomCategories();
-        addAdminMsgButton();
     await loadLocal();
     await loadMessages(true);
     subscribeSSE();
