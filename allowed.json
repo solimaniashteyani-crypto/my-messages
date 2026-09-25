@@ -1,13 +1,3 @@
 {
-  "allowed": [
-    {
-      "phone": "09911453955",
-      "name": "مهدی سلیمانی",
-      "groups": [
-        "khayerin"
-      ],
-      "personalTopic": "chal-v11-mhdy-slymany-mgts",
-      "province": "ستاد"
-    }
-  ]
+  "allowed": []
 }
