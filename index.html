@@ -27,12 +27,22 @@
       <button id="refreshBtn" title="به‌روزرسانی">🔄</button>
     </div>
   </header>
-
-  <!-- 👑 دکمه ورود به پنل مدیریت — فقط برای مدیر نمایش داده میشه -->
+  <!-- 👑 دکمه‌های ادمین — فقط برای مدیر نمایش داده میشن -->
   <div class="admin-entry" id="adminEntry" hidden>
-    <a href="./send.html" class="admin-entry-btn">
-      👑 ورود به پنل مدیریت
-    </a>
+    <div class="admin-buttons">
+      <a href="./index.html" class="admin-btn primary">
+        🌐 نمایش پیام‌ها
+      </a>
+      <a href="./send.html" class="admin-btn">
+        ⚙️ پنل ادمین
+      </a>
+      <a href="./stats.html" class="admin-btn">
+        📊 صفحه آمار
+      </a>
+      <a href="./members.html" class="admin-btn">
+        👥 مدیریت اعضا
+      </a>
+    </div>
   </div>
 
   <div id="offline" class="offline-bar" hidden>📴 حالت آفلاین — آخرین نسخه ذخیره‌شده</div>
