@@ -1030,6 +1030,110 @@ function openAdminMsgDialog() {
   dlg.showModal();
 }
 
+  // ═══════════════════════════════════════════════════════
+// 💬 دکمه «پیام به مدیر» — برای کاربرای عادی
+// ═══════════════════════════════════════════════════════
+function addAdminMsgButton() {
+  if (isAdmin) return;
+  if (document.getElementById('adminMsgBtn')) return;
+
+  const headerActions = document.querySelector('.header-actions');
+  if (!headerActions) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'adminMsgBtn';
+  btn.title = 'پیام به مدیر';
+  btn.textContent = '💬';
+  btn.style.cssText = 'background:rgba(139,92,246,.15); color:#7c3aed; font-size:18px;';
+  btn.onclick = openAdminMsgDialog;
+
+  headerActions.insertBefore(btn, headerActions.firstChild);
+}
+
+function openAdminMsgDialog() {
+  if (!state.myName) {
+    alert('اول از ⚙️ نامت رو وارد کن');
+    return;
+  }
+
+  let dlg = document.getElementById('adminMsgDlg');
+
+  if (!dlg) {
+    dlg = document.createElement('dialog');
+    dlg.id = 'adminMsgDlg';
+    dlg.innerHTML = `
+      <form method="dialog">
+        <h3>💬 پیام به مدیر</h3>
+        <p style="color:#64748b; font-size:14px; margin:0 0 14px; font-weight:600; line-height:1.7">
+          پیام شما فقط برای مدیر سامانه ارسال می‌شه
+        </p>
+        <textarea id="adminMsgText" placeholder="متن پیام..." rows="4"
+          style="width:100%; padding:12px; border:2px solid #dbeafe; border-radius:12px; font-family:inherit; font-size:15px; resize:vertical; box-sizing:border-box; background:#f8fbff; color:#0c1e3e;"></textarea>
+        <div id="adminMsgStatus" style="margin-top:12px; font-size:14px; font-weight:700; min-height:20px; text-align:center"></div>
+        <menu style="display:flex; gap:10px; justify-content:flex-end; margin:18px 0 0; padding:0;">
+          <button value="cancel" class="ghost" style="background:transparent; color:#64748b; border:2px solid #93c5fd; padding:10px 20px; border-radius:12px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer;">لغو</button>
+          <button id="adminMsgSendBtn" type="button" style="background:linear-gradient(135deg,#7c3aed,#8b5cf6); color:#fff; border:none; padding:10px 24px; border-radius:12px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; box-shadow:0 6px 18px rgba(124,58,237,.35);">ارسال به مدیر 📨</button>
+        </menu>
+      </form>
+    `;
+    document.body.appendChild(dlg);
+
+    dlg.querySelector('#adminMsgSendBtn').onclick = async () => {
+      const text = dlg.querySelector('#adminMsgText').value.trim();
+      const statusEl = dlg.querySelector('#adminMsgStatus');
+      const sendBtn = dlg.querySelector('#adminMsgSendBtn');
+
+      if (!text) {
+        statusEl.textContent = '❌ متن لازمه';
+        statusEl.style.color = '#dc2626';
+        return;
+      }
+
+      statusEl.textContent = '⏳ در حال ارسال...';
+      statusEl.style.color = '#64748b';
+      sendBtn.disabled = true;
+
+      try {
+        await fetch(C.ntfyBase + '/' + C.adminTopic, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify({
+            type: 'admin-message',
+            text: text,
+            from: state.myName || 'ناشناس',
+            phone: localStorage.getItem('myPhone') || '',
+            group: state.myGroups[0] || '',
+            time: new Date().toISOString()
+          })
+        });
+
+        statusEl.textContent = '✅ پیام ارسال شد!';
+        statusEl.style.color = '#16a34a';
+
+        setTimeout(() => {
+          dlg.close();
+          dlg.querySelector('#adminMsgText').value = '';
+          statusEl.textContent = '';
+          sendBtn.disabled = false;
+        }, 1500);
+
+      } catch(e) {
+        statusEl.textContent = '❌ ' + e.message;
+        statusEl.style.color = '#dc2626';
+        sendBtn.disabled = false;
+      }
+    };
+
+    dlg.addEventListener('close', () => {
+      dlg.querySelector('#adminMsgText').value = '';
+      dlg.querySelector('#adminMsgStatus').textContent = '';
+      dlg.querySelector('#adminMsgSendBtn').disabled = false;
+    });
+  }
+
+  dlg.showModal();
+}
+
   function setupSettings() {
   const dlg = document.getElementById('settingsDlg');
   const sel = document.getElementById('myGroup');
@@ -1094,7 +1198,7 @@ async function init() {
     updateOnlineBadge();
     setupSettings();
     addAdminMsgButton();
-
+  
     await loadCustomCategories();
         addAdminMsgButton();
     await loadLocal();
