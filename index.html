@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="fa">
 <head>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
   <meta charset="UTF-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#1e40af">
-  <meta name="description" content="سامانه پیام‌رسان شخصی سما — نسخه 5/11">
+  <meta name="theme-color" content="#0ea5e9">
+  <meta name="description" content="سامانه پیام‌رسان سما — نسخه ۵/۱۱">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="سما">
@@ -19,15 +16,88 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <style>
+    .admin-entry {
+      padding: 16px 22px 8px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .admin-entry[hidden] { display: none; }
+    .admin-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 640px) {
+      .admin-buttons { grid-template-columns: 1fr 1fr; }
+    }
+    .admin-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px 12px;
+      background: #f0f7ff;
+      color: #1e3a8a;
+      border: 2px solid #bfdbfe;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all .2s;
+      text-align: center;
+    }
+    .admin-btn:hover {
+      background: #fff;
+      border-color: #1e40af;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(30,64,175,.15);
+    }
+    .admin-btn.primary {
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 6px 18px rgba(30,64,175,.35);
+    }
+    .admin-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(30,64,175,.45);
+    }
+  </style>
 </head>
 <body>
+
+  <script>
+    (function() {
+      try {
+        var isAdmin = localStorage.getItem('isAdmin') === 'true';
+        if (isAdmin) return;
+        if (localStorage.getItem('registered') !== 'true' ||
+            !localStorage.getItem('myName') ||
+            !localStorage.getItem('myPhone')) {
+          localStorage.removeItem('registered');
+          localStorage.removeItem('myName');
+          localStorage.removeItem('myGroups');
+          localStorage.removeItem('myGroup');
+          localStorage.removeItem('myPhone');
+          localStorage.removeItem('myPersonalTopic');
+          localStorage.removeItem('myProvince');
+          window.location.replace('./register.html');
+        }
+      } catch(e) {
+        window.location.replace('./register.html');
+      }
+    })();
+  </script>
+
   <header>
     <h1>📬 سما</h1>
     <div class="header-actions">
       <button id="refreshBtn" title="به‌روزرسانی">🔄</button>
     </div>
   </header>
-  <!-- 👑 دکمه‌های ادمین — فقط برای مدیر نمایش داده میشن -->
+
   <div class="admin-entry" id="adminEntry" hidden>
     <div class="admin-buttons">
       <a href="./index.html" class="admin-btn primary">
@@ -78,59 +148,8 @@
     </form>
   </dialog>
 
-  <script>
-    // ═══════════════════════════════════════════════════════════════
-    // 👑 فعال‌سازی حالت ادمین
-    // ─────────────────────────────────────────────────────────────
-    // برای ادمین شدن، یک بار این آدرس رو باز کن:
-    //   .../my-messages/#admin
-    //
-    // برای لغو ادمین بودن:
-    //   .../my-messages/#logout-admin
-    // ═══════════════════════════════════════════════════════════════
-    (function() {
-      try {
-        var hash = location.hash;
-        if (hash === '#admin' || hash === '#admin-panel') {
-          localStorage.setItem('isAdmin', 'true');
-          setTimeout(function() {
-            try { history.replaceState(null, '', location.pathname); } catch(e){}
-          }, 100);
-        }
-        if (hash === '#logout-admin') {
-          localStorage.removeItem('isAdmin');
-          setTimeout(function() {
-            try { history.replaceState(null, '', location.pathname); } catch(e){}
-          }, 100);
-        }
-
-        // نمایش یا مخفی کردن دکمه پنل مدیریت
-        var isAdmin = localStorage.getItem('isAdmin') === 'true';
-        var entry = document.getElementById('adminEntry');
-        if (entry && isAdmin) {
-          entry.hidden = false;
-        }
-      } catch(e) {
-        console.warn('admin check error:', e);
-      }
-    })();
-  </script>
-
   <script src="db.js"></script>
   <script src="config.js"></script>
-  <script>
-// چک سریع ثبت‌نام
-(function() {
-  try {
-    if (localStorage.getItem('registered') !== 'true' || !localStorage.getItem('myName') || !localStorage.getItem('myPhone')) {
-      localStorage.clear();
-      window.location.replace('./register.html');
-    }
-  } catch(e) {
-    window.location.replace('./register.html');
-  }
-})();
-</script>
   <script src="app.js"></script>
 </body>
 </html>
