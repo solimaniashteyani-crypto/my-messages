@@ -21,7 +21,66 @@
       "time": "2026-09-25T02:48:00.317Z"
     }
   ],
-  "reactions": [],
-  "replies": [],
-  "seen": []
+  "reactions": [
+    {
+      "id": "KFeSTj9qd7U5",
+      "messageId": "f7e18264-0e35-4c42-ae3e-c0b4ac44c4b5",
+      "emoji": "😂",
+      "from": "مهدی سلیمانی",
+      "time": "2026-09-24T14:49:07.000Z"
+    }
+  ],
+  "replies": [
+    {
+      "id": "9trPQwFBaPbf",
+      "messageId": "f7e18264-0e35-4c42-ae3e-c0b4ac44c4b5",
+      "text": "سلام و احترام",
+      "from": "جواد جوادی خواه",
+      "time": "2026-09-24T14:52:32.000Z"
+    },
+    {
+      "id": "X3idG0dm7xnf",
+      "messageId": "c2e304fd-4087-45cc-9d57-c88ccca1fc73",
+      "text": "عجب",
+      "from": "خودم",
+      "time": "2026-09-24T19:45:24.000Z"
+    }
+  ],
+  "seen": [
+    {
+      "messageId": "f7e18264-0e35-4c42-ae3e-c0b4ac44c4b5",
+      "from": "جواد جوادی خواه",
+      "time": "2026-09-24T14:51:07.000Z"
+    },
+    {
+      "messageId": "f7e18264-0e35-4c42-ae3e-c0b4ac44c4b5",
+      "from": "مهدی سلیمانی",
+      "time": "2026-09-24T18:08:54.000Z"
+    },
+    {
+      "messageId": "c2e304fd-4087-45cc-9d57-c88ccca1fc73",
+      "from": "خودم",
+      "time": "2026-09-24T19:45:09.000Z"
+    },
+    {
+      "messageId": "c2e304fd-4087-45cc-9d57-c88ccca1fc73",
+      "from": "مهدی سلیمانی",
+      "time": "2026-09-25T01:44:20.000Z"
+    },
+    {
+      "messageId": "c2e304fd-4087-45cc-9d57-c88ccca1fc73",
+      "from": "امیرعلی",
+      "time": "2026-09-25T02:18:24.000Z"
+    },
+    {
+      "messageId": "18209ab7-1e23-44f5-9f30-ba30d6123e65",
+      "from": "خودم",
+      "time": "2026-09-25T02:48:13.000Z"
+    },
+    {
+      "messageId": "2190cf06-2b36-44c5-94d7-a0801361c8d6",
+      "from": "خودم",
+      "time": "2026-09-25T02:48:13.000Z"
+    }
+  ]
 }
