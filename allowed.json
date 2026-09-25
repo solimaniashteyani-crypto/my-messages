@@ -1,3 +1,14 @@
 {
-  "allowed": []
+  "allowed": [
+    {
+      "phone": "09121234567",
+      "name": "احمد رضایی",
+      "groups": [
+        "rabet_tehran",
+        "hamsar"
+      ],
+      "personalTopic": "chal-v11-ahmad-rezaei-x7k3",
+      "province": "تهران"
+    }
+  ]
 }
