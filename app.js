@@ -665,26 +665,100 @@ function openReply(mid) {
 }
 
 async function submitReply() {
-  const t = document.getElementById('replyText');
-  if (!t) return;
-  const text = t.value.trim();
-  if (!text || !replyTargetId) return;
+  console.log('=== submitReply called ===');
+
   try {
-    await fetch(C.ntfyBase + '/' + C.interactionsTopic, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'reply', messageId: replyTargetId, text, from: state.myName })
-    });
-    state.replies.push({
-      id: 'local-' + uid(), messageId: replyTargetId, text,
-      from: state.myName, time: new Date().toISOString()
-    });
+    const t = document.getElementById('replyText');
     const dlg = document.getElementById('replyDlg');
-    if (dlg) dlg.close();
+    const sendBtn = document.getElementById('replySendBtn');
+
+    console.log('Elements:', { t: !!t, dlg: !!dlg, sendBtn: !!sendBtn });
+    console.log('replyTargetId:', replyTargetId);
+    console.log('myName:', state.myName);
+
+    if (!t) {
+      alert('❌ کادر متن پیدا نشد');
+      return;
+    }
+
+    const text = t.value.trim();
+    console.log('text:', text);
+
+    if (!text) {
+      alert('❌ متن پاسخ خالیه');
+      return;
+    }
+
+    if (!replyTargetId) {
+      alert('❌ پیام انتخاب نشده — دوباره روی 💬 پاسخ بزن');
+      return;
+    }
+
+    if (!state.myName) {
+      alert('❌ نام شما ثبت نشده — از ⚙️ نامت رو وارد کن');
+      return;
+    }
+
+    console.log('✓ همه چک‌ها پاس شد → در حال ارسال به ntfy');
+
+    if (sendBtn) {
+      sendBtn.disabled = true;
+      sendBtn.textContent = '⏳ ارسال...';
+    }
+
+    const url = C.ntfyBase + '/' + C.interactionsTopic;
+    console.log('URL:', url);
+
+    const body = JSON.stringify({
+      type: 'reply',
+      messageId: replyTargetId,
+      text: text,
+      from: state.myName
+    });
+    console.log('Body:', body);
+
+    const res = await fetch(url, {
+      method: 'POST',
+      body: body
+    });
+
+    console.log('Response status:', res.status);
+    console.log('Response ok:', res.ok);
+
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status);
+    }
+
+    console.log('✓ ntfy ارسال شد');
+
+    state.replies.push({
+      id: 'local-' + uid(),
+      messageId: replyTargetId,
+      text: text,
+      from: state.myName,
+      time: new Date().toISOString()
+    });
+
+    if (dlg) {
+      dlg.close();
+      console.log('✓ پنجره بسته شد');
+    }
+
     replyTargetId = null;
     render();
-  } catch(e) { setStatus('خطا: ' + e.message, true); }
-}
+    console.log('✓ render شد');
 
+  } catch(e) {
+    console.error('❌ submitReply error:', e);
+    alert('❌ خطا: ' + e.message);
+  } finally {
+    const sendBtn = document.getElementById('replySendBtn');
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'ارسال';
+    }
+  }
+}
 // ═══════════════════════════════════════════════════════
 // 👁 seen
 // ═══════════════════════════════════════════════════════
