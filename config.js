@@ -4,7 +4,7 @@ window.CONFIG = {
   branch: 'main',
   ntfyBase: 'https://ntfy.sh',
   interactionsTopic: 'chal-v11-ix-K7mPq2WnR9xL4zB8',
-
+  adminTopic: 'chal-v11-admin-messages-D7k9N2p5',
   // ═══════════════════════════════════════════════════════
   // 📁 گروه‌ها (۴۰ گروه)
   // کدهای ntfy: معنی‌دار + پسوند تصادفی ۸ کاراکتری
