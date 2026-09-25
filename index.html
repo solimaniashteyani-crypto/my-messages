@@ -108,6 +108,19 @@
 
   <script src="db.js"></script>
   <script src="config.js"></script>
+  <script>
+// چک سریع ثبت‌نام
+(function() {
+  try {
+    if (localStorage.getItem('registered') !== 'true' || !localStorage.getItem('myName') || !localStorage.getItem('myPhone')) {
+      localStorage.clear();
+      window.location.replace('./register.html');
+    }
+  } catch(e) {
+    window.location.replace('./register.html');
+  }
+})();
+</script>
   <script src="app.js"></script>
 </body>
 </html>
