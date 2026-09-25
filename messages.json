@@ -221,6 +221,20 @@
       "personalRecipients": [],
       "customRecipients": [],
       "time": "2026-09-25T14:51:34.878Z"
+    },
+    {
+      "id": "15fb014c-8cf1-44ef-909a-2416a23596be",
+      "text": "سلام",
+      "groups": [],
+      "group": "__personal__",
+      "personalRecipients": [
+        {
+          "name": "خودم",
+          "topic": "chal-v11-khvdm-c84t"
+        }
+      ],
+      "customRecipients": [],
+      "time": "2026-09-25T16:50:53.445Z"
     }
   ],
   "reactions": [
