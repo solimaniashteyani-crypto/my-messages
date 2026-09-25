@@ -1,13 +1,3 @@
 {
-  "allowed": [
-    {
-      "phone": "09911453955",
-      "name": "خودم",
-      "groups": [
-        "amirali"
-      ],
-      "personalTopic": "chal-v11-khvdm-avd3",
-      "province": "ستاد کل"
-    }
-  ]
+  "allowed": []
 }
