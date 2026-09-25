@@ -53,6 +53,7 @@ const state = {
   messages: [], reactions: [], replies: [], seen: [],
   myName: myName,
   myGroups: myGroups,
+  myPersonalTopic: myPersonalTopic,
   filter: 'all',  // 'all' یا کلید گروه یا 'ostan' یا 'special'
   ostanFilter: null,  // برای dropdown استان‌ها
   etag: null
