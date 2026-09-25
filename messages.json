@@ -160,6 +160,20 @@
       "personalRecipients": [],
       "customRecipients": [],
       "time": "2026-09-25T12:26:32.492Z"
+    },
+    {
+      "id": "f3ad911d-a258-4dd1-8184-859c34ad819c",
+      "text": "سلام سید عباس\nاین محل پیام شخصی من و شماست از این پس می توانی پیامک رایگان رد و بدل بشه و رایگان \n\nلطفا بازخورد بده آیا پیام بهت رسیده و می توانی پاشخ بدی \n\nوفقکم الله",
+      "groups": [],
+      "group": "__personal__",
+      "personalRecipients": [],
+      "customRecipients": [
+        {
+          "name": "👤 سید عباس",
+          "topic": "chal-v11-seyyed-abbas-g7h8"
+        }
+      ],
+      "time": "2026-09-25T12:40:22.343Z"
     }
   ],
   "reactions": [],
