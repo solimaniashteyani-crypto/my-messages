@@ -401,6 +401,14 @@ function renderTabs() {
   let html = '';
   html += `<button data-filter="all" class="${state.filter === 'all' ? 'active' : ''}">🌐 همه</button>`;
 
+  // 👑 تب پیام‌های مدیر (فقط برای ادمین)
+  if (isAdmin) {
+    const adminMsgCount = state.messages.filter(m => m.isAdminMessage).length;
+    html += `<button data-filter="toAdmin" class="${state.filter === 'toAdmin' ? 'active' : ''}" style="background:linear-gradient(135deg,#7c3aed,#8b5cf6); color:#fff; border-color:transparent;">
+      📬 پیام‌های مدیر ${adminMsgCount ? ' (' + adminMsgCount + ')' : ''}
+    </button>`;
+  }
+  
   Object.entries(cats).forEach(([catName, cat]) => {
     cat.items.forEach(g => {
       html += `<button data-filter="group:${g.key}" class="${state.filter === 'group:' + g.key ? 'active' : ''}">${g.emoji} ${g.name}</button>`;
@@ -475,6 +483,11 @@ function render() {
   } else if (state.filter.startsWith('group:')) {
     const g = state.filter.substring(6);
     list = list.filter(m => messageHasTopic(m, g));
+      } else if (state.filter === 'toAdmin') {
+    // فقط پیام‌های کاربرا به ادمین
+    list = list.filter(m => m.isAdminMessage);
+  } else if (state.filter.startsWith('cat:')) {
+    const catId = state.filter.substring(4);
   } else if (state.filter.startsWith('cat:')) {
     const catId = state.filter.substring(4);
     const cat = state.customCategories.find(c => c.id === catId);
@@ -569,6 +582,14 @@ function renderMessageCard(m) {
   // ───── ساخت برچسب گروه‌ها ─────
   const labels = [];
 
+  // اگه پیام خصوصی به ادمین بود
+  if (m.isAdminMessage) {
+    labels.push('💬 از ' + (m.from || 'ناشناس'));
+    if (m.userGroup) {
+      labels.push('📁 ' + m.userGroup);
+    }
+  }
+  
   // 1. گروه‌های عادی
   const msgGroups = m.groups || (m.group ? [m.group] : []);
   msgGroups.forEach(g => {
