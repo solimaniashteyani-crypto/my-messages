@@ -199,6 +199,17 @@
         }
       ],
       "time": "2026-09-25T12:54:57.714Z"
+    },
+    {
+      "id": "a2cf5fa6-faa0-4088-9468-3df89b463093",
+      "text": "سلام\nکارت تمام شده؟",
+      "groups": [
+        "hamsar"
+      ],
+      "group": "hamsar",
+      "personalRecipients": [],
+      "customRecipients": [],
+      "time": "2026-09-25T14:29:21.306Z"
     }
   ],
   "reactions": [],
