@@ -169,6 +169,13 @@ window.CONFIG = {
       name: 'رابط یزد', emoji: '🕌', category: 'استان',
       topic: 'chal-v11-yazd-N2wF6tB8'
     },
+    // ═══════════ 👑 ادمین ═══════════
+    admin: {
+      name: '👑 ادمین',
+      emoji: '👑',
+      category: 'سایر',
+      topic: 'chal-v11-admin-zgmf-2026'
+    },
 
     // ═══════════ 👥 سایر ═══════════
     khayerin: {
