@@ -149,6 +149,17 @@
       "personalRecipients": [],
       "customRecipients": [],
       "time": "2026-09-25T11:11:47.475Z"
+    },
+    {
+      "id": "f3b20551-78dd-450c-a0ae-e46e4f8dfb1f",
+      "text": "سلام\nتست جدید",
+      "groups": [
+        "hamsar"
+      ],
+      "group": "hamsar",
+      "personalRecipients": [],
+      "customRecipients": [],
+      "time": "2026-09-25T12:26:32.492Z"
     }
   ],
   "reactions": [],
