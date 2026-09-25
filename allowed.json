@@ -1,29 +1,3 @@
 {
-  "allowed": [
-    {
-      "phone": "09911453955",
-      "name": "خودم",
-      "groups": [
-        "khayerin"
-      ],
-      "personalTopic": "chal-v11-khvdm-a0fl"
-    },
-    {
-      "phone": "09192946413",
-      "name": "مهدی",
-      "groups": [
-        "khayerin"
-      ],
-      "personalTopic": "chal-v11-mhdy-5zms",
-      "province": "ستاد"
-    },
-    {
-      "phone": "09195426733",
-      "name": "همسر",
-      "groups": [
-        "hamsar"
-      ],
-      "personalTopic": "chal-v11-hmsr-ba1s"
-    }
-  ]
+  "allowed": []
 }
