@@ -4,6 +4,28 @@ const DB = window.MsgDB;
 const RAW_API = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/messages.json`;
 const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
 const RAW_CATS = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/categories.json`;
+// ═══════════════════════════════════════════════════════
+// 💬 دکمه پیام به مدیر — فقط برای کاربرای عادی
+// ═══════════════════════════════════════════════════════
+function addAdminMsgButton() {
+  if (isAdmin) return;  // ادمین نیازی نداره
+
+  // چک کن دکمه هست؟
+  if (document.getElementById('adminMsgBtn')) return;
+
+  // دکمه رو به header اضافه کن
+  const headerActions = document.querySelector('.header-actions');
+  if (!headerActions) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'adminMsgBtn';
+  btn.title = 'پیام به مدیر';
+  btn.textContent = '💬';
+  btn.style.cssText = 'background:rgba(139,92,246,.15); color:#7c3aed; font-size:18px;';
+  btn.onclick = openAdminMsgDialog;
+
+  headerActions.insertBefore(btn, headerActions.firstChild);
+}
 
 // ═══════════════════════════════════════════════════════
 // 👑 ادمین
@@ -57,6 +79,131 @@ if (isAdmin && localStorage.getItem('adminUnlocked') !== 'true') {
 // ═══════════════════════════════════════════════════════
 // 📦 state
 // ═══════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════
+// 💬 پیام به مدیر — فقط برای کاربرای عادی
+// ═══════════════════════════════════════════════════════
+async function sendToAdmin(text, imageUrl) {
+  if (!text && !imageUrl) return;
+
+  const payload = {
+    type: 'admin-message',
+    text: text || '',
+    image: imageUrl || '',
+    from: state.myName || 'ناشناس',
+    phone: localStorage.getItem('myPhone') || '',
+    group: state.myGroups[0] || '',
+    time: new Date().toISOString()
+  };
+
+  try {
+    await fetch(C.ntfyBase + '/' + C.adminTopic, {
+      method: 'POST',
+      headers: {
+        'Title': '💬 پیام از ' + payload.from,
+        'Priority': 'high',
+        'Tags': 'envelope,speech_balloon'
+      },
+      body: JSON.stringify(payload)
+    });
+    return true;
+  } catch(e) {
+    console.error('sendToAdmin error:', e);
+    return false;
+  }
+}
+
+function openAdminMsgDialog() {
+  if (!state.myName) return setStatus('اول وارد شو', true);
+
+  const dlg = document.getElementById('adminMsgDlg');
+  if (!dlg) {
+    // اگه دیالوگ نبود، بساز
+    const newDlg = document.createElement('dialog');
+    newDlg.id = 'adminMsgDlg';
+    newDlg.innerHTML = `
+      <form method="dialog">
+        <h3>💬 پیام به مدیر</h3>
+        <p style="color:#64748b; font-size:14px; margin:0 0 12px; font-weight:600">
+          پیام شما فقط برای مدیر سامانه ارسال میشه
+        </p>
+        <textarea id="adminMsgText" placeholder="متن پیام..." rows="4"></textarea>
+        <label style="display:block; margin:12px 0 6px; font-size:14px; color:#64748b; font-weight:700">
+          🖼 عکس (اختیاری)
+        </label>
+        <input type="file" id="adminMsgImg" accept="image/*">
+        <img id="adminMsgPreview" style="max-width:200px; border-radius:12px; margin-top:10px; display:none">
+        <div id="adminMsgStatus" style="margin-top:10px; font-size:14px; font-weight:700; min-height:20px"></div>
+        <menu>
+          <button value="cancel" class="ghost">لغو</button>
+          <button id="adminMsgSendBtn" type="button">ارسال به مدیر 📨</button>
+        </menu>
+      </form>
+    `;
+    document.body.appendChild(newDlg);
+
+    // اتصال رویدادها
+    const imgInput = newDlg.querySelector('#adminMsgImg');
+    const preview = newDlg.querySelector('#adminMsgPreview');
+    imgInput.onchange = () => {
+      const f = imgInput.files[0];
+      if (!f) { preview.style.display = 'none'; return; }
+      preview.src = URL.createObjectURL(f);
+      preview.style.display = 'block';
+    };
+
+    newDlg.querySelector('#adminMsgSendBtn').onclick = async () => {
+      const text = newDlg.querySelector('#adminMsgText').value.trim();
+      const file = imgInput.files[0];
+      const statusEl = newDlg.querySelector('#adminMsgStatus');
+
+      if (!text && !file) {
+        statusEl.textContent = '❌ متن یا عکس لازمه';
+        statusEl.style.color = '#dc2626';
+        return;
+      }
+
+      statusEl.textContent = '⏳ در حال ارسال...';
+      statusEl.style.color = '#64748b';
+
+      let imageDataUrl = '';
+      if (file) {
+        // عکس رو به base64 تبدیل کن (چون توکن نداریم نمیتونیم آپلود کنیم به گیتهاب)
+        // پس عکس رو به صورت data URL توی ntfy می‌فرستیم
+        // ولی ntfy محدودیت 4KB داره — پس عکس رو نمی‌فرستیم
+        statusEl.textContent = '⚠️ عکس فعلاً پشتیبانی نمیشه (فقط متن)';
+        statusEl.style.color = '#d97706';
+        await new Promise(r => setTimeout(r, 1500));
+      }
+
+      const ok = await sendToAdmin(text, '');
+
+      if (ok) {
+        statusEl.textContent = '✅ پیام ارسال شد!';
+        statusEl.style.color = '#16a34a';
+        setTimeout(() => {
+          newDlg.close();
+          newDlg.querySelector('#adminMsgText').value = '';
+          imgInput.value = '';
+          preview.style.display = 'none';
+          statusEl.textContent = '';
+        }, 1200);
+      } else {
+        statusEl.textContent = '❌ خطا در ارسال';
+        statusEl.style.color = '#dc2626';
+      }
+    };
+
+    newDlg.addEventListener('close', () => {
+      newDlg.querySelector('#adminMsgText').value = '';
+      newDlg.querySelector('#adminMsgImg').value = '';
+      newDlg.querySelector('#adminMsgPreview').style.display = 'none';
+      newDlg.querySelector('#adminMsgStatus').textContent = '';
+    });
+  }
+
+  dlg.showModal();
+}
+
 const state = {
   messages: [], reactions: [], replies: [], seen: [],
   myName: localStorage.getItem('myName') || '',
@@ -713,6 +860,7 @@ async function init() {
     setupSettings();
 
     await loadCustomCategories();
+        addAdminMsgButton();
     await loadLocal();
     await loadMessages(true);
     subscribeSSE();
