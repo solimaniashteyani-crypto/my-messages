@@ -35,6 +35,7 @@ const isAdmin = localStorage.getItem('isAdmin') === 'true';
 // 📦 state
 // ═══════════════════════════════════════════════════════
 const myName = localStorage.getItem('myName') || '';
+  const myPersonalTopic = localStorage.getItem('myPersonalTopic') || '';
 let myGroups = [];
 try {
   myGroups = JSON.parse(localStorage.getItem('myGroups') || '[]');
@@ -500,6 +501,39 @@ function sendSeen(messageId) {
 // ═══════════════════════════════════════════════════════
 function subscribeSSE() {
   try {
+    const subscribed = new Set();
+
+    // Subscribe به گروه‌های کاربر
+    state.myGroups.forEach(groupKey => {
+      const group = C.groups[groupKey];
+      if (group && group.topic && !subscribed.has(group.topic)) {
+        subscribed.add(group.topic);
+        const es = new EventSource(C.ntfyBase + '/' + group.topic + '/sse');
+        es.onmessage = ev => {
+          try {
+            const d = JSON.parse(ev.data);
+            if (d.event === 'message' && d.message) setTimeout(() => loadMessages(true), 500);
+          } catch(e) {}
+        };
+        es.onerror = () => {};
+      }
+    });
+
+    // Subscribe به کد اختصاصی
+    const personalTopic = localStorage.getItem('myPersonalTopic');
+    if (personalTopic && !subscribed.has(personalTopic)) {
+      subscribed.add(personalTopic);
+      const esP = new EventSource(C.ntfyBase + '/' + personalTopic + '/sse');
+      esP.onmessage = ev => {
+        try {
+          const d = JSON.parse(ev.data);
+          if (d.event === 'message' && d.message) setTimeout(() => loadMessages(true), 500);
+        } catch(e) {}
+      };
+      esP.onerror = () => {};
+    }
+
+    // کانال تعاملات
     const esIx = new EventSource(C.ntfyBase + '/' + C.interactionsTopic + '/sse');
     esIx.onmessage = ev => {
       try {
@@ -510,33 +544,16 @@ function subscribeSSE() {
 
         if (data.type === 'reaction') {
           if (state.reactions.some(r => r.id === d.id)) return;
-          if (data.from === state.myName) {
-            const i = state.reactions.findIndex(r =>
-              r.id.indexOf('local-') === 0 && r.messageId === data.messageId && r.emoji === data.emoji);
-            if (i >= 0) state.reactions.splice(i, 1);
-          }
-          state.reactions.push({
-            id: d.id, messageId: data.messageId,
-            emoji: data.emoji, from: data.from, time: iso
-          });
+          state.reactions.push({ id: d.id, messageId: data.messageId, emoji: data.emoji, from: data.from, time: iso });
         } else if (data.type === 'reply') {
           if (state.replies.some(r => r.id === d.id)) return;
-          if (data.from === state.myName) {
-            const i = state.replies.findIndex(r =>
-              r.id.indexOf('local-') === 0 && r.messageId === data.messageId && r.text === data.text);
-            if (i >= 0) state.replies.splice(i, 1);
-          }
-          state.replies.push({
-            id: d.id, messageId: data.messageId,
-            text: data.text, from: data.from, time: iso
-          });
+          state.replies.push({ id: d.id, messageId: data.messageId, text: data.text, from: data.from, time: iso });
         } else if (data.type === 'seen') {
           if (state.seen.some(s => s.messageId === data.messageId && s.from === data.from)) return;
           state.seen.push({ messageId: data.messageId, from: data.from, time: iso });
         } else return;
 
-        saveLocal();
-        render();
+        saveLocal(); render();
       } catch(e) {}
     };
     esIx.onerror = () => {};
