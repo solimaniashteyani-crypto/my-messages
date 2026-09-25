@@ -3,54 +3,10 @@ const C = window.CONFIG;
 const DB = window.MsgDB;
 const RAW_API = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/messages.json`;
 const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
+const RAW_CATS = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/categories.json`;
 
 // ═══════════════════════════════════════════════════════
-// 📥 بارگیری اطلاعات کاربر از allowed.json
-// ═══════════════════════════════════════════════════════
-async function loadUserInfo() {
-  const myPhone = localStorage.getItem('myPhone');
-  if (!myPhone) return false;
-
-  try {
-    const res = await fetch(RAW_ALLOWED + '?t=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const user = (data.allowed || []).find(u => u.phone === myPhone);
-
-    if (!user) {
-      // کاربر از لیست حذف شده
-      localStorage.clear();
-      location.href = './register.html';
-      return false;
-    }
-
-    // ✅ آپدیت localStorage با اطلاعات تازه
-    localStorage.setItem('myName', user.name || 'کاربر');
-    localStorage.setItem('myGroups', JSON.stringify(user.groups || []));
-    localStorage.setItem('myGroup', (user.groups && user.groups[0]) || 'friends');
-    localStorage.setItem('myPersonalTopic', user.personalTopic || '');
-    localStorage.setItem('myProvince', user.province || '');
-
-    return true;
-  } catch(e) {
-    console.error('loadUserInfo error:', e);
-    return false;
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// 🔐 چک ثبت‌نام
-// ═══════════════════════════════════════════════════════
-const isRegistered = localStorage.getItem('registered') === 'true';
-const hasName = !!localStorage.getItem('myName');
-
-if (!isRegistered || !hasName) {
-  location.href = './register.html';
-  return;
-}
-
-// ═══════════════════════════════════════════════════════
-// 👑 ادمین
+// 👑 ادمین — قبل از هر چیز
 // ═══════════════════════════════════════════════════════
 try {
   const hash = location.hash;
@@ -60,6 +16,7 @@ try {
   }
   if (hash === '#logout-admin') {
     localStorage.removeItem('isAdmin');
+    localStorage.removeItem('adminUnlocked');
     setTimeout(() => { try { history.replaceState(null, '', location.pathname); } catch(e){} }, 100);
   }
 } catch(e) {}
@@ -67,91 +24,36 @@ try {
 const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
 // ═══════════════════════════════════════════════════════
-// 🔐 رمز ادمین — اگه ادمین هستی ولی رمز نزدی، نشون بده
+// 🔐 چک ثبت‌نام — برای کاربر عادی
+// ═══════════════════════════════════════════════════════
+if (!isAdmin) {
+  const isRegistered = localStorage.getItem('registered') === 'true';
+  const hasName = !!localStorage.getItem('myName');
+  const hasPhone = !!localStorage.getItem('myPhone');
+
+  if (!isRegistered || !hasName || !hasPhone) {
+    try {
+      localStorage.removeItem('registered');
+      localStorage.removeItem('myName');
+      localStorage.removeItem('myGroups');
+      localStorage.removeItem('myGroup');
+      localStorage.removeItem('myPhone');
+      localStorage.removeItem('myPersonalTopic');
+      localStorage.removeItem('myProvince');
+    } catch(e) {}
+    location.href = './register.html';
+    return;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 🔐 رمز ادمین — اگه ادمین هستی ولی رمز نزدی، برو admin-lock
 // ═══════════════════════════════════════════════════════
 if (isAdmin && localStorage.getItem('adminUnlocked') !== 'true') {
-  // صفحه رمز
-  document.documentElement.innerHTML = `
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <title>سما — رمز ادمین</title>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-      <style>
-        body{
-          font-family:Vazirmatn,system-ui,sans-serif;
-          background:radial-gradient(1200px 600px at 100% -10%, #93c5fd 0%, transparent 55%),
-            radial-gradient(900px 500px at -10% 110%, #bfdbfe 0%, transparent 55%),
-            linear-gradient(160deg,#dbeafe 0%, #eff6ff 45%, #fff 100%);
-          min-height:100vh; margin:0; padding:20px;
-          display:flex; align-items:center; justify-content:center;
-        }
-        .box{
-          background:#fff; border-radius:24px; padding:36px 28px;
-          max-width:420px; width:100%; text-align:center;
-          box-shadow:0 20px 60px rgba(30,64,175,.2);
-        }
-        .icon{
-          width:100px; height:100px; border-radius:28px;
-          background:linear-gradient(135deg,#1e40af,#3b82f6);
-          color:#fff; display:inline-flex; align-items:center; justify-content:center;
-          font-size:50px; margin-bottom:20px;
-          box-shadow:0 16px 40px rgba(30,64,175,.4);
-        }
-        h1{font-size:24px; color:#1e3a8a; margin:0 0 12px; font-weight:900}
-        p{color:#64748b; margin:0 0 24px; line-height:1.8; font-weight:600}
-        input{
-          width:100%; padding:20px 22px;
-          background:#f0f7ff; border:2.5px solid #bfdbfe;
-          border-radius:16px; font-family:inherit; font-size:28px;
-          font-weight:900; text-align:center; letter-spacing:14px;
-          box-sizing:border-box;
-        }
-        input:focus{outline:none; border-color:#1e40af; background:#fff; box-shadow:0 0 0 6px rgba(30,64,175,.15)}
-        button{
-          width:100%; padding:18px 24px; margin-top:14px;
-          background:linear-gradient(135deg,#1e40af,#3b82f6);
-          color:#fff; border:none; border-radius:16px;
-          font-family:inherit; font-size:18px; font-weight:900;
-          cursor:pointer; box-shadow:0 8px 22px rgba(30,64,175,.4);
-        }
-        button:active{transform:scale(.98)}
-        .err{
-          color:#dc2626; margin-top:14px; font-size:15px;
-          font-weight:800; min-height:22px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="box">
-        <div class="icon">🔐</div>
-        <h1>رمز ادمین</h1>
-        <p>برای ورود به پنل ادمین، رمز ۴ رقمی رو وارد کن</p>
-        <input type="password" id="adminPass" placeholder="••••" maxlength="4" inputmode="numeric" autofocus>
-        <button onclick="checkAdminPass()">ورود به پنل ادمین 🔓</button>
-        <div class="err" id="adminErr"></div>
-      </div>
-      <script>
-        var ADMIN_PASS = '5113';
-        function checkAdminPass() {
-          var v = document.getElementById('adminPass').value.trim();
-          var err = document.getElementById('adminErr');
-          if (v === ADMIN_PASS) {
-            localStorage.setItem('adminUnlocked', 'true');
-            location.reload();
-          } else {
-            err.textContent = '❌ رمز اشتباه';
-            document.getElementById('adminPass').value = '';
-          }
-        }
-        document.getElementById('adminPass').addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') checkAdminPass();
-        });
-      </script>
-    </body>
-  `;
+  location.href = './admin-lock.html';
   return;
 }
+
 // ═══════════════════════════════════════════════════════
 // 📦 state
 // ═══════════════════════════════════════════════════════
@@ -160,11 +62,10 @@ const state = {
   myName: localStorage.getItem('myName') || '',
   myGroups: [],
   myPersonalTopic: localStorage.getItem('myPersonalTopic') || '',
-  filter: 'all',
-  etag: null
+  customCategories: [],
+  filter: 'all'
 };
 
-// بارگیری اولیه myGroups
 try {
   state.myGroups = JSON.parse(localStorage.getItem('myGroups') || '[]');
   if (!state.myGroups.length) {
@@ -240,6 +141,18 @@ window.addEventListener('online',  () => { updateOnlineBadge(); loadMessages(tru
 window.addEventListener('offline', updateOnlineBadge);
 
 // ═══════════════════════════════════════════════════════
+// 📥 بارگیری دسته‌های سفارشی
+// ═══════════════════════════════════════════════════════
+async function loadCustomCategories() {
+  try {
+    const res = await fetch(RAW_CATS + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    state.customCategories = data.categories || [];
+  } catch(e) { console.warn(e); }
+}
+
+// ═══════════════════════════════════════════════════════
 // 📥 دریافت پیام‌ها
 // ═══════════════════════════════════════════════════════
 async function loadMessages(force) {
@@ -293,6 +206,16 @@ function isUserInGroup(groupKey) {
   return state.myGroups.includes(groupKey);
 }
 
+function isUserInCustomCat(catId) {
+  if (isAdmin) return true;
+  return state.myGroups.includes('__cat__' + catId);
+}
+
+function isUserInCustomSub(subId) {
+  if (isAdmin) return true;
+  return state.myGroups.includes(subId);
+}
+
 // ═══════════════════════════════════════════════════════
 // 🎨 تب‌ها — فقط گروه‌های کاربر
 // ═══════════════════════════════════════════════════════
@@ -322,6 +245,17 @@ function renderTabs() {
     });
   });
 
+  // دسته‌های سفارشی
+  state.customCategories.forEach(cat => {
+    if (!isUserInCustomCat(cat.id)) return;
+    html += `<button data-filter="cat:${cat.id}" class="${state.filter === 'cat:' + cat.id ? 'active' : ''}">${cat.emoji || '📁'} ${cat.name}</button>`;
+
+    (cat.subcategories || []).forEach(sub => {
+      if (!isUserInCustomSub(sub.id)) return;
+      html += `<button data-filter="group:${sub.id}" class="${state.filter === 'group:' + sub.id ? 'active' : ''}">${sub.emoji || '👤'} ${sub.name}</button>`;
+    });
+  });
+
   tabs.innerHTML = html;
 
   tabs.querySelectorAll('button[data-filter]').forEach(b => {
@@ -340,6 +274,18 @@ function render() {
   const isAdminNow = localStorage.getItem('isAdmin') === 'true';
   const adminEntry = document.getElementById('adminEntry');
   if (adminEntry) adminEntry.hidden = !isAdminNow;
+
+  // دکمه خروج ادمین
+  const logoutBtn = document.getElementById('logoutAdminBtn');
+  if (logoutBtn) {
+    logoutBtn.hidden = !isAdminNow;
+    logoutBtn.onclick = () => {
+      if (confirm('از پنل ادمین خارج بشی؟')) {
+        localStorage.removeItem('adminUnlocked');
+        location.reload();
+      }
+    };
+  }
 
   renderTabs();
 
@@ -360,6 +306,12 @@ function render() {
     list = list.filter(m => {
       const groups = m.groups || (m.group ? [m.group] : []);
       return groups.includes(g);
+    });
+  } else if (state.filter.startsWith('cat:')) {
+    const catId = state.filter.substring(4);
+    list = list.filter(m => {
+      const customs = m.customRecipients || [];
+      return customs.some(c => c.topic && c.topic.indexOf('-' + catId + '-') > -1);
     });
   }
 
@@ -641,7 +593,14 @@ function setupSettings() {
     localStorage.setItem('myGroup', state.myGroup);
     observeSeen();
   });
-  // 👑 دکمه خروج ادمین (فقط اگه ادمینه)
+
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) refreshBtn.onclick = () => loadMessages(true);
+
+  const replyBtn = document.getElementById('replySendBtn');
+  if (replyBtn) replyBtn.onclick = submitReply;
+
+  // 👑 دکمه خروج ادمین
   if (isAdmin) {
     const logoutAdminBtn = document.getElementById('logoutAdminBtn');
     if (logoutAdminBtn) {
@@ -654,11 +613,6 @@ function setupSettings() {
       };
     }
   }
-  const refreshBtn = document.getElementById('refreshBtn');
-  if (refreshBtn) refreshBtn.onclick = () => loadMessages(true);
-
-  const replyBtn = document.getElementById('replySendBtn');
-  if (replyBtn) replyBtn.onclick = submitReply;
 }
 
 function showEmptyIfNeeded() {
@@ -682,19 +636,7 @@ async function init() {
     updateOnlineBadge();
     setupSettings();
 
-    // ✅ بارگیری اطلاعات تازه کاربر از allowed.json
-    await loadUserInfo();
-    // آپدیت state بعد از بارگیری
-    state.myName = localStorage.getItem('myName') || '';
-    state.myPersonalTopic = localStorage.getItem('myPersonalTopic') || '';
-    try {
-      state.myGroups = JSON.parse(localStorage.getItem('myGroups') || '[]');
-      if (!state.myGroups.length) {
-        const g = localStorage.getItem('myGroup');
-        if (g) state.myGroups = [g];
-      }
-    } catch(e) {}
-
+    await loadCustomCategories();
     await loadLocal();
     await loadMessages(true);
     subscribeSSE();
