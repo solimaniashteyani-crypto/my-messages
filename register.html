@@ -366,7 +366,11 @@ form.onsubmit = async (e) => {
         localStorage.setItem('myPersonalTopic', user.personalTopic || '');
     localStorage.setItem('myProvince', user.province || '');
     localStorage.setItem('registered', 'true');
-
+    
+    // 👑 اگه شماره ادمین بود، خودکار ادمین کن
+    if (user.phone === '09120000000') {
+      localStorage.setItem('isAdmin', 'true');
+    }
     showStatus('ok',
       `✅ خوش آمدی ${user.name}!<br>در حال انتقال به سما...`);
 
