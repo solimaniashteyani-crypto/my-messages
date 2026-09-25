@@ -6,7 +6,7 @@ const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.
 const RAW_CATS = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/categories.json`;
 
 // ═══════════════════════════════════════════════════════
-// 👑 ادمین — قبل از هر چیز
+// 👑 ادمین
 // ═══════════════════════════════════════════════════════
 try {
   const hash = location.hash;
@@ -24,7 +24,7 @@ try {
 const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
 // ═══════════════════════════════════════════════════════
-// 🔐 چک ثبت‌نام — برای کاربر عادی
+// 🔐 چک ثبت‌نام
 // ═══════════════════════════════════════════════════════
 if (!isAdmin) {
   const isRegistered = localStorage.getItem('registered') === 'true';
@@ -47,7 +47,7 @@ if (!isAdmin) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🔐 رمز ادمین — اگه ادمین هستی ولی رمز نزدی، برو admin-lock
+// 🔐 رمز ادمین
 // ═══════════════════════════════════════════════════════
 if (isAdmin && localStorage.getItem('adminUnlocked') !== 'true') {
   location.href = './admin-lock.html';
@@ -199,7 +199,7 @@ async function loadMessages(force) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 🎯 چک کن کاربر عضو این گروه هست
+// 🎯 توابع کمکی
 // ═══════════════════════════════════════════════════════
 function isUserInGroup(groupKey) {
   if (isAdmin) return true;
@@ -216,8 +216,23 @@ function isUserInCustomSub(subId) {
   return state.myGroups.includes(subId);
 }
 
+// آیا پیام به این topic رفته؟
+function messageHasTopic(m, topic) {
+  // چک groups
+  const groups = m.groups || (m.group ? [m.group] : []);
+  if (groups.includes(topic)) return true;
+
+  // چک customRecipients
+  if ((m.customRecipients || []).some(c => c.topic === topic)) return true;
+
+  // چک personalRecipients
+  if ((m.personalRecipients || []).some(p => p.topic === topic)) return true;
+
+  return false;
+}
+
 // ═══════════════════════════════════════════════════════
-// 🎨 تب‌ها — فقط گروه‌های کاربر
+// 🎨 تب‌ها
 // ═══════════════════════════════════════════════════════
 function renderTabs() {
   const tabs = document.getElementById('tabs');
@@ -247,7 +262,7 @@ function renderTabs() {
 
   // دسته‌های سفارشی
   state.customCategories.forEach(cat => {
-    if (!isUserInCustomCat(cat.id)) return;
+    if (!isUserInCustomCat(cat.id) && !isUserInCustomSub('__cat__' + cat.id)) return;
     html += `<button data-filter="cat:${cat.id}" class="${state.filter === 'cat:' + cat.id ? 'active' : ''}">${cat.emoji || '📁'} ${cat.name}</button>`;
 
     (cat.subcategories || []).forEach(sub => {
@@ -275,7 +290,6 @@ function render() {
   const adminEntry = document.getElementById('adminEntry');
   if (adminEntry) adminEntry.hidden = !isAdminNow;
 
-  // دکمه خروج ادمین
   const logoutBtn = document.getElementById('logoutAdminBtn');
   if (logoutBtn) {
     logoutBtn.hidden = !isAdminNow;
@@ -294,25 +308,37 @@ function render() {
 
   let list = state.messages.slice();
 
+  // ───── فیلتر ─────
   if (state.filter === 'all') {
     if (!isAdmin) {
       list = list.filter(m => {
+        // چک گروه‌های عادی
         const groups = m.groups || (m.group ? [m.group] : []);
-        return groups.some(g => state.myGroups.includes(g));
+        if (groups.some(g => state.myGroups.includes(g))) return true;
+
+        // چک customRecipients (مقایسه topic)
+        if ((m.customRecipients || []).some(c => state.myGroups.includes(c.topic))) return true;
+
+        // چک personalRecipients (مقایسه topic)
+        if ((m.personalRecipients || []).some(p => state.myGroups.includes(p.topic))) return true;
+
+        return false;
       });
     }
   } else if (state.filter.startsWith('group:')) {
     const g = state.filter.substring(6);
-    list = list.filter(m => {
-      const groups = m.groups || (m.group ? [m.group] : []);
-      return groups.includes(g);
-    });
+    list = list.filter(m => messageHasTopic(m, g));
   } else if (state.filter.startsWith('cat:')) {
     const catId = state.filter.substring(4);
-    list = list.filter(m => {
-      const customs = m.customRecipients || [];
-      return customs.some(c => c.topic && c.topic.indexOf('-' + catId + '-') > -1);
-    });
+    const cat = state.customCategories.find(c => c.id === catId);
+    if (cat) {
+      const topic = cat.topic;
+      list = list.filter(m => {
+        if (topic && messageHasTopic(m, topic)) return true;
+        // یا هر زیرمجموعه‌ای از این دسته
+        return (cat.subcategories || []).some(sub => messageHasTopic(m, sub.id));
+      });
+    }
   }
 
   list.sort((a, b) => new Date(b.time) - new Date(a.time));
@@ -393,12 +419,28 @@ function renderMessageCard(m) {
   const seenBy = state.seen.filter(s => s.messageId === m.id);
   const seenHtml = seenBy.length ? '<span class="seen-badge">👁 ' + seenBy.length + '</span>' : '';
 
+  // ───── ساخت برچسب گروه‌ها ─────
+  const labels = [];
+
+  // 1. گروه‌های عادی
   const msgGroups = m.groups || (m.group ? [m.group] : []);
-  const groupLabels = msgGroups
-    .map(g => C.groups[g])
-    .filter(g => g)
-    .map(g => g.emoji + ' ' + g.name)
-    .join('، ');
+  msgGroups.forEach(g => {
+    if (C.groups[g]) {
+      labels.push(C.groups[g].emoji + ' ' + C.groups[g].name);
+    }
+  });
+
+  // 2. افراد اختصاصی
+  (m.personalRecipients || []).forEach(p => {
+    if (p.name) labels.push('👤 ' + p.name);
+  });
+
+  // 3. دسته‌های سفارشی
+  (m.customRecipients || []).forEach(c => {
+    if (c.name) labels.push('📢 ' + c.name);
+  });
+
+  const groupLabels = labels.join('، ');
 
   const imgHtml = m.image
     ? '<img class="img" src="' + esc(m.image) + '" loading="lazy" alt="" data-full="' + esc(m.image) + '">'
@@ -514,6 +556,7 @@ function subscribeSSE() {
   try {
     const subscribed = new Set();
 
+    // Subscribe به گروه‌ها
     state.myGroups.forEach(groupKey => {
       const group = C.groups[groupKey];
       if (group && group.topic && !subscribed.has(group.topic)) {
@@ -529,6 +572,7 @@ function subscribeSSE() {
       }
     });
 
+    // Subscribe به topic اختصاصی
     const personalTopic = localStorage.getItem('myPersonalTopic');
     if (personalTopic && !subscribed.has(personalTopic)) {
       subscribed.add(personalTopic);
@@ -542,6 +586,39 @@ function subscribeSSE() {
       esP.onerror = () => {};
     }
 
+    // Subscribe به topic دسته‌های سفارشی که کاربر عضوشونه
+    state.customCategories.forEach(cat => {
+      if (state.myGroups.includes('__cat__' + cat.id) || isAdmin) {
+        if (cat.topic && !subscribed.has(cat.topic)) {
+          subscribed.add(cat.topic);
+          const esC = new EventSource(C.ntfyBase + '/' + cat.topic + '/sse');
+          esC.onmessage = ev => {
+            try {
+              const d = JSON.parse(ev.data);
+              if (d.event === 'message' && d.message) setTimeout(() => loadMessages(true), 500);
+            } catch(e) {}
+          };
+          esC.onerror = () => {};
+        }
+      }
+      (cat.subcategories || []).forEach(sub => {
+        if (state.myGroups.includes(sub.id) || isAdmin) {
+          if (sub.topic && !subscribed.has(sub.topic)) {
+            subscribed.add(sub.topic);
+            const esS = new EventSource(C.ntfyBase + '/' + sub.topic + '/sse');
+            esS.onmessage = ev => {
+              try {
+                const d = JSON.parse(ev.data);
+                if (d.event === 'message' && d.message) setTimeout(() => loadMessages(true), 500);
+              } catch(e) {}
+            };
+            esS.onerror = () => {};
+          }
+        }
+      });
+    });
+
+    // کانال تعاملات
     const esIx = new EventSource(C.ntfyBase + '/' + C.interactionsTopic + '/sse');
     esIx.onmessage = ev => {
       try {
@@ -600,7 +677,6 @@ function setupSettings() {
   const replyBtn = document.getElementById('replySendBtn');
   if (replyBtn) replyBtn.onclick = submitReply;
 
-  // 👑 دکمه خروج ادمین
   if (isAdmin) {
     const logoutAdminBtn = document.getElementById('logoutAdminBtn');
     if (logoutAdminBtn) {
