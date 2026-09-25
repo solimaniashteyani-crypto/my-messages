@@ -1,3 +1,13 @@
 {
-  "allowed": []
+  "allowed": [
+    {
+      "phone": "09123456789",
+      "name": "سارا محمدی",
+      "groups": [
+        "rabet_kerman"
+      ],
+      "personalTopic": "chal-v11-sara-mohammadi-4p8n",
+      "province": "کرمان"
+    }
+  ]
 }
