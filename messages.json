@@ -49,6 +49,20 @@
       "group": "hamsar",
       "personalRecipients": [],
       "time": "2026-09-25T09:20:11.254Z"
+    },
+    {
+      "id": "ecd96f1a-a8ab-4cd5-b05d-6963352b99e6",
+      "text": "سلام به اداره، این یه پیام تستیه 🏢",
+      "groups": [],
+      "group": "__personal__",
+      "personalRecipients": [],
+      "customRecipients": [
+        {
+          "name": "📢 کل اداره",
+          "topic": "chal-v11-edare-h1i2j3"
+        }
+      ],
+      "time": "2026-09-25T09:54:50.786Z"
     }
   ],
   "reactions": [],
