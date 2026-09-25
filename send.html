@@ -2,24 +2,22 @@
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>سامانه پیام‌رسان سما — پنل ادمین</title>
-<meta name="description" content="پنل ارسال پیام سامانه پیام‌رسان سما">
 <link rel="manifest" href="admin-manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="پنل ادمین سما">
 <meta name="theme-color" content="#1e40af">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <style>
   :root{
     --primary:#1e40af; --primary-2:#3b82f6; --primary-deep:#1e3a8a;
     --text:#0c1e3e; --muted:#64748b; --border:#bfdbfe; --border-strong:#93c5fd;
     --ok:#16a34a; --err:#dc2626; --card:#fff; --card-soft:#f0f7ff;
+    --orange:#ea580c; --purple:#7c3aed;
   }
   *{box-sizing:border-box}
   html,body{margin:0;min-height:100%}
@@ -31,7 +29,7 @@
     background-attachment:fixed; color:var(--text);
     padding:28px 20px 60px; line-height:1.75; min-height:100vh;
   }
-  .wrap{max-width:820px; margin:0 auto}
+  .wrap{max-width:860px; margin:0 auto}
   .header{text-align:center; margin-bottom:24px}
   .header .icon{
     display:inline-flex; align-items:center; justify-content:center;
@@ -65,10 +63,7 @@
     text-decoration:none; cursor:pointer; border:none;
     transition:all .25s ease; text-align:center;
   }
-  .nav-btn.primary{
-    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
-    box-shadow:0 6px 18px rgba(30,64,175,.35);
-  }
+  .nav-btn.primary{background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff; box-shadow:0 6px 18px rgba(30,64,175,.35)}
   .nav-btn.ghost{background:var(--card-soft); color:var(--primary-deep); border:2px solid var(--border)}
   .token-card{
     background:linear-gradient(135deg,#ecfdf5,#d1fae5);
@@ -107,25 +102,29 @@
     border:2px solid var(--border); cursor:pointer; transition:all .2s;
   }
   .quick-btn:hover{background:var(--primary); color:#fff; border-color:var(--primary)}
-  .quick-btn.primary{
-    background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff;
-    border-color:transparent; box-shadow:0 4px 12px rgba(30,64,175,.3);
-  }
+  .quick-btn.primary{background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff; border-color:transparent; box-shadow:0 4px 12px rgba(30,64,175,.3)}
   .quick-btn.clear{color:var(--err); border-color:#fca5a5}
   .quick-btn.clear:hover{background:var(--err); color:#fff}
   .category-box{
     background:#fff; border:1.5px solid var(--border);
     border-radius:14px; margin-bottom:10px; overflow:hidden;
   }
+  .category-box.custom{border:2px dashed var(--purple)}
   .category-header{
     display:flex; justify-content:space-between; align-items:center;
     padding:14px 18px; cursor:pointer;
     background:linear-gradient(135deg,#f0f7ff,#dbeafe);
   }
+  .category-box.custom .category-header{
+    background:linear-gradient(135deg,#faf5ff,#f3e8ff);
+  }
   .category-title{display:flex; align-items:center; gap:10px; font-size:16px; font-weight:900; color:var(--primary-deep)}
+  .category-box.custom .category-title{color:var(--purple)}
   .category-title .count{background:rgba(30,64,175,.15); color:var(--primary-deep); padding:2px 10px; border-radius:999px; font-size:12px; font-weight:800}
+  .category-box.custom .category-title .count{background:rgba(124,58,237,.15); color:var(--purple)}
   .category-title .selected-count{background:linear-gradient(135deg,#16a34a,#15803d); color:#fff; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:800}
   .category-arrow{font-size:16px; color:var(--primary-deep); transition:transform .3s ease}
+  .category-box.custom .category-arrow{color:var(--purple)}
   .category-box.open .category-arrow{transform:rotate(90deg)}
   .category-body{display:none; padding:14px 18px}
   .category-box.open .category-body{display:block}
@@ -146,8 +145,8 @@
   .checkbox-item input:checked + .check{background:linear-gradient(135deg,#1e40af,#3b82f6); border-color:transparent}
   .checkbox-item input:checked + .check::after{opacity:1}
   .checkbox-item:has(input:checked){background:linear-gradient(135deg,#dbeafe,#bfdbfe); border-color:var(--primary)}
-  .personal-item{background:linear-gradient(135deg,#faf5ff,#f3e8ff) !important; border-color:#d8b4fe !important}
-  .personal-item:has(input:checked){background:linear-gradient(135deg,#e9d5ff,#d8b4fe) !important; border-color:#8b5cf6 !important}
+  .checkbox-item.custom:has(input:checked){background:linear-gradient(135deg,#e9d5ff,#d8b4fe); border-color:var(--purple)}
+  .checkbox-item.custom input:checked + .check{background:linear-gradient(135deg,#7c3aed,#8b5cf6)}
   .selection-summary{
     background:linear-gradient(135deg,#dbeafe,#bfdbfe);
     border:2px solid var(--primary); border-radius:12px;
@@ -182,15 +181,12 @@
     padding:18px 26px; background:linear-gradient(135deg,#ef4444,#dc2626);
     color:#fff; border:none; border-radius:16px;
     cursor:pointer; font-family:inherit; font-size:16px; font-weight:800;
-    box-shadow:0 6px 20px rgba(220,38,38,.35);
   }
   .progress{height:8px; background:#dbeafe; border-radius:6px; overflow:hidden; margin-top:20px; display:none}
   .progress > div{
     height:100%; background:linear-gradient(90deg,#1e40af,#3b82f6,#1e40af);
     background-size:200% 100%; width:0; transition:width .3s ease;
-    animation:shine 2s linear infinite;
   }
-  @keyframes shine{to{background-position:-200% 0}}
   #status{margin-top:20px; font-size:17px; font-weight:800; min-height:28px; text-align:center}
   .ok{color:var(--ok)} .err{color:var(--err)}
   .modal-backdrop{
@@ -276,6 +272,7 @@
         <button class="quick-btn" onclick="selectSpecialOnly()">✓ فقط ویژه</button>
         <button class="quick-btn" onclick="selectFamilyOnly()">✓ فقط خانواده</button>
         <button class="quick-btn" onclick="selectPersonalOnly()">✓ فقط افراد</button>
+        <button class="quick-btn" onclick="selectCustomOnly()">✓ فقط دسته‌های سفارشی</button>
         <button class="quick-btn clear" onclick="clearAll()">✗ پاک کردن همه</button>
       </div>
 
@@ -299,7 +296,6 @@
       <button class="btn-main" onclick="send()">ارسال 🚀</button>
       <button class="btn-ghost" onclick="reload()">🔄</button>
       <button class="btn-danger" onclick="openResetModal()">🗑 پاک کردن همه</button>
-      <button class="btn-danger" onclick="openFullResetModal()" style="background:linear-gradient(135deg,#7c2d12,#991b1b);">⚠️ ریست کامل</button>
     </div>
 
     <div class="progress" id="prog"><div id="progBar"></div></div>
@@ -307,38 +303,13 @@
 
   </div>
 </div>
-<!-- مودال ریست کامل -->
-<div class="modal-backdrop" id="fullResetModal">
-  <div class="modal">
-    <h3 style="color:#7c2d12">⚠️ ریست کامل سامانه</h3>
-    <div class="warning-text">
-      <b style="color:#dc2626;font-size:16px">این عمل غیرقابل بازگشت است!</b><br><br>
-      <b>پاک می‌کنه:</b><br>
-      • 📨 همه پیام‌ها<br>
-      • ❤️ همه ری‌اکشن‌ها<br>
-      • 💬 همه پاسخ‌ها<br>
-      • 👁 همه بازدیدها<br>
-      • 👥 همه اعضا (allowed.json)<br><br>
-      <b style="color:#16a34a">نمی‌پاکه:</b><br>
-      • 📁 گروه‌ها (config.js)<br>
-      • ⚙️ تنظیمات سامانه
-    </div>
-    <label>🔐 رمز امنیتی رو وارد کن</label>
-    <input type="password" id="fullResetPassword" placeholder="••••" maxlength="4" inputmode="numeric">
-    <div class="error-msg" id="fullResetError"></div>
-    <div class="actions">
-      <button class="cancel" onclick="closeFullResetModal()">لغو</button>
-      <button class="confirm" id="confirmFullResetBtn" onclick="confirmFullReset()" disabled style="background:linear-gradient(135deg,#7c2d12,#991b1b);">🗑 ریست کامل</button>
-    </div>
-  </div>
-</div>
+
 <div class="modal-backdrop" id="resetModal">
   <div class="modal">
     <h3>🗑 پاک کردن همه پیام‌ها</h3>
     <div class="warning-text">
-      این عمل غیرقابل بازگشت است.<br>
       همه پیام‌ها، ری‌اکشن‌ها، پاسخ‌ها و بازدیدها پاک می‌شن.<br>
-      <b style="color:#16a34a">اعضای ثبت‌نام‌شده دست‌نخورده می‌مونن.</b>
+      <b style="color:#16a34a">اعضا و دسته‌ها دست‌نخورده می‌مونن.</b>
     </div>
     <label>🔐 رمز امنیتی</label>
     <input type="password" id="resetPassword" placeholder="••••" maxlength="4" inputmode="numeric">
@@ -357,17 +328,20 @@
 const C = window.CONFIG;
 const API = `https://api.github.com/repos/${C.owner}/${C.repo}/contents`;
 const MSG_PATH = 'messages.json';
+const CATS_PATH = 'categories.json';
 const TOKEN_KEY = 'gh_token';
 const RESET_PASSWORD = '5113';
 const RAW_ALLOWED = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/allowed.json`;
+const RAW_CATS = `https://raw.githubusercontent.com/${C.owner}/${C.repo}/${C.branch}/categories.json`;
 
 const tokenEl = document.getElementById('token');
 let allowedMembers = [];
+let customCategories = [];
 
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 
 // ═══════════════════════════════════════════════════════
-// 👤 بارگیری افراد اختصاصی
+// 📥 بارگیری داده‌ها
 // ═══════════════════════════════════════════════════════
 async function loadAllowedMembers() {
   try {
@@ -375,8 +349,21 @@ async function loadAllowedMembers() {
     if (!res.ok) return;
     const data = await res.json();
     allowedMembers = data.allowed || [];
-    renderGroups();
   } catch(e) { console.warn(e); }
+}
+
+async function loadCustomCategories() {
+  try {
+    const res = await fetch(RAW_CATS + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    customCategories = data.categories || [];
+  } catch(e) { console.warn(e); }
+}
+
+async function loadAll() {
+  await Promise.all([loadAllowedMembers(), loadCustomCategories()]);
+  renderGroups();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -412,6 +399,7 @@ function renderGroups() {
 
   let html = '';
 
+  // ═══════ دسته‌های ثابت ═══════
   Object.entries(categories).forEach(([catKey, cat]) => {
     if (!cat.items.length) return;
 
@@ -435,17 +423,13 @@ function renderGroups() {
                 }).filter(Boolean).join(' + ');
                 return `
                   <label class="checkbox-item personal-item">
-                    <input type="checkbox" class="group-check personal-check" 
+                    <input type="checkbox" class="group-check personal-check"
                            data-cat="${catKey}" data-personal-topic="${g.personalTopic || ''}"
                            data-personal-name="${g.name}" value="${g.key}">
                     <span class="check"></span>
                     <span class="label">
                       👤 <b>${g.name}</b>
                       <small style="display:block;color:#7c3aed;font-size:11px;font-weight:700">${groupsText || 'بدون گروه'}</small>
-                      
-<button onclick="event.preventDefault(); event.stopPropagation(); copyText('${g.personalTopic || ''}')"
-        style="background:#8b5cf6;color:#fff;border:none;padding:3px 8px;border-radius:6px;cursor:pointer;font-size:10px;font-weight:700;font-family:inherit;margin-top:4px"
-        title="کپی کد اختصاصی">📋 کپی کد</button>
                     </span>
                   </label>
                 `;
@@ -464,6 +448,52 @@ function renderGroups() {
     `;
   });
 
+  // ═══════ دسته‌های سفارشی (categories.json) ═══════
+  if (customCategories.length) {
+    html += `<div style="margin:20px 0 8px; padding-top:16px; border-top:2px dashed var(--purple)">
+      <h4 style="color:var(--purple); font-weight:900; font-size:16px; margin:0 0 12px">🏢 دسته‌های سفارشی</h4>
+    </div>`;
+
+    customCategories.forEach((cat, i) => {
+      html += `
+        <div class="category-box custom" data-cat="custom-${cat.id}">
+          <div class="category-header" onclick="toggleCategory('custom-${cat.id}')">
+            <div class="category-title">
+              ${cat.emoji || '📁'} ${cat.name}
+              <span class="count">${(cat.subcategories || []).length}</span>
+              <span class="selected-count" id="sel-custom-${cat.id}" style="display:none">0</span>
+            </div>
+            <span class="category-arrow">◀</span>
+          </div>
+          <div class="category-body">
+            <label class="checkbox-item custom" style="margin-bottom:10px; background:rgba(124,58,237,.08)">
+              <input type="checkbox" class="group-check custom-cat-check"
+                     data-cat="custom-${cat.id}"
+                     data-custom-cat="${cat.id}"
+                     data-custom-topic="${cat.topic || ''}"
+                     value="__cat__${cat.id}">
+              <span class="check"></span>
+              <span class="label">📢 کل ${cat.name}</span>
+            </label>
+            <div class="checkboxes-grid">
+              ${(cat.subcategories || []).map(sub => `
+                <label class="checkbox-item custom">
+                  <input type="checkbox" class="group-check custom-sub-check"
+                         data-cat="custom-${cat.id}"
+                         data-custom-cat="${cat.id}"
+                         data-custom-topic="${sub.topic || ''}"
+                         value="${sub.id}">
+                  <span class="check"></span>
+                  <span class="label">${sub.emoji || '👤'} ${sub.name}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
   container.innerHTML = html;
   container.querySelectorAll('.group-check').forEach(cb => cb.addEventListener('change', updateSelectionSummary));
 }
@@ -475,7 +505,7 @@ function toggleCategory(catKey) {
 
 function getSelectedGroups() {
   return Array.from(document.querySelectorAll('.group-check:checked'))
-    .filter(x => !x.classList.contains('personal-check'))
+    .filter(x => !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check'))
     .map(x => x.value);
 }
 
@@ -486,40 +516,31 @@ function getSelectedPersonalMembers() {
   })).filter(m => m.topic);
 }
 
+function getSelectedCustomTopics() {
+  return Array.from(document.querySelectorAll('.custom-cat-check:checked, .custom-sub-check:checked')).map(x => ({
+    name: x.closest('.checkbox-item').querySelector('.label').textContent.trim(),
+    topic: x.dataset.customTopic
+  })).filter(c => c.topic);
+}
+
 function updateSelectionSummary() {
   const selected = getSelectedGroups();
   const personal = getSelectedPersonalMembers();
-  const totalCount = selected.length + personal.length;
-
-  const cats = {};
-  selected.forEach(key => {
-    const g = C.groups[key];
-    if (g) {
-      const cat = catMap[g.category] || 'other';
-      cats[cat] = (cats[cat] || 0) + 1;
-    }
-  });
-  if (personal.length) cats.personal = personal.length;
-
-  ['family', 'special', 'ostan', 'other', 'personal'].forEach(cat => {
-    const el = document.getElementById('sel-' + cat);
-    if (el) {
-      if (cats[cat]) {
-        el.textContent = '✓ ' + cats[cat];
-        el.style.display = 'inline-block';
-      } else el.style.display = 'none';
-    }
-  });
+  const custom = getSelectedCustomTopics();
+  const totalCount = selected.length + personal.length + custom.length;
 
   const summary = document.getElementById('selectionSummary');
   if (!totalCount) {
     summary.textContent = 'هیچ گروهی انتخاب نشده';
     summary.className = 'selection-summary empty';
-  } else if (personal.length) {
-    summary.textContent = `✓ ${totalCount} انتخاب (${selected.length} گروه + ${personal.length} فرد)`;
-    summary.className = 'selection-summary';
   } else {
-    summary.textContent = `✓ ${totalCount} گروه انتخاب شده`;
+    let text = `✓ ${totalCount} انتخاب`;
+    const parts = [];
+    if (selected.length) parts.push(`${selected.length} گروه`);
+    if (personal.length) parts.push(`${personal.length} فرد`);
+    if (custom.length) parts.push(`${custom.length} سفارشی`);
+    if (parts.length) text += ` (${parts.join(' + ')})`;
+    summary.textContent = text;
     summary.className = 'selection-summary';
   }
 }
@@ -532,31 +553,37 @@ function selectAll() {
 }
 function selectOstanAndSpecial() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && (x.dataset.cat === 'special' || x.dataset.cat === 'ostan');
+    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && (x.dataset.cat === 'special' || x.dataset.cat === 'ostan');
   });
   updateSelectionSummary();
 }
 function selectOstanOnly() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && x.dataset.cat === 'ostan';
+    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && x.dataset.cat === 'ostan';
   });
   updateSelectionSummary();
 }
 function selectSpecialOnly() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && x.dataset.cat === 'special';
+    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && x.dataset.cat === 'special';
   });
   updateSelectionSummary();
 }
 function selectFamilyOnly() {
   document.querySelectorAll('.group-check').forEach(x => {
-    x.checked = !x.classList.contains('personal-check') && x.dataset.cat === 'family';
+    x.checked = !x.classList.contains('personal-check') && !x.classList.contains('custom-cat-check') && !x.classList.contains('custom-sub-check') && x.dataset.cat === 'family';
   });
   updateSelectionSummary();
 }
 function selectPersonalOnly() {
   document.querySelectorAll('.group-check').forEach(x => {
     x.checked = x.classList.contains('personal-check');
+  });
+  updateSelectionSummary();
+}
+function selectCustomOnly() {
+  document.querySelectorAll('.group-check').forEach(x => {
+    x.checked = x.classList.contains('custom-cat-check') || x.classList.contains('custom-sub-check');
   });
   updateSelectionSummary();
 }
@@ -664,7 +691,10 @@ async function send() {
 
   const selected = getSelectedGroups();
   const personal = getSelectedPersonalMembers();
-  if (!selected.length && !personal.length) return setStatus('حداقل یه گروه یا فرد انتخاب کن', 'err');
+  const custom = getSelectedCustomTopics();
+  if (!selected.length && !personal.length && !custom.length) {
+    return setStatus('حداقل یه مخاطب انتخاب کن', 'err');
+  }
 
   const text = document.getElementById('msg').value.trim();
   const file = imgFile.files[0];
@@ -695,6 +725,7 @@ async function send() {
       groups: selected,
       group: selected[0] || '__personal__',
       personalRecipients: personal,
+      customRecipients: custom,
       time: new Date().toISOString(),
       ...(imageUrl ? { image: imageUrl } : {})
     });
@@ -704,7 +735,7 @@ async function send() {
 
     document.getElementById('msg').value = '';
     imgFile.value = ''; preview.style.display = 'none';
-    const total = selected.length + personal.length;
+    const total = selected.length + personal.length + custom.length;
     setStatus(`✅ ارسال شد به ${total} مخاطب! اعلان تا چند لحظه دیگه میاد 📲`, 'ok');
   } catch (e) {
     setStatus('❌ ' + e.message, 'err');
@@ -734,105 +765,6 @@ function openResetModal() {
   setTimeout(() => document.getElementById('resetPassword').focus(), 100);
 }
 function closeResetModal() { document.getElementById('resetModal').classList.remove('show'); }
-  // ═══════════════════════════════════════════════════════
-// ⚠️ ریست کامل
-// ═══════════════════════════════════════════════════════
-function openFullResetModal() {
-  if (!getToken()) { showToast('❌ اول توکن رو وارد کن', true); return; }
-  document.getElementById('fullResetPassword').value = '';
-  document.getElementById('fullResetError').textContent = '';
-  document.getElementById('confirmFullResetBtn').disabled = true;
-  document.getElementById('fullResetModal').classList.add('show');
-  setTimeout(() => document.getElementById('fullResetPassword').focus(), 100);
-}
-
-function closeFullResetModal() {
-  document.getElementById('fullResetModal').classList.remove('show');
-}
-
-document.getElementById('fullResetPassword').addEventListener('input', e => {
-  const val = e.target.value.trim();
-  const btn = document.getElementById('confirmFullResetBtn');
-  const err = document.getElementById('fullResetError');
-  if (val.length === 0) { btn.disabled = true; err.textContent = ''; }
-  else if (val === RESET_PASSWORD) {
-    btn.disabled = false;
-    err.textContent = '✅ رمز صحیح — آماده برای ریست';
-    err.style.color = '#16a34a';
-  } else {
-    btn.disabled = true;
-    err.textContent = '❌ رمز اشتباه';
-    err.style.color = '#dc2626';
-  }
-});
-
-async function confirmFullReset() {
-  const pass = document.getElementById('fullResetPassword').value.trim();
-  if (pass !== RESET_PASSWORD) return;
-
-  const btn = document.getElementById('confirmFullResetBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ در حال ریست...';
-
-  try {
-    const token = getToken();
-    if (!token) throw new Error('توکن موجود نیست');
-
-    // 1. پاک کردن messages.json
-    const emptyMessages = { messages: [], reactions: [], replies: [], seen: [] };
-
-    const r1 = await fetch(`${API}/${MSG_PATH}?t=${Date.now()}`, {
-      headers: { Authorization: `token ${token}` }
-    });
-    if (!r1.ok) throw new Error('خطا در خواندن messages.json');
-    const j1 = await r1.json();
-
-    const putR1 = await fetch(`${API}/${MSG_PATH}`, {
-      method: 'PUT',
-      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: 'FULL RESET: clear all messages',
-        content: b64encodeStr(JSON.stringify(emptyMessages, null, 2)),
-        sha: j1.sha
-      })
-    });
-    if (!putR1.ok) throw new Error('پاک‌سازی پیام‌ها نشد');
-
-    // 2. پاک کردن allowed.json (اعضا)
-    const emptyAllowed = { allowed: [] };
-
-    const r2 = await fetch(`${API}/allowed.json?t=${Date.now()}`, {
-      headers: { Authorization: `token ${token}` }
-    });
-    if (!r2.ok) throw new Error('خطا در خواندن allowed.json');
-    const j2 = await r2.json();
-
-    const putR2 = await fetch(`${API}/allowed.json`, {
-      method: 'PUT',
-      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: 'FULL RESET: clear all members',
-        content: b64encodeStr(JSON.stringify(emptyAllowed, null, 2)),
-        sha: j2.sha
-      })
-    });
-    if (!putR2.ok) throw new Error('پاک‌سازی اعضا نشد');
-
-    // 3. پاک کردن localStorage ادمین
-    localStorage.removeItem('seenSent');
-    localStorage.removeItem('feedLimit');
-
-    closeFullResetModal();
-    showToast('✅ سامانه کاملاً ریست شد!');
-    setTimeout(() => reload(), 1000);
-
-  } catch (e) {
-    document.getElementById('fullResetError').textContent = '❌ ' + e.message;
-    btn.disabled = false;
-    btn.textContent = '🗑 ریست کامل';
-  }
-}
-
 document.getElementById('resetPassword').addEventListener('input', e => {
   const val = e.target.value.trim();
   const btn = document.getElementById('confirmResetBtn');
@@ -869,32 +801,6 @@ async function confirmReset() {
     btn.disabled = false; btn.textContent = '🗑 پاک کن';
   }
 }
-  function copyText(text) {
-  if (!text) return;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
-      showToast('✅ کپی شد');
-    }).catch(() => fallbackCopy(text));
-  } else {
-    fallbackCopy(text);
-  }
-}
-
-function fallbackCopy(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.position = 'fixed';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.select();
-  try {
-    document.execCommand('copy');
-    showToast('✅ کپی شد');
-  } catch(e) {
-    showToast('❌ خطا', true);
-  }
-  document.body.removeChild(ta);
-}
 function showToast(msg, isError) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
@@ -907,7 +813,7 @@ document.getElementById('resetModal').addEventListener('click', e => { if (e.tar
 // 🚀 شروع
 tokenEl.value = getToken() || '';
 updateTokenUI();
-loadAllowedMembers();
+loadAll();
 if (getToken()) reload();
 </script>
 </body>
