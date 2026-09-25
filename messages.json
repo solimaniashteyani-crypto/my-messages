@@ -302,6 +302,21 @@
       ],
       "group": "__toAdmin__",
       "time": "2026-09-25T17:12:50.699Z"
+    },
+    {
+      "id": "admin-9iIneVovfiGv",
+      "ntfyId": "9iIneVovfiGv",
+      "isAdminMessage": true,
+      "text": "السلام علیک یا اباعبدالله",
+      "image": "",
+      "from": "امیر علی",
+      "phone": "09911453955",
+      "userGroup": "amirali",
+      "groups": [
+        "__toAdmin__"
+      ],
+      "group": "__toAdmin__",
+      "time": "2026-09-25T17:28:16.520Z"
     }
   ],
   "reactions": [
