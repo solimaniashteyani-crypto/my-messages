@@ -185,6 +185,20 @@
       "personalRecipients": [],
       "customRecipients": [],
       "time": "2026-09-25T12:44:12.661Z"
+    },
+    {
+      "id": "d147b96e-fc1d-47c0-b59c-4fc2e72228f6",
+      "text": "سلام مجدد",
+      "groups": [],
+      "group": "__personal__",
+      "personalRecipients": [],
+      "customRecipients": [
+        {
+          "name": "👤 سید عباس",
+          "topic": "chal-v11-seyyed-abbas-g7h8"
+        }
+      ],
+      "time": "2026-09-25T12:54:57.714Z"
     }
   ],
   "reactions": [],
