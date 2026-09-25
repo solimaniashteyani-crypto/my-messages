@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>فعال‌سازی ادمین</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+  body{
+    font-family:Vazirmatn,system-ui,sans-serif;
+    background:linear-gradient(160deg,#dbeafe,#eff6ff,#fff);
+    min-height:100vh; margin:0; padding:20px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card{
+    background:#fff; border-radius:24px; padding:36px 28px;
+    max-width:460px; width:100%; text-align:center;
+    box-shadow:0 20px 60px rgba(30,64,175,.2);
+  }
+  .icon{
+    width:90px; height:90px; border-radius:26px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; display:inline-flex; align-items:center; justify-content:center;
+    font-size:44px; margin-bottom:20px;
+  }
+  h1{font-size:24px; color:#1e3a8a; margin:0 0 12px}
+  p{color:#64748b; margin:0 0 24px; line-height:1.8}
+  input{
+    width:100%; padding:16px 20px; margin:8px 0;
+    background:#f0f7ff; border:2.5px solid #bfdbfe;
+    border-radius:14px; font-family:inherit; font-size:16px;
+    box-sizing:border-box;
+  }
+  input:focus{outline:none; border-color:#1e40af; background:#fff}
+  button{
+    width:100%; padding:18px 24px; margin-top:14px;
+    background:linear-gradient(135deg,#1e40af,#3b82f6);
+    color:#fff; border:none; border-radius:16px;
+    font-family:inherit; font-size:18px; font-weight:900;
+    cursor:pointer; box-shadow:0 8px 22px rgba(30,64,175,.35);
+  }
+  button:active{transform:scale(.98)}
+  .status{
+    margin-top:16px; padding:14px; border-radius:12px;
+    font-weight:700; display:none;
+  }
+  .status.ok{background:#ecfdf5; color:#047857; display:block}
+  .status.err{background:#fef2f2; color:#b91c1c; display:block}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">👑</div>
+  <h1>فعال‌سازی ادمین</h1>
+  <p>این صفحه فقط برای مدیر سامانه است.<br>اطلاعات رو وارد کن و «فعال کن» بزن.</p>
+
+  <input type="text" id="adminName" placeholder="نام مدیر" value="مدیر سامانه">
+  <input type="tel" id="adminPhone" placeholder="شماره موبایل مدیر" value="09120000000">
+
+  <button onclick="activate()">👑 فعال‌سازی ادمین</button>
+
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+function activate() {
+  var name = document.getElementById('adminName').value.trim() || 'مدیر سامانه';
+  var phone = document.getElementById('adminPhone').value.trim() || '09120000000';
+  var statusEl = document.getElementById('status');
+
+  try {
+    localStorage.setItem('isAdmin', 'true');
+    localStorage.setItem('registered', 'true');
+    localStorage.setItem('myName', name);
+    localStorage.setItem('myPhone', phone);
+    localStorage.setItem('myGroups', JSON.stringify(['khayerin']));
+    localStorage.setItem('myGroup', 'khayerin');
+
+    statusEl.className = 'status ok';
+    statusEl.textContent = '✅ فعال شد! در حال انتقال به PWA...';
+
+    setTimeout(function() {
+      location.href = './index.html';
+    }, 1200);
+  } catch(e) {
+    statusEl.className = 'status err';
+    statusEl.textContent = '❌ خطا: ' + e.message;
+  }
+}
+</script>
+</body>
+</html>
