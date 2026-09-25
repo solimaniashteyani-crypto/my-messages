@@ -330,6 +330,37 @@ var tokenEl = document.getElementById('token');
 var allowedMembers = [];
 var customCategories = [];
 
+// ═══════════════════════════════════════════════════════
+// 🧹 پاک کردن خودکار توکن قدیمی در صورت خطا
+// ═══════════════════════════════════════════════════════
+async function checkAndCleanToken() {
+  var t = getToken();
+  if (!t) return;
+
+  try {
+    // تست توکن با یه درخواست ساده
+    var res = await fetch('https://api.github.com/repos/' + C.owner + '/' + C.repo, {
+      headers: { Authorization: 'token ' + t }
+    });
+
+    if (res.status === 401 || res.status === 403) {
+      // توکن منقضی یا اشتباه
+      localStorage.removeItem('gh_token');
+      document.getElementById('tokenSaved').hidden = true;
+      document.getElementById('tokenForm').hidden = false;
+      tokenEl.value = '';
+      var msgEl = document.getElementById('tokenMsg');
+      if (msgEl) {
+        msgEl.innerHTML = '<span style="color:#dc2626">⚠️ توکن قبلی منقضی شده بود — توکن جدید وارد کن</span>';
+      }
+      return false;
+    }
+    return true;
+  } catch(e) {
+    // خطای شبکه — نادیده بگیر
+    return true;
+  }
+}
 function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
 
 // ───── توکن ─────
@@ -798,11 +829,21 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ───── شروع ─────
+// ───── شروع ─────
 tokenEl.value = getToken() || '';
 updateTokenUI();
-loadAll();
-if (getToken()) reload();
 
+// ✅ اول توکن رو چک کن، بعد بارگیری
+(async function() {
+  var isValid = await checkAndCleanToken();
+  if (isValid && getToken()) {
+    loadAll();
+    reload();
+  } else if (!getToken()) {
+    // توکن نیست — فقط گروه‌ها رو لود کن
+    loadAll();
+  }
+})();
 })();
 </script>
 </body>
