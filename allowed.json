@@ -1,13 +1,3 @@
 {
-  "allowed": [
-    {
-      "phone": "09911453955",
-      "name": "امیرعلی",
-      "groups": [
-        "amirali"
-      ],
-      "personalTopic": "chal-v11-amyraly-o774",
-      "province": "ستاد"
-    }
-  ]
+  "allowed": []
 }
