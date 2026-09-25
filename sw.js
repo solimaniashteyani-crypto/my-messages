@@ -1,19 +1,24 @@
-// Service Worker — غیرفعال
-// همه چیز از شبکه لود میشه
+// ═══════════════════════════════════════════════════════
+// Service Worker — غیرفعال کامل
+// ═══════════════════════════════════════════════════════
 
 self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(keys.map(k => caches.delete(k))))
       .then(() => self.registration.unregister())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then(clients => clients.forEach(c => {
+        try { c.navigate(c.url); } catch(e) {}
+      }))
   );
 });
 
-self.addEventListener('fetch', e => {
+self.addEventListener('fetch', event => {
   // هیچ کشی نکن
-  e.respondWith(fetch(e.request));
+  event.respondWith(fetch(event.request));
 });
