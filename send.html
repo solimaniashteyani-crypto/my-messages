@@ -495,7 +495,19 @@ function renderGroups() {
   }
 
   container.innerHTML = html;
-  container.querySelectorAll('.group-check').forEach(cb => cb.addEventListener('change', updateSelectionSummary));
+  container.querySelectorAll('.group-check').forEach(cb => {
+    cb.addEventListener('change', () => {
+      // اگه چک‌باکس «کل دسته سفارشی» بود
+      if (cb.classList.contains('custom-cat-check')) {
+        handleCustomCatClick(cb);
+      }
+      // اگه چک‌باکس زیرمجموعه دسته سفارشی بود
+      else if (cb.classList.contains('custom-sub-check')) {
+        handleCustomSubClick(cb);
+      }
+      updateSelectionSummary();
+    });
+  });
 }
 
 function toggleCategory(catKey) {
@@ -523,7 +535,39 @@ function getSelectedCustomTopics() {
   })).filter(c => c.topic);
 }
 
-function updateSelectionSummary() {
+function updateSelect// ═══════════════════════════════════════════════════════
+// 🏢 مدیریت دسته سفارشی
+// ═══════════════════════════════════════════════════════
+function handleCustomCatClick(catCheckbox) {
+  const catId = catCheckbox.dataset.customCat;
+  const isChecked = catCheckbox.checked;
+
+  // همه زیرمجموعه‌های این دسته
+  const subChecks = document.querySelectorAll(
+    `.custom-sub-check[data-custom-cat="${catId}"]`
+  );
+
+  // اگه کل اداره تیک خورد → همه زیرمجموعه‌ها تیک بخورن
+  // اگه کل اداره برداشته شد → همه زیرمجموعه‌ها برداشته بشن
+  subChecks.forEach(sub => { sub.checked = isChecked; });
+}
+
+function handleCustomSubClick(subCheckbox) {
+  const catId = subCheckbox.dataset.customCat;
+
+  // چک کن همه زیرمجموعه‌ها تیک خوردن؟
+  const allSubs = document.querySelectorAll(
+    `.custom-sub-check[data-custom-cat="${catId}"]`
+  );
+  const allChecked = Array.from(allSubs).every(s => s.checked);
+
+  // آپدیت چک‌باکس «کل اداره»
+  const catCheckbox = document.querySelector(
+    `.custom-cat-check[data-custom-cat="${catId}"]`
+  );
+  if (catCheckbox) catCheckbox.checked = allChecked;
+}
+ionSummary() {
   const selected = getSelectedGroups();
   const personal = getSelectedPersonalMembers();
   const custom = getSelectedCustomTopics();
