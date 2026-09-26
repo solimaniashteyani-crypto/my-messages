@@ -1,6 +1,166 @@
 {
   "messages": [],
-  "reactions": [],
-  "replies": [],
-  "seen": []
+  "reactions": [
+    {
+      "id": "mtU0xoTANDxR",
+      "messageId": "1aa3fc36-4538-4536-aa57-60e6fdd8d8ea",
+      "emoji": "👍",
+      "from": "جواد جوادی خواه",
+      "time": "2026-09-25T14:57:30.000Z"
+    }
+  ],
+  "replies": [
+    {
+      "id": "N6WZHhFcGIEq",
+      "messageId": "1aa3fc36-4538-4536-aa57-60e6fdd8d8ea",
+      "text": "سلام و احترام\nاره رسید",
+      "from": "جواد جوادی خواه",
+      "time": "2026-09-25T14:56:41.000Z"
+    },
+    {
+      "id": "59xem8znirlI",
+      "messageId": "1aa3fc36-4538-4536-aa57-60e6fdd8d8ea",
+      "text": "ممنونم",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T15:53:26.000Z"
+    },
+    {
+      "id": "pYxIiPbpDV3K",
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "text": "سلام علیکم",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T17:43:43.000Z"
+    },
+    {
+      "id": "LjuGX7OBOlXg",
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "text": "ض",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T17:45:15.000Z"
+    },
+    {
+      "id": "xV8ziWrRym39",
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "text": "بل",
+      "from": "خودم",
+      "time": "2026-09-25T17:45:35.000Z"
+    },
+    {
+      "id": "uQcEIpauCegO",
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "text": "سی",
+      "from": "خودم",
+      "time": "2026-09-25T17:50:34.000Z"
+    },
+    {
+      "id": "xSou5P44gFpp",
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "text": "U",
+      "from": "امیر علی",
+      "time": "2026-09-25T18:07:15.000Z"
+    },
+    {
+      "id": "tRCJo4xPq67m",
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "text": "لبواز",
+      "from": "امیر علی",
+      "time": "2026-09-25T18:11:27.000Z"
+    },
+    {
+      "id": "KcvgBndjwLEd",
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "text": "ب",
+      "from": "خودم",
+      "time": "2026-09-25T18:26:18.000Z"
+    },
+    {
+      "id": "D0cTBevJRnPb",
+      "messageId": "admin-9iIneVovfiGv",
+      "text": "حانم",
+      "from": "خودم",
+      "time": "2026-09-25T18:37:36.000Z"
+    }
+  ],
+  "seen": [
+    {
+      "messageId": "a2cf5fa6-faa0-4088-9468-3df89b463093",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T14:29:30.000Z"
+    },
+    {
+      "messageId": "cd87e16c-812d-4379-be07-2a56c1ecf7ea",
+      "from": "جواد جوادی خواه",
+      "time": "2026-09-25T14:30:16.000Z"
+    },
+    {
+      "messageId": "1aa3fc36-4538-4536-aa57-60e6fdd8d8ea",
+      "from": "جواد جوادی خواه",
+      "time": "2026-09-25T14:55:40.000Z"
+    },
+    {
+      "messageId": "1aa3fc36-4538-4536-aa57-60e6fdd8d8ea",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T15:53:13.000Z"
+    },
+    {
+      "messageId": "a2cf5fa6-faa0-4088-9468-3df89b463093",
+      "from": "خودم",
+      "time": "2026-09-25T16:34:45.000Z"
+    },
+    {
+      "messageId": "1aa3fc36-4538-4536-aa57-60e6fdd8d8ea",
+      "from": "خودم",
+      "time": "2026-09-25T16:34:45.000Z"
+    },
+    {
+      "messageId": "a2cf5fa6-faa0-4088-9468-3df89b463093",
+      "from": "همسر",
+      "time": "2026-09-25T16:41:44.000Z"
+    },
+    {
+      "messageId": "66cf3fe3-80d9-45b7-9187-52475929b772",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T17:16:02.000Z"
+    },
+    {
+      "messageId": "15fb014c-8cf1-44ef-909a-2416a23596be",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T17:16:03.000Z"
+    },
+    {
+      "messageId": "b608fc84-7ddc-45b8-a4d7-f1cc1be97de5",
+      "from": "امیر علی",
+      "time": "2026-09-25T18:07:08.000Z"
+    },
+    {
+      "messageId": "admin-wZrumfNe0Fzr",
+      "from": "خودم",
+      "time": "2026-09-25T18:26:22.000Z"
+    },
+    {
+      "messageId": "admin-is6itRaO6oJl",
+      "from": "خودم",
+      "time": "2026-09-25T18:26:22.000Z"
+    },
+    {
+      "messageId": "admin-EveqhC7cHKUw",
+      "from": "خودم",
+      "time": "2026-09-25T18:26:22.000Z"
+    },
+    {
+      "messageId": "admin-9iIneVovfiGv",
+      "from": "خودم",
+      "time": "2026-09-25T18:37:28.000Z"
+    },
+    {
+      "messageId": "admin-9iIneVovfiGv",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T19:11:42.000Z"
+    },
+    {
+      "messageId": "admin-wZrumfNe0Fzr",
+      "from": "مهدی سلیمانی آشتیانی",
+      "time": "2026-09-25T19:11:42.000Z"
+    }
+  ]
 }
