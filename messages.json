@@ -1,5 +1,66 @@
 {
-  "messages": [],
+  "messages": [
+    {
+      "id": "admin-EveqhC7cHKUw",
+      "ntfyId": "EveqhC7cHKUw",
+      "isAdminMessage": true,
+      "text": "تاردن",
+      "image": "",
+      "from": "امیر علی",
+      "phone": "09911453955",
+      "userGroup": "amirali",
+      "groups": [
+        "__toAdmin__"
+      ],
+      "group": "__toAdmin__",
+      "time": "2026-09-25T17:08:59.355Z"
+    },
+    {
+      "id": "admin-is6itRaO6oJl",
+      "ntfyId": "is6itRaO6oJl",
+      "isAdminMessage": true,
+      "text": "یا علی مدد",
+      "image": "",
+      "from": "امیر علی",
+      "phone": "09911453955",
+      "userGroup": "amirali",
+      "groups": [
+        "__toAdmin__"
+      ],
+      "group": "__toAdmin__",
+      "time": "2026-09-25T17:09:41.517Z"
+    },
+    {
+      "id": "admin-wZrumfNe0Fzr",
+      "ntfyId": "wZrumfNe0Fzr",
+      "isAdminMessage": true,
+      "text": "الان کجا رفت",
+      "image": "",
+      "from": "امیر علی",
+      "phone": "09911453955",
+      "userGroup": "amirali",
+      "groups": [
+        "__toAdmin__"
+      ],
+      "group": "__toAdmin__",
+      "time": "2026-09-25T17:12:50.699Z"
+    },
+    {
+      "id": "admin-9iIneVovfiGv",
+      "ntfyId": "9iIneVovfiGv",
+      "isAdminMessage": true,
+      "text": "السلام علیک یا اباعبدالله",
+      "image": "",
+      "from": "امیر علی",
+      "phone": "09911453955",
+      "userGroup": "amirali",
+      "groups": [
+        "__toAdmin__"
+      ],
+      "group": "__toAdmin__",
+      "time": "2026-09-25T17:28:16.520Z"
+    }
+  ],
   "reactions": [
     {
       "id": "mtU0xoTANDxR",
